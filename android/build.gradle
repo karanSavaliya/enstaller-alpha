@@ -1,0 +1,44 @@
+buildscript {
+    ext.kotlin_version = '1.5.30'
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'https://dl.google.com/dl/android/maven2'
+        }
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.4.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0-RC"
+        //classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20'
+        classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.12'
+        //add this line
+    }
+
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+        maven {
+            url 'https://dl.google.com/dl/android/maven2'
+        }
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+subprojects {
+    project.evaluationDependsOn(':app')
+}
+
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
