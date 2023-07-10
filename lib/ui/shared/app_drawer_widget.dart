@@ -22,6 +22,8 @@ import 'package:enstaller/ui/screen/today_appointments.dart';
 import 'package:enstaller/ui/screen/widget/drawer_row_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../screen/electricity_screen.dart';
+
 class AppDrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -94,6 +96,14 @@ class AppDrawerWidget extends StatelessWidget {
                 removeTop: true,
                 child: ListView(
                   children: [
+                    DrawerRowWidget(
+                      title: 'Electricity',
+                      assetPath: ImageFile.dashboard,
+                      onTap: () {
+                        Navigator.of(context).push(new MaterialPageRoute(
+                            builder: (context) => Electricity()));
+                      },
+                    ),
                     DrawerRowWidget(
                       title: 'Dashboard',
                       assetPath: ImageFile.dashboard,

@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
@@ -106,54 +105,6 @@ class _HomeScreenState extends State<HomeScreen> {
       print("Reset Update Global Flag for offline process.");
       GlobalVar.offilineSSubmittionStarted = false;
     }
-
-    //submit close job
-    //
-    // if (status != "NONE" &&
-    //     preferences.getStringList("listOfUnSubmittedJob") != null) {
-    //   List<String> _listOfUnSubmittedJob =
-    //       preferences.getStringList("listOfUnSubmittedJob");
-    //   _listOfUnSubmittedJob.forEach((appointmentid) {
-    //     print("Start close job for apoointment id ....$appointmentid");
-    //     removeid = appointmentid;
-    //     String gasmodel;
-    //     String elecmodel;
-    //     gasmodel = preferences.getString("$appointmentid" + "GasJob");
-    //     elecmodel = preferences.getString("$appointmentid" + "ElecJob");
-    //     Map<String, dynamic> gasJson;
-    //     Map<String, dynamic> elecjson;
-    //     print("-------------------");
-    //     print(gasmodel);
-    //     print(elecmodel);
-    //     print(appointmentid);
-    //     print("-------------------");
-    //     if (gasmodel == null && elecmodel == null) {
-    //       print("nuledddddddddddd");
-    //     } else {
-    //       if (gasmodel != null) gasJson = jsonDecode(gasmodel);
-    //       if (elecmodel != null) elecjson = jsonDecode(elecmodel);
-
-    //       if (gasmodel == null || elecmodel != null) {
-    //         preferences.remove("$appointmentid" + "ElecJob");
-    //         SurveyScreenViewModel().eleccloseJobSubmitOffline(
-    //             appointmentid, ElecCloseJobModel.fromJson(elecjson));
-    //       } else if (gasmodel != null || elecmodel == null) {
-    //         preferences.remove("$appointmentid" + "GasJob");
-    //         SurveyScreenViewModel().gascloseJobSubmitOffline(
-    //             appointmentid, GasCloseJobModel.fromJson(gasJson));
-    //       } else if (gasmodel != null || elecmodel != null) {
-    //         preferences.remove("$appointmentid" + "GasJob");
-    //         preferences.remove("$appointmentid" + "ElecJob");
-    //         SurveyScreenViewModel().bothcloseJobSubmitOffline(
-    //             appointmentid,
-    //             GasCloseJobModel.fromJson(gasJson),
-    //             ElecCloseJobModel.fromJson(elecjson));
-    //       }
-    //     }
-    //   });
-    // _listOfUnSubmittedJob = null;
-    // preferences.setStringList("listOfUnSubmittedJob", _listOfUnSubmittedJob);
-    // }
   }
 
   String _updateConnectionStatus(ConnectivityResult result) {
@@ -189,9 +140,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
-    //SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
-
     SizeConfig.sizeConfigInit(context);
     return SafeArea(
       child: BaseView<HomeScreenViewModel>(

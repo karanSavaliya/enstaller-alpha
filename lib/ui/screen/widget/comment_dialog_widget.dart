@@ -38,7 +38,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
   bool isCheck = false;
   bool isLoadingCommentDetails = true;
 
-  bool autoFoucs = true;
+  bool autoFoucs = false;
   FocusNode _textFieldFocusNode = FocusNode();
 
   @override
