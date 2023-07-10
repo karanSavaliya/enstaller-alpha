@@ -158,8 +158,6 @@ class _DetailScreenState extends State<DetailScreen> {
   @override
   void initState() {
     super.initState();
-
-
   }
 
 
@@ -174,16 +172,16 @@ class _DetailScreenState extends State<DetailScreen> {
       builder: (context, model, child) {
 
         model.checkifEnrouted();
-      ///  print(model.appointmentDetails.appointment?.dteCreatedDate);
+        ///  print(model.appointmentDetails.appointment?.dteCreatedDate);
         //print(model.appointmentDetails.appointment.appointmentEventType.toString()+"*****");
-       /* if(model.appointmentDetails != null) {
+        /* if(model.appointmentDetails != null) {
           if (model.appointmentDetails.appointment.appointmentEventType ==
               "Cancelled") {
             Navigator.pop(context);
           }
         }*/
 
-       // print(model.latlngmap+"******");
+        // print(model.latlngmap+"******");
 
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
@@ -226,325 +224,327 @@ class _DetailScreenState extends State<DetailScreen> {
             body: model.state == ViewState.Busy
                 ? AppConstants.circulerProgressIndicator()
                 : RefreshIndicator(
-                    onRefresh: () => Future.delayed(Duration.zero).whenComplete(
-                        () => model.initializeData(
-                            widget.arguments.appointmentID,
-                            widget.arguments.customerID)),
-                    child: SingleChildScrollView(
-                      physics: const ScrollPhysics(
-                          parent: AlwaysScrollableScrollPhysics()),
-                      child: Column(
-                        children: [
-                          _engineerInfo(model),
-                          _surveyInfo(model),
-                          Padding(
-                            padding: SizeConfig.padding,
-                            child: ListView.builder(
-                                key: Key('builder ${selected.toString()}'),
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: 5,
-                                shrinkWrap: true,
-                                itemBuilder: (BuildContext ctxt, int index) {
-                                  return ConfigurableExpansionTile(
-                                      key: Key(index.toString()),
-                                      initiallyExpanded: index == selected,
-                                      header: Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 20,
-                                              top: 20,
-                                              bottom: 10,
-                                              right: 20),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Text(
-                                                _getHeaderText(index),
-                                                style: getTextStyle(
-                                                    color: Colors.white,
-                                                    isBold: true,
-                                                    fontSize: 16.0),
-                                              ),
-                                              Icon(
-                                                Icons.add,
-                                                color: AppColors.whiteColor,
-                                              )
-                                            ],
-                                          ),
+              onRefresh: () => Future.delayed(Duration.zero).whenComplete(
+                      () => model.initializeData(
+                      widget.arguments.appointmentID,
+                      widget.arguments.customerID)),
+              child: SingleChildScrollView(
+                physics: const ScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics()),
+                child: Column(
+                  children: [
+                    _engineerInfo(model),
+                    _surveyInfo(model),
+                    Padding(
+                      padding: SizeConfig.padding,
+                      child: ListView.builder(
+                          key: Key('builder ${selected.toString()}'),
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: 5,
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext ctxt, int index) {
+                            return ConfigurableExpansionTile(
+                                key: Key(index.toString()),
+                                initiallyExpanded: index == selected,
+                                header: Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 20,
+                                        top: 20,
+                                        bottom: 10,
+                                        right: 20),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          _getHeaderText(index),
+                                          style: getTextStyle(
+                                              color: Colors.white,
+                                              isBold: true,
+                                              fontSize: 16.0),
                                         ),
-                                      ),
-                                      headerBackgroundColorStart:
-                                          AppColors.appThemeColor,
-                                      headerBackgroundColorEnd:
-                                          AppColors.appThemeColor,
-                                      onExpansionChanged: (value) {
-                                        if (value) {
-                                          setState(() {
-                                            selected = index;
-                                          });
-                                          if (value == true && index == 4) {
-                                            setState(() {
-                                              isToShowBottomBar = true;
-                                            });
-                                          } else {
-                                            setState(() {
-                                              isToShowBottomBar = false;
-                                            });
-                                          }
-                                        } else {
-                                          setState(() {
-                                            isToShowBottomBar = false;
-                                            selected = -1;
-                                          });
-                                        }
-                                      },
-                                      headerExpanded: Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              left: 20,
-                                              top: 20,
-                                              bottom: 10,
-                                              right: 20),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: <Widget>[
-                                              Text(
-                                                _getHeaderText(index),
-                                                style: getTextStyle(
-                                                    color: Colors.white,
-                                                    isBold: true,
-                                                    fontSize: 16.0),
-                                              ),
-                                              RotatedBox(
-                                                  quarterTurns: 2,
-                                                  child: Icon(
-                                                    Icons.remove,
-                                                    color: AppColors.whiteColor,
-                                                  ))
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      children: [
-                                        _getChildrenWidget(selected , model)
-                                      ]);
-                                }),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Text(
-                            "AVAILABLE ACTION",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(fontWeight: FontWeight.normal),
-                          ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          if (model.appointmentDetails.appointment
-                                  .appointmentEventType ==
-                              "Scheduled"  || model.appointmentDetails.appointment
-                              .appointmentEventType == "Rescheduled" )
-                            Padding(
-                              padding: SizeConfig.sidepadding,
-                              child: AppButton(
-                                height: 40,
-                                color: AppColors.darkBlue,
-                                buttonText: AppStrings.forward_button,
-                                radius: 15,
-                                textStyle:
-                                    TextStyle(color: AppColors.whiteColor),
-                                onTap: () async {
-                                  UserModel user = await Prefs.getUser();
-                                  ResponseModel responseModel =
-                                      await _apiService
-                                          .updateCallForwardAppointment(
-                                              widget.arguments.appointmentID
-                                                  .trim(),
-                                              user.intCompanyId);
-                                  print(responseModel.statusCode.toString() +
-                                      "......line373");
-                                  if (responseModel.statusCode == 1)
-                                    model.initializeData(
-                                        widget.arguments.appointmentID,
-                                        widget.arguments.customerID);
-                                },
-                              ),
-                            ),
-                          if (model.appointmentDetails.appointment
-                                  .appointmentEventType ==
-                              "Scheduled")
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                          if (model.appointmentDetails.appointment
-                                  .bCompleteForwardCall &&
-                              (model.appointmentDetails.appointment
-                                  .appointmentEventType ==
-                                  "Scheduled" ||  model.appointmentDetails.appointment
-                                  .appointmentEventType ==
-                                  "Rescheduled"))
-                            Padding(
-                              padding: EdgeInsets.only(top: 10 , left: 15 ,right: 15),
-                              child: AppButton(
-                                height: 40,
-                                color: AppColors.darkBlue,
-                                buttonText: "En Route",
-                                radius: 15,
-                                textStyle:
-                                    TextStyle(color: AppColors.whiteColor),
-                                onTap: () async {
-
-                                  if(model.vals_enroute == "0") {
-                                    model.onUpdateStatusOnRoute(
-                                        context,
-                                        widget.arguments.appointmentID);
-                                    model.initializeData(
-                                        widget.arguments.appointmentID,
-                                        widget.arguments.customerID);
-                                  }else{
-
-                                    AppConstants.showFailToast(context, "There is already one enrouted Appointment for today");
-
-                                  }
-
-                                },
-                              ),
-                            ),
-                          if (model.showChangeAppointmentStatusButton() && model.appointmentDetails.appointment
-                              .bisAbortRequested == false && model.appointmentDetails.appointment.bisAbortRequestApproved == false)
-                            Padding(
-                              padding: SizeConfig.sidepadding,
-                              child: AppButton(
-                                height: 40,
-                                color: AppColors.darkBlue,
-                                buttonText:
-                                    AppStrings.change_appointment_status_button,
-                                radius: 15,
-                                textStyle: TextStyle(color: AppColors.whiteColor),
-                                onTap: () async {
-                                  bool status = await model.onUpdateStatusOnSchedule(context , widget.arguments.appointmentID);
-                                  if (status) {
-                                    model.initializeData(widget.arguments.appointmentID , widget.arguments.customerID);
-                                  }
-                                },
-                              ),
-                            ),
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Padding(
-                            padding: SizeConfig.sidepadding,
-                            child: AppButton(
-                              height: 40,
-                              color: AppColors.darkBlue,
-                              buttonText: AppStrings.ADD_COMMENT,
-                              radius: 15,
-                              textStyle: TextStyle(color: AppColors.whiteColor),
-                              onTap: () {
-                                AppConstants.showAppDialog(
-                                    context: context,
-                                    child: CommentDialogWidget(
-                                      appointmentID:
-                                          widget.arguments.appointmentID,
-                                    ));
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          _getDisplayButton(_checkbuttonindex(model), model),
-                          SizedBox(
-                            height: 20,
-                          ),
-
-                          Padding(
-                            padding: SizeConfig.sidepadding,
-                            child: Container(
-                              height: 300,
-                              child: GoogleMap(
-                                markers: {
-                                  Marker(
-                                    GeoCoord( double.parse(model.latlngmap.split(",")[0]), double.parse(model.latlngmap.split(",")[1])),
-                                    info: "",
-                                    label: "",
-                                    icon: "",
-                                    infoSnippet: "",
-                                    onInfoWindowTap: (){}
-
+                                        Icon(
+                                          Icons.add,
+                                          color: AppColors.whiteColor,
+                                        )
+                                      ],
+                                    ),
                                   ),
+                                ),
+                                headerBackgroundColorStart:
+                                AppColors.appThemeColor,
+                                headerBackgroundColorEnd:
+                                AppColors.appThemeColor,
+                                onExpansionChanged: (value) {
+                                  if (value) {
+                                    setState(() {
+                                      selected = index;
+                                    });
+                                    if (value == true && index == 4) {
+                                      setState(() {
+                                        isToShowBottomBar = true;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        isToShowBottomBar = false;
+                                      });
+                                    }
+                                  } else {
+                                    setState(() {
+                                      isToShowBottomBar = false;
+                                      selected = -1;
+                                    });
+                                  }
                                 },
-                                initialZoom: 12,
-                                initialPosition:
-                                    GeoCoord(double.parse(model.latlngmap.split(",")[0]) , double.parse(model.latlngmap.split(",")[1])),
-                                // Los Angeles, CA
-                                mapType: MapType.roadmap,
-                                interactive: true,
-                                mobilePreferences: const MobileMapPreferences(
-                                  trafficEnabled: true,
-                                  zoomControlsEnabled: false,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizeConfig.verticalSpaceSmall(),
-                          Padding(
-                            padding: SizeConfig.sidepadding,
-                            child: InkWell(
-                              onTap: () async {
-
-                                final location = await GeoLocationService.getAddressFromPinCode(model.customerDetails.strPostCode);
-
-                               // final url = Uri.encodeFull(
-                                   // 'https://www.google.com/maps/dir/current+location/${model.customerDetails.strPostCode}');
-
-                                String url = "http://maps.google.com/maps?q=loc:" + location.coordinates.latitude.toString() + "," +  location.coordinates.longitude.toString()+ " (" + model.customerDetails.strPostCode + ")";
-
-                                if (await canLaunch(url)) {
-                                  await launch(url);
-                                } else {
-                                  throw 'Could not open the map.';
-                                }
-                              },
-                              child: Container(
-                                width: SizeConfig.screenWidth,
-                                height: 40,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                        height: SizeConfig.screenHeight * .02,
-                                        width: SizeConfig.screenHeight * .02,
-                                        child:
-                                            Image.asset(ImageFile.direction)),
-                                    SizedBox(
-                                      width: 10,
+                                headerExpanded: Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        left: 20,
+                                        top: 20,
+                                        bottom: 10,
+                                        right: 20),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: <Widget>[
+                                        Text(
+                                          _getHeaderText(index),
+                                          style: getTextStyle(
+                                              color: Colors.white,
+                                              isBold: true,
+                                              fontSize: 16.0),
+                                        ),
+                                        RotatedBox(
+                                            quarterTurns: 2,
+                                            child: Icon(
+                                              Icons.remove,
+                                              color: AppColors.whiteColor,
+                                            ))
+                                      ],
                                     ),
-                                    Text(
-                                      AppStrings.GET_DIRECTIONS,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: AppColors.whiteColor),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                                decoration: BoxDecoration(
-                                    color: AppColors.appThemeColor,
-                                    borderRadius: BorderRadius.circular(15)),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 60,
-                          ),
-                        ],
+                                children: [
+                                  _getChildrenWidget(selected , model)
+                                ]);
+                          }),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      "AVAILABLE ACTION",
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontWeight: FontWeight.normal),
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    if (model.appointmentDetails.appointment
+                        .appointmentEventType ==
+                        "Scheduled"  || model.appointmentDetails.appointment
+                        .appointmentEventType == "Rescheduled" )
+                      Padding(
+                        padding: SizeConfig.sidepadding,
+                        child: AppButton(
+                          height: 40,
+                          color: AppColors.darkBlue,
+                          buttonText: model.appointmentDetails.appointment
+                              .bCompleteForwardCall == false ? AppStrings.forward_button : AppStrings.forward_button_completed,
+                          radius: 15,
+                          textStyle:
+                          TextStyle(color: AppColors.whiteColor),
+                          onTap: () async {
+                            UserModel user = await Prefs.getUser();
+                            ResponseModel responseModel =
+                            await _apiService
+                                .updateCallForwardAppointment(
+                                widget.arguments.appointmentID
+                                    .trim(),
+                                user.intCompanyId);
+                            print(responseModel.statusCode.toString() +
+                                "......line373");
+                            if (responseModel.statusCode == 1){
+                              model.initializeData(
+                                  widget.arguments.appointmentID,
+                                  widget.arguments.customerID);
+                            }
+                          },
+                        ),
+                      ),
+                    if (model.appointmentDetails.appointment
+                        .appointmentEventType ==
+                        "Scheduled")
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                    if (model.appointmentDetails.appointment
+                        .bCompleteForwardCall &&
+                        (model.appointmentDetails.appointment
+                            .appointmentEventType ==
+                            "Scheduled" ||  model.appointmentDetails.appointment
+                            .appointmentEventType ==
+                            "Rescheduled"))
+                      Padding(
+                        padding: EdgeInsets.only(top: 10 , left: 15 ,right: 15),
+                        child: AppButton(
+                          height: 40,
+                          color: AppColors.darkBlue,
+                          buttonText: "En Route",
+                          radius: 15,
+                          textStyle:
+                          TextStyle(color: AppColors.whiteColor),
+                          onTap: () async {
+
+                            if(model.vals_enroute == "0") {
+                              model.onUpdateStatusOnRoute(
+                                  context,
+                                  widget.arguments.appointmentID);
+                              model.initializeData(
+                                  widget.arguments.appointmentID,
+                                  widget.arguments.customerID);
+                            }else{
+
+                              AppConstants.showFailToast(context, "There is already one enrouted Appointment for today");
+
+                            }
+
+                          },
+                        ),
+                      ),
+                    if (model.showChangeAppointmentStatusButton() && model.appointmentDetails.appointment
+                        .bisAbortRequested == false && model.appointmentDetails.appointment.bisAbortRequestApproved == false)
+                      Padding(
+                        padding: SizeConfig.sidepadding,
+                        child: AppButton(
+                          height: 40,
+                          color: AppColors.darkBlue,
+                          buttonText:
+                          AppStrings.change_appointment_status_button,
+                          radius: 15,
+                          textStyle: TextStyle(color: AppColors.whiteColor),
+                          onTap: () async {
+                            bool status = await model.onUpdateStatusOnSchedule(context , widget.arguments.appointmentID);
+                            if (status) {
+                              model.initializeData(widget.arguments.appointmentID , widget.arguments.customerID);
+                            }
+                          },
+                        ),
+                      ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Padding(
+                      padding: SizeConfig.sidepadding,
+                      child: AppButton(
+                        height: 40,
+                        color: AppColors.darkBlue,
+                        buttonText: AppStrings.ADD_COMMENT,
+                        radius: 15,
+                        textStyle: TextStyle(color: AppColors.whiteColor),
+                        onTap: () {
+                          AppConstants.showAppDialog(
+                              context: context,
+                              child: CommentDialogWidget(
+                                appointmentID:
+                                widget.arguments.appointmentID,
+                              ));
+                        },
                       ),
                     ),
-                  ));
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _getDisplayButton(_checkbuttonindex(model), model),
+                    SizedBox(
+                      height: 20,
+                    ),
+
+                    Padding(
+                      padding: SizeConfig.sidepadding,
+                      child: Container(
+                        height: 300,
+                        child: GoogleMap(
+                          markers: {
+                            Marker(
+                                GeoCoord( double.parse(model.latlngmap.split(",")[0]), double.parse(model.latlngmap.split(",")[1])),
+                                info: "",
+                                label: "",
+                                icon: "",
+                                infoSnippet: "",
+                                onInfoWindowTap: (){}
+
+                            ),
+                          },
+                          initialZoom: 12,
+                          initialPosition:
+                          GeoCoord(double.parse(model.latlngmap.split(",")[0]) , double.parse(model.latlngmap.split(",")[1])),
+                          // Los Angeles, CA
+                          mapType: MapType.roadmap,
+                          interactive: true,
+                          mobilePreferences: const MobileMapPreferences(
+                            trafficEnabled: true,
+                            zoomControlsEnabled: false,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizeConfig.verticalSpaceSmall(),
+                    Padding(
+                      padding: SizeConfig.sidepadding,
+                      child: InkWell(
+                        onTap: () async {
+
+                          final location = await GeoLocationService.getAddressFromPinCode(model.customerDetails.strPostCode);
+
+                          // final url = Uri.encodeFull(
+                          // 'https://www.google.com/maps/dir/current+location/${model.customerDetails.strPostCode}');
+
+                          String url = "http://maps.google.com/maps?q=loc:" + location.coordinates.latitude.toString() + "," +  location.coordinates.longitude.toString()+ " (" + model.customerDetails.strPostCode + ")";
+
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not open the map.';
+                          }
+                        },
+                        child: Container(
+                          width: SizeConfig.screenWidth,
+                          height: 40,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                  height: SizeConfig.screenHeight * .02,
+                                  width: SizeConfig.screenHeight * .02,
+                                  child:
+                                  Image.asset(ImageFile.direction)),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Text(
+                                AppStrings.GET_DIRECTIONS,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: AppColors.whiteColor),
+                              ),
+                            ],
+                          ),
+                          decoration: BoxDecoration(
+                              color: AppColors.appThemeColor,
+                              borderRadius: BorderRadius.circular(15)),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 60,
+                    ),
+                  ],
+                ),
+              ),
+            ));
       },
     );
   }
@@ -559,7 +559,7 @@ class _DetailScreenState extends State<DetailScreen> {
     print("------------------------------");
     int id;
     id = _appointmenttype[
-        model.appointmentDetails.appointment.strJobType.trim()];
+    model.appointmentDetails.appointment.strJobType.trim()];
 
     // _appointmentandjobtype.forEach((key, value) {
 
@@ -581,123 +581,123 @@ class _DetailScreenState extends State<DetailScreen> {
         children: [
           (id != 2 && id != 6)
               ? Column(
-                  children: [
-                    Text(
-                      "SMETS2 XMREM ACTION",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontWeight: FontWeight.normal),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Padding(
-                      padding: SizeConfig.sidepadding,
-                      child: AppButton(
-                        height: 40,
-                        color: !model.isformfilled[_smest2displaybutton[id]]
-                            ? AppColors.darkBlue
-                            : AppColors.disablebuttonColor,
-                        buttonText:
-                            !model.isformfilled[_smest2displaybutton[id]]
-                                ? "Raise " + _smest2displaybutton[id]
-                                : _disablesmest2displaybutton[id],
-                        radius: !model.isformfilled[_smest2displaybutton[id]]
-                            ? 15
-                            : 6,
-                        textStyle: TextStyle(
-                            color: !model.isformfilled[_smest2displaybutton[id]]
-                                ? AppColors.whiteColor
-                                : AppColors.black),
-                        onTap: !model.isformfilled[_smest2displaybutton[id]]
-                            ? () {
-                                model.onRaiseButtonPressed(
-                                    widget.arguments.customerID,
-                                    _processid[_smest2displaybutton[id]]);
-                              }
-                            : () {},
-                      ),
-                    ),
-                  ],
-                )
+            children: [
+              Text(
+                "SMETS2 XMREM ACTION",
+                textAlign: TextAlign.start,
+                style: TextStyle(fontWeight: FontWeight.normal),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Padding(
+                padding: SizeConfig.sidepadding,
+                child: AppButton(
+                  height: 40,
+                  color: !model.isformfilled[_smest2displaybutton[id]]
+                      ? AppColors.darkBlue
+                      : AppColors.disablebuttonColor,
+                  buttonText:
+                  !model.isformfilled[_smest2displaybutton[id]]
+                      ? "Raise " + _smest2displaybutton[id]
+                      : _disablesmest2displaybutton[id],
+                  radius: !model.isformfilled[_smest2displaybutton[id]]
+                      ? 15
+                      : 6,
+                  textStyle: TextStyle(
+                      color: !model.isformfilled[_smest2displaybutton[id]]
+                          ? AppColors.whiteColor
+                          : AppColors.black),
+                  onTap: !model.isformfilled[_smest2displaybutton[id]]
+                      ? () {
+                    model.onRaiseButtonPressed(
+                        widget.arguments.customerID,
+                        _processid[_smest2displaybutton[id]]);
+                  }
+                      : () {},
+                ),
+              ),
+            ],
+          )
               : Column(
-                  children: [
-                    Text(
-                      "SMETS2 XMREM ACTION",
-                      textAlign: TextAlign.start,
-                      style: TextStyle(fontWeight: FontWeight.normal),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Padding(
-                      padding: SizeConfig.sidepadding,
-                      child: AppButton(
-                        height: 40,
-                        color: !model.isformfilled[
-                                _smest2displaybutton[id].split("+")[0]]
-                            ? AppColors.darkBlue
-                            : AppColors.disablebuttonColor,
-                        buttonText: !model.isformfilled[
-                                _smest2displaybutton[id].split("+")[0]]
-                            ? "Raise " + _smest2displaybutton[id].split("+")[0]
-                            : _disablesmest2displaybutton[id].split("+")[0],
-                        radius: !model.isformfilled[
-                                _smest2displaybutton[id].split("+")[0]]
-                            ? 15
-                            : 6,
-                        textStyle: TextStyle(
-                            color: !model.isformfilled[
-                                    _smest2displaybutton[id].split("+")[0]]
-                                ? AppColors.whiteColor
-                                : AppColors.black),
-                        onTap: !model.isformfilled[
-                                _smest2displaybutton[id].split("+")[0]]
-                            ? () {
-                                model.onRaiseButtonPressed(
-                                    widget.arguments.customerID,
-                                    _processid[_smest2displaybutton[id]
-                                        .split("+")[0]]);
-                              }
-                            : () {},
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Padding(
-                      padding: SizeConfig.sidepadding,
-                      child: AppButton(
-                        height: 40,
-                        color: !model.isformfilled[
-                                _smest2displaybutton[id].split("+")[1]]
-                            ? AppColors.darkBlue
-                            : AppColors.disablebuttonColor,
-                        buttonText: !model.isformfilled[
-                                _smest2displaybutton[id].split("+")[1]]
-                            ? "Raise " + _smest2displaybutton[id].split("+")[1]
-                            : _disablesmest2displaybutton[id].split("+")[1],
-                        radius: !model.isformfilled[
-                                _smest2displaybutton[id].split("+")[1]]
-                            ? 15
-                            : 6,
-                        textStyle: TextStyle(
-                            color: !model.isformfilled[
-                                    _smest2displaybutton[id].split("+")[1]]
-                                ? AppColors.whiteColor
-                                : AppColors.black),
-                        onTap: !model.isformfilled[
-                                _smest2displaybutton[id].split("+")[1]]
-                            ? () {
-                                model.onRaiseButtonPressed(
-                                    widget.arguments.customerID,
-                                    _processid[_smest2displaybutton[id]
-                                        .split("+")[1]]);
-                              }
-                            : () {},
-                      ),
-                    ),
-                  ],
-                )
+            children: [
+              Text(
+                "SMETS2 XMREM ACTION",
+                textAlign: TextAlign.start,
+                style: TextStyle(fontWeight: FontWeight.normal),
+              ),
+              SizedBox(
+                height: 10.0,
+              ),
+              Padding(
+                padding: SizeConfig.sidepadding,
+                child: AppButton(
+                  height: 40,
+                  color: !model.isformfilled[
+                  _smest2displaybutton[id].split("+")[0]]
+                      ? AppColors.darkBlue
+                      : AppColors.disablebuttonColor,
+                  buttonText: !model.isformfilled[
+                  _smest2displaybutton[id].split("+")[0]]
+                      ? "Raise " + _smest2displaybutton[id].split("+")[0]
+                      : _disablesmest2displaybutton[id].split("+")[0],
+                  radius: !model.isformfilled[
+                  _smest2displaybutton[id].split("+")[0]]
+                      ? 15
+                      : 6,
+                  textStyle: TextStyle(
+                      color: !model.isformfilled[
+                      _smest2displaybutton[id].split("+")[0]]
+                          ? AppColors.whiteColor
+                          : AppColors.black),
+                  onTap: !model.isformfilled[
+                  _smest2displaybutton[id].split("+")[0]]
+                      ? () {
+                    model.onRaiseButtonPressed(
+                        widget.arguments.customerID,
+                        _processid[_smest2displaybutton[id]
+                            .split("+")[0]]);
+                  }
+                      : () {},
+                ),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Padding(
+                padding: SizeConfig.sidepadding,
+                child: AppButton(
+                  height: 40,
+                  color: !model.isformfilled[
+                  _smest2displaybutton[id].split("+")[1]]
+                      ? AppColors.darkBlue
+                      : AppColors.disablebuttonColor,
+                  buttonText: !model.isformfilled[
+                  _smest2displaybutton[id].split("+")[1]]
+                      ? "Raise " + _smest2displaybutton[id].split("+")[1]
+                      : _disablesmest2displaybutton[id].split("+")[1],
+                  radius: !model.isformfilled[
+                  _smest2displaybutton[id].split("+")[1]]
+                      ? 15
+                      : 6,
+                  textStyle: TextStyle(
+                      color: !model.isformfilled[
+                      _smest2displaybutton[id].split("+")[1]]
+                          ? AppColors.whiteColor
+                          : AppColors.black),
+                  onTap: !model.isformfilled[
+                  _smest2displaybutton[id].split("+")[1]]
+                      ? () {
+                    model.onRaiseButtonPressed(
+                        widget.arguments.customerID,
+                        _processid[_smest2displaybutton[id]
+                            .split("+")[1]]);
+                  }
+                      : () {},
+                ),
+              ),
+            ],
+          )
         ],
       );
     }
@@ -728,11 +728,11 @@ class _DetailScreenState extends State<DetailScreen> {
                   SizeConfig.horizontalSpaceSmall(),
                   Text(
                     model.appointmentDetails.appointment.appointmentEventType ==
-                            "InRoute"
+                        "InRoute"
                         ? "EnRoute"
                         : model.appointmentDetails.appointment
-                                .appointmentEventType ??
-                            "",
+                        .appointmentEventType ??
+                        "",
                     style: getTextStyle(
                         color: AppColors.statusColor(model.appointmentDetails
                             .appointment.appointmentEventType),
@@ -744,14 +744,14 @@ class _DetailScreenState extends State<DetailScreen> {
             AppointmentDetailsRowWidget(
               firstText: AppStrings.assignedEngineer,
               secondText:
-                  model.appointmentDetails.appointment.engineerName ?? "",
+              model.appointmentDetails.appointment.engineerName ?? "",
             ),
             AppointmentDetailsRowWidget(
               borderEnable: false,
               firstText: AppStrings.bookingReference,
               secondText:
-                  model.appointmentDetails.appointment.strBookingReference ??
-                      "",
+              model.appointmentDetails.appointment.strBookingReference ??
+                  "",
             ),
           ],
         ),
@@ -793,7 +793,7 @@ class _DetailScreenState extends State<DetailScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   if (model.appointmentDetails.appointment.strJobType.trim() !=
-                          "Full Day Hire" &&
+                      "Full Day Hire" &&
                       model.appointmentDetails.appointment.strJobType.trim() !=
                           "Half Day Hire")
                     AppButton(
@@ -955,25 +955,25 @@ class _DetailScreenState extends State<DetailScreen> {
           AppointmentDataRow(
             firstText: AppStrings.date,
             secondText: AppConstants.formattedSingeDate(DateTime.parse(
-                    model.appointmentDetails.appointment?.dteBookedDate)) ??
+                model.appointmentDetails.appointment?.dteBookedDate)) ??
                 "",
           ),
           AppointmentDataRow(
             firstText: AppStrings.timeSlot,
             secondText:
-                model.appointmentDetails.appointment?.strBookedTime ?? "",
+            model.appointmentDetails.appointment?.strBookedTime ?? "",
           ),
           AppointmentDataRow(
             firstText: AppStrings.workType,
             secondText:
-                model.appointmentDetails.appointment.strAppointmentType +
-                        ">" +
-                        model.appointmentDetails.appointment?.strJobType ??
-                    "",
+            model.appointmentDetails.appointment.strAppointmentType +
+                ">" +
+                model.appointmentDetails.appointment?.strJobType ??
+                "",
           ),
           AppointmentDataRow(
-            firstText: AppStrings.bookOn,
-            secondText: AppConstants.getDateTime(model.appointmentDetails.appointment?.dteCreatedDate)),
+              firstText: AppStrings.bookOn,
+              secondText: AppConstants.getDateTime(model.appointmentDetails.appointment?.dteCreatedDate)),
 
           AppointmentDataRow(
             firstText: AppStrings.bookBy,
@@ -1028,9 +1028,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   color: AppColors.appThemeColor,
                   child: Center(
                       child: Text(
-                    AppStrings.dateAndTime,
-                    style: getTextStyle(color: Colors.white, isBold: true),
-                  )),
+                        AppStrings.dateAndTime,
+                        style: getTextStyle(color: Colors.white, isBold: true),
+                      )),
                 ),
               ),
               SizedBox(
@@ -1043,9 +1043,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   color: AppColors.appThemeColor,
                   child: Center(
                       child: Text(
-                    AppStrings.user,
-                    style: getTextStyle(color: Colors.white, isBold: true),
-                  )),
+                        AppStrings.user,
+                        style: getTextStyle(color: Colors.white, isBold: true),
+                      )),
                 ),
               ),
               SizedBox(
@@ -1058,9 +1058,9 @@ class _DetailScreenState extends State<DetailScreen> {
                   color: AppColors.appThemeColor,
                   child: Center(
                       child: Text(
-                    AppStrings.comment,
-                    style: getTextStyle(color: Colors.white, isBold: true),
-                  )),
+                        AppStrings.comment,
+                        style: getTextStyle(color: Colors.white, isBold: true),
+                      )),
                 ),
               )
             ],
@@ -1085,13 +1085,13 @@ class _DetailScreenState extends State<DetailScreen> {
                           color: Colors.grey[300],
                           child: Center(
                               child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                                AppConstants.getDateTime(model
-                                    .activityDetailsList[index]
-                                    .dteCreatedDate),
-                                textAlign: TextAlign.center),
-                          )),
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                    AppConstants.getDateTime(model
+                                        .activityDetailsList[index]
+                                        .dteCreatedDate),
+                                    textAlign: TextAlign.center),
+                              )),
                         ),
                       ),
                       SizedBox(
@@ -1166,7 +1166,7 @@ class _DetailScreenState extends State<DetailScreen> {
           AppointmentDataRow(
             firstText: AppStrings.name,
             secondText:
-                AppStrings.mr + model.customerDetails.strContactName ?? "",
+            AppStrings.mr + model.customerDetails.strContactName ?? "",
           ),
           AppointmentDataRow(
             firstText: AppStrings.contactNumber,

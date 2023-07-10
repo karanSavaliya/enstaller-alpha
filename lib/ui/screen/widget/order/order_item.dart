@@ -86,6 +86,7 @@ class _OrderItemState extends State<OrderItem> {
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: SizeConfig.sidepadding / 2,
       child: Card(

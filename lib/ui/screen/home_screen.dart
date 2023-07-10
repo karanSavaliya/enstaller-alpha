@@ -83,10 +83,13 @@ class _HomeScreenState extends State<HomeScreen> {
       GlobalVar.offilineSSubmittionStarted = true;
       print("Update Global Flag for offline process start.");
       try {
-        if (status != "NONE" && preferences.getStringList("listOfUnSubmittedForm") != null) {
-          List<String> _listOfUnSubmittedForm = preferences.getStringList("listOfUnSubmittedForm");
+        if (status != "NONE" &&
+            preferences.getStringList("listOfUnSubmittedForm") != null) {
+          List<String> _listOfUnSubmittedForm =
+              preferences.getStringList("listOfUnSubmittedForm");
           for (int i = 0; i < _listOfUnSubmittedForm.length; i++) {
-            await _submitOfflineSurveyForAppointmentId(_listOfUnSubmittedForm[i]);
+            await _submitOfflineSurveyForAppointmentId(
+                _listOfUnSubmittedForm[i]);
             await _removeAppointmentIdFromStore(_listOfUnSubmittedForm[i]);
           }
         }
@@ -195,7 +198,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onModelReady: (model) => model.getAppointmentList(),
         builder: (context, model, child) {
           _listofappointment = model.masterAppointmentList;
-
+          model.masterAppointmentList.removeWhere((element) => element.appointmentEventType == "Cancelled" || element.appointmentEventType == "Aborted"  || element.appointmentEventType == "Completed");
+          _listofappointment = model.masterAppointmentList;
           return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,

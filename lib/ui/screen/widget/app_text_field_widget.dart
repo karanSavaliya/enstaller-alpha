@@ -12,8 +12,9 @@ class AppTextFieldWidget extends StatelessWidget {
   final IconData preFix;
   bool obsecureText;
   String assetPath;
+  bool readOnly;
 
-  AppTextFieldWidget({this.controller,this.hintText,this.width,this.preFix,this.assetPath,this.obsecureText:false});
+  AppTextFieldWidget({this.controller,this.hintText,this.width,this.preFix,this.assetPath,this.obsecureText:false,this.readOnly});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,7 @@ class AppTextFieldWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10)
       ),
       child: TextFormField(
+        readOnly: readOnly == null ? false : readOnly,
         controller:controller,
         obscureText: obsecureText,
         decoration: InputDecoration(

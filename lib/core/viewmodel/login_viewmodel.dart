@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/after_login_model.dart';
@@ -13,6 +15,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../constant/api_urls.dart';
+import '../model/reset_password_model.dart';
+import '../model/user_model.dart';
 
 class LogInViewModel extends BaseModel {
   ApiService _apiService = ApiService();
@@ -101,7 +107,6 @@ class LogInViewModel extends BaseModel {
 
     setState(ViewState.Busy);
 
-
     Map data = {"stremail": emailController.text.toString()};
     final res =  await _apiService.VerifyEmail(data);
 
@@ -118,54 +123,48 @@ class LogInViewModel extends BaseModel {
           builder: (context) => ResetPassword(
             emailId: emailController.text.toString(),
           )));
-
-     // Navigator.of(context).pushNamed("/resetPassword" , arguments: ResetScreenArguments(emailId :emailController.text.toString()));
-
     }
-
     setState(ViewState.Idle);
-
   }
 
   Future<void> ResetPasswordModel(BuildContext context) async {
-
+    FocusManager.instance.primaryFocus?.unfocus();
     setState(ViewState.Busy);
-
     print(otpController.text.toString()+"--"+passwordController.text.toString()+"---"+confirmPasswordController.text.toString());
     if(passwordController.text.toString().isEmpty || confirmPasswordController.text.toString().isEmpty || otpController.text.toString().isEmpty){
       AppConstants.showFailToast(context, "All Fields are Compulsory");
+      setState(ViewState.Idle);
     }else if(passwordController.text.toString() != confirmPasswordController.text.toString()){
       AppConstants.showFailToast(context, "Password and Confirm Password should be same");
+      setState(ViewState.Idle);
+    }else if(passwordController.text.toString().length < 6 || passwordController.text.toString().length > 20){
+      AppConstants.showFailToast(context, "Password should be minimum of 6 and maximum of 20 characters");
+      setState(ViewState.Idle);
     }else{
-
       Map data = {
         "strusername": EmailidController.text.toString(),
         "strCode": otpController.text.toString(),
         "newPassword": passwordController.text.toString()
       };
-
-      print(data.toString());
-      final res =  await _apiService.resetPassword(data);
-
-      AppConstants.showFailToast(context, res.result);
-
-      if(res.result == "Password Change Sucess."){
-        AppConstants.showSuccessToast(context, res.result+" , you are redirected to Login Screen");
-        Navigator.of(context).pushReplacementNamed("/login");
-      }else{
-
-        AppConstants.showFailToast(context, res.result);
-      }
-
-
-
-
+      await resetPassword(data, context);
     }
-
-    setState(ViewState.Idle);
-
   }
 
+  Future<reset_password_model?> resetPassword(Map data, BuildContext context) async {
 
+    UserModel user = await Prefs.getUser();
+    var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.resetEmail;
+    final response = await http.post(Uri.parse(url) , body: jsonEncode(data) ,  headers: {
+      'Authorization': 'Bearer ${user.accessToken}' , "Content-Type": "application/json"
+    });
 
+    if(response.body.toString() == "\"Password Change Sucess.\""){
+      AppConstants.showSuccessToast(context, "Password changed successfully you are redirected to Login Screen");
+      Navigator.of(context).pushReplacementNamed("/login");
+    }else{
+      AppConstants.showFailToast(context , response.body.toString().substring(1,response.body.toString().length-1));
+    }
+    setState(ViewState.Idle);
+    return null;
+  }
 }

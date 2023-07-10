@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-class DeletableTag extends StatelessWidget {
+class DeletableTag extends StatefulWidget {
   final String path;
   final VoidCallback onDelete;
 
@@ -12,6 +12,11 @@ class DeletableTag extends StatelessWidget {
     required this.onDelete,
   }) : super(key: key);
 
+  @override
+  State<DeletableTag> createState() => _DeletableTagState();
+}
+
+class _DeletableTagState extends State<DeletableTag> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,13 +29,13 @@ class DeletableTag extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Image.asset(
-          (path.endsWith("jpg") || path.endsWith("jpeg") || path.endsWith("png")) ? "assets/icon/img_image.png" : (path.endsWith("doc") || path.endsWith("docx")) ? "assets/icon/img_doc.png" :  path.endsWith("pdf") ? "assets/icon/img_pdf.png" : "assets/icon/img_xls.png",
+          (widget.path.endsWith("jpg") || widget.path.endsWith("jpeg") || widget.path.endsWith("png")) ? "assets/icon/img_image.png" : (widget.path.endsWith("doc") || widget.path.endsWith("docx")) ? "assets/icon/img_doc.png" :  widget.path.endsWith("pdf") ? "assets/icon/img_pdf.png" : "assets/icon/img_xls.png",
             width: 40,
             height: 40,
           ),
           SizedBox(width: 0),
           GestureDetector(
-            onTap: onDelete,
+            onTap: widget.onDelete,
             child: Icon(
               Icons.close,
               size: 20,

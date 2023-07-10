@@ -57,6 +57,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:io';
+import 'package:path/path.dart' as p;
 
 class ApiService extends BaseApi {
 
@@ -311,7 +312,7 @@ class ApiService extends BaseApi {
         (response) {
       return  cm.commentModel.fromJson(json.decode(response.body));
     } ,
-        'intappintmentid=71634');
+        'intappintmentid=$appointmentID');
 
   }
 
@@ -854,22 +855,6 @@ class ApiService extends BaseApi {
   }
 
 
-
-  Future<reset_password_model> resetPassword(Map data) async {
-
-    UserModel user = await Prefs.getUser();
-    var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.resetEmail;
-    final response = await http.post(Uri.parse(url) , body: jsonEncode(data) ,  headers: {
-      'Authorization': 'Bearer ${user.accessToken}' , "Content-Type": "application/json"
-    });
-
-    final Map<String ,dynamic> parsed = json.decode(response.body);
-    final  reset_model = reset_password_model.fromJson(parsed);
-
-    return reset_model;
-  }
-
-
   Future<dynamic> checkIfEnrouted(UserModel model) {
     return getRequestWithParam(ApiUrls.isEnrouted_url,
             (response) {
@@ -913,12 +898,15 @@ class ApiService extends BaseApi {
     for (var file in files) {
       var stream = http.ByteStream(file.openRead());
       var length = await file.length();
+
+      print(files[0].absolute.path+"---"+CommonUtils().getFileMimeType(file.absolute.path).toString()+"------"+file.path.split('/').last);
+
       var multipartFile = http.MultipartFile(
         'esignFile',
         stream,
         length,
         filename: file.path.split('/').last,
-        contentType: MediaType(CommonUtils().getFileMimeType(file.absolute.path)  , CommonUtils().getExensions(CommonUtils().getFileExtension(file.path.split('/').last))), // Adjust the media type based on your file
+        contentType: MediaType(CommonUtils().getFileMimeType(file.absolute.path)  , p.extension(file.absolute.path)), // Adjust the media type based on your file
       );
       request.files.add(multipartFile);
     }

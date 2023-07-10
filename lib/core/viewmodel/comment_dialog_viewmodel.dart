@@ -1,7 +1,5 @@
 // @dart=2.9
 
-
-
 import 'dart:io';
 
 import 'package:enstaller/core/constant/api_urls.dart';
@@ -14,8 +12,8 @@ import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
-import 'package:enstaller/ui/util/AppBuilder.dart';
 import 'package:flutter/cupertino.dart';
+import '../constant/appconstant.dart';
 
 
 class CommentDialogViewModel extends BaseModel {
@@ -80,7 +78,6 @@ class CommentDialogViewModel extends BaseModel {
 
   String response_body = "";
   void addComments(BuildContext context ,String appointmentID , String comments , List<Map<String ,dynamic>> liststr_files) async {
-    setState(ViewState.Busy);
     if (commentController.text.trim().length > 0) {
       showErrorMessage = false;
       UserModel userModel = await Prefs.getUser();
@@ -98,33 +95,28 @@ class CommentDialogViewModel extends BaseModel {
           });
       if (responseModel != null) {
         commentController.clear();
-
+        AppConstants.showSuccessToast(context, "Comment Submitted");
+        Navigator.pop(context);
         var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.insertAttachment;
         var map = {
           'intDetailsId': responseModel,
           'intAppointmentId': appointmentID,
           'intCreatedBy': userModel.id,
         };
+
         List<File> list_files = [];
         liststr_files.forEach((element) {
           String filepath = element["value"].toString();
           list_files.add(File(filepath));
-
         });
 
         final response  = await _apiService.uploadFilesWithParameters(url , list_files , map);
         response_body  = response;
-
-        /*comments = await _apiService.get(
-            appointmentID, userModel.intCompanyId);*/
-
-       // Navigator.pop(context);
-
+        print(response_body);
       }
     } else {
       showErrorMessage = true;
     }
-    setState(ViewState.Idle);
   }
 
 

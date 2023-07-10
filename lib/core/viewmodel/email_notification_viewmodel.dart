@@ -36,7 +36,10 @@ class EmailNotificationViewModel extends BaseModel {
     setState(ViewState.Busy);
     emailNotificationList = [];
     _emailNotificationList.forEach((element) {
-      if (element.intAppointmentId.toString().toLowerCase().contains(val.toLowerCase()) ||
+      if (element.intAppointmentId
+              .toString()
+              .toLowerCase()
+              .contains(val.toLowerCase()) ||
           element.customerName.toLowerCase().contains(val.toLowerCase()) ||
           element.dteCreatedDate.toLowerCase().contains(val.toLowerCase()) ||
           element.strEmail.toLowerCase().contains(val.toLowerCase())) {

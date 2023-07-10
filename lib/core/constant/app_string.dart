@@ -3,7 +3,8 @@ class AppStrings {
   static const String NO_DATA_FOUND = 'NO_DATA_FOUND';
   static const appTitle = 'enstallers';
   static const abort_text = "Abort Appointment";
-  static const forward_button = "Forward Call Completed";
+  static const forward_button = "Forward Call Complete";
+  static const forward_button_completed = "Forward Call Completed";
   static const change_appointment_status_button = "Change Appointment Status";
   static const abort_reason = "Select Abort Reason";
   static const logInTitle = 'Sign in to your account';

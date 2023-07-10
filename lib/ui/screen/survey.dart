@@ -1042,7 +1042,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 _getQuestion(surveyResponseModel),
                 InkWell(
                     onTap: () {
-                      _showMyDialog(surveyResponseModel: surveyResponseModel, model: model);
+                      _showMyDialog(
+                          surveyResponseModel: surveyResponseModel,
+                          model: model);
                     },
                     child: (surveyResponseModel?.imagePath == null || surveyResponseModel?.image == null)
                         ? Column(

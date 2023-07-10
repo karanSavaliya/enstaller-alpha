@@ -32,8 +32,7 @@ class TodayAppointmentViewModel extends BaseModel {
       }
     });
 
-    appointmentList.removeWhere((element) => element.appointmentEventType == "Cancelled"  ||  element.appointmentEventType == "Aborted");
-
+    appointmentList.removeWhere((element) => element.appointmentEventType == "Cancelled"  ||  element.appointmentEventType == "Aborted" ||  element.appointmentEventType == "Completed");
     setState(ViewState.Idle);
   }
 

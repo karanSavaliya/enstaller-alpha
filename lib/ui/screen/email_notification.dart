@@ -17,7 +17,8 @@ import 'package:flutter/services.dart';
 
 class EmailNotificationScreen extends StatefulWidget {
   @override
-  _EmailNotificationScreenState createState() => _EmailNotificationScreenState();
+  _EmailNotificationScreenState createState() =>
+      _EmailNotificationScreenState();
 }
 
 class _EmailNotificationScreenState extends State<EmailNotificationScreen> {

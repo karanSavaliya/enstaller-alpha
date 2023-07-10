@@ -124,11 +124,13 @@ class MapScreenState extends State<ProfilePage>
                               ],
                             ),
                             Padding(
-                                padding: EdgeInsets.only(top: 90.0, right: 100.0),
+                                padding:
+                                    EdgeInsets.only(top: 90.0, right: 100.0),
                                 child: new Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
-                                      !_status ? InkWell(
+                                      !_status
+                                          ? InkWell(
                                               onTap: () {
                                                 _showMyDialog();
                                               },
@@ -247,13 +249,12 @@ class MapScreenState extends State<ProfilePage>
                         ],
                       ),
                     ),
-                  ),
+                  )
                 ],
               ),
             ],
           ),
-        ),
-    );
+        ));
   }
 
   @override

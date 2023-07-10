@@ -45,4 +45,5 @@ class AbortAppointmentViewModel extends BaseModel {
 
     setState(ViewState.Idle);
   }
+
 }

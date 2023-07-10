@@ -35,56 +35,65 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                 brightness: Brightness.dark,
                 backgroundColor: AppColors.appThemeColor,
                 automaticallyImplyLeading: true,
-                title: Text((widget.intOrderId != null) ? "${AppStrings.EDIT_ORDER}" : '${AppStrings.ADD_ORDER}',
+                title: Text(
+                  (widget.intOrderId != null)
+                      ? "${AppStrings.EDIT_ORDER}"
+                      : '${AppStrings.ADD_ORDER}',
                   style: TextStyle(color: AppColors.whiteColor),
                 ),
                 centerTitle: true),
             body: model.state == ViewState.Busy && !model.isSaving
                 ? AppConstants.circulerProgressIndicator()
-                : Padding(
-                  padding: SizeConfig.verticalBigPadding * 2,
-                  child: ListView(
-                    children: [
-                      widget.intOrderId != null ? ListView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          itemCount: model.orderItems.length,
-                          itemBuilder: (context, index) {
-                            return model.orderItems[index];
-                          }) : Container(),
-                      SizeConfig.verticalSpaceBigMedium(),
-                      Padding(
-                        padding: SizeConfig.sidepadding,
-                        child: AppButton(
-                          height: 40,
-                          radius: 15,
-                          color: AppColors.appThemeColor,
-                          textStyle: TextStyle(color: AppColors.whiteColor),
-                          buttonText: AppStrings.ADD_LINE_ITEM,
-                          onTap: () {
-                            model.addOrderItem();
-                          },
-                        ),
-                      ),
-                      SizeConfig.verticalSpace(12),
-                      model.state == ViewState.Busy && model.isSaving
-                          ? AppConstants.circulerProgressIndicator()
-                          : Padding(
+                : Container(
+                   height: MediaQuery.of(context).size.height,
+
+                  child: SingleChildScrollView(
+                      child: Padding(
+                        padding: SizeConfig.verticalBigPadding * 2,
+                        child: Column(
+                          children: [
+                            ListView.builder(
+                                shrinkWrap: true,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemCount: model.orderItems.length,
+                                itemBuilder: (context, index) {
+                                  return model.orderItems[index];
+                                }),
+                            SizeConfig.verticalSpaceBigMedium(),
+                            Padding(
                               padding: SizeConfig.sidepadding,
                               child: AppButton(
                                 height: 40,
                                 radius: 15,
                                 color: AppColors.appThemeColor,
-                                textStyle:
-                                    TextStyle(color: AppColors.whiteColor),
-                                buttonText: AppStrings.save,
+                                textStyle: TextStyle(color: AppColors.whiteColor),
+                                buttonText: AppStrings.ADD_LINE_ITEM,
                                 onTap: () {
-                                  model.onSave(context);
+                                  model.addOrderItem();
                                 },
                               ),
-                            )
-                    ],
-                  ),
+                            ),
+                            SizeConfig.verticalSpace(12),
+                            model.state == ViewState.Busy && model.isSaving
+                                ? AppConstants.circulerProgressIndicator()
+                                : Padding(
+                                    padding: SizeConfig.sidepadding,
+                                    child: AppButton(
+                                      height: 40,
+                                      radius: 15,
+                                      color: AppColors.appThemeColor,
+                                      textStyle:
+                                          TextStyle(color: AppColors.whiteColor),
+                                      buttonText: AppStrings.save,
+                                      onTap: () {
+                                        model.onSave(context);
+                                      },
+                                    ),
+                                  )
+                          ],
+                        ),
+                      ),
+                    ),
                 ));
       },
     );

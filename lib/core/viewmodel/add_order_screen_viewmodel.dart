@@ -91,7 +91,8 @@ class AddOrderScreenViewModel extends BaseModel {
   void addOrderItem() {
     setState(ViewState.Busy);
 
-    SaveOrderLine saveOrderLine = SaveOrderLine(intCompanyId: user.intCompanyId);
+    SaveOrderLine saveOrderLine =
+        SaveOrderLine(intCompanyId: user.intCompanyId);
     if (orderItems.isNotEmpty) {
       OrderItem _previtem = orderItems[orderItems.length - 1];
       if (_previtem.saveOrderLine.intItemId != null &&

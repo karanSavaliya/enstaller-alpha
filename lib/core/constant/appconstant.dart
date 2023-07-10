@@ -7,6 +7,7 @@ import 'package:enstaller/core/constant/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:toast/toast.dart';
+import 'package:mime/mime.dart';
 
 class AppConstants {
   static String faceBookClientID = "2355582358071365";
@@ -332,6 +333,13 @@ class AppConstants {
       return 31;
     }
   }
+
+   static String getFileContentType(String filePath) {
+    final mimeType = lookupMimeType(filePath);
+    print('Content type: $mimeType');
+  }
+
+
 
   static String nameTitle(String value) {
     if (value != null) {

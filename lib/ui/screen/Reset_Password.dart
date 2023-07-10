@@ -18,7 +18,7 @@ class ResetScreenArguments {
 
   String emailId;
   ResetScreenArguments({
-     this.emailId,
+    this.emailId,
   });
 
 }
@@ -33,6 +33,7 @@ class ResetPassword extends StatefulWidget {
   ResetPasswordState createState() => ResetPasswordState();
 
 }
+
 
 class ResetPasswordState extends State<ResetPassword> {
 
@@ -100,8 +101,8 @@ class ResetPasswordState extends State<ResetPassword> {
                           hintText: widget.emailId,
                           preFix: Icons.person_outline,
                           assetPath: ImageFile.loginUser,
+                          readOnly: true,
                         ),
-
                         SizeConfig.verticalSpace(SizeConfig.screenHeight * .03),
                         AppTextFieldWidget(
                           width: SizeConfig.screenWidth * .8,
@@ -146,7 +147,7 @@ class ResetPasswordState extends State<ResetPassword> {
                           radius: 20,
                           onTap: () {
 
-                               model.ResetPasswordModel(context);
+                            model.ResetPasswordModel(context);
                           },
                         ),
 
