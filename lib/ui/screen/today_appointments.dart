@@ -682,7 +682,8 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                                 true,
                                 context,
                                 10,
-                                false),
+                                false,
+                            false),
                             SizedBox(
                               height: 30,
                             ),

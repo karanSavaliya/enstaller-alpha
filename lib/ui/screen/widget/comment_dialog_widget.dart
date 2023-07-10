@@ -38,12 +38,15 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
   bool isCheck = false;
   bool isLoadingCommentDetails = true;
 
+  bool autoFoucs = true;
+  FocusNode _textFieldFocusNode = FocusNode();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-
+    _textFieldFocusNode.requestFocus();
     Future.delayed(const Duration(milliseconds: 2500), () {
 
       addData(model1);
@@ -52,6 +55,15 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
   }
 
+  @override
+  void dispose() {
+    _textFieldFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _onButtonClick() {
+    _textFieldFocusNode.unfocus();
+  }
 
   Widget FilesPicked() {
     return Container(
@@ -71,7 +83,11 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                 setState(() {
                   listfiles.removeAt(index);
                 });
-
+                if(listfiles.isEmpty){
+                  setState(() {
+                    isCheck = false;
+                  });
+                }
               });
 
             },
@@ -82,7 +98,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
   }
 
   Future<void> pickfile() async {
-
+    _onButtonClick();
     final result = await FilePicker.getMultiFilePath(
         type: FileType.ANY,
         fileExtension: 'jpeg,jpg,png,doc,docx,pdf,xls,xlsx,jfif,pjpeg,pjp'
@@ -140,9 +156,6 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
 
     });
-
-
-
 
 
     Future.delayed(Duration(seconds: 2), () {
@@ -229,26 +242,46 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                     child: Container(
                       decoration:
                       BoxDecoration(color: AppColors.veryLightGrayColor),
-                      child: commonTextFormField(
-                          model.commentController,
-                          "Type Comment",
-                          TextInputType.text,
-                          null,
-                          true,
-                          context,
-                          10,
-                          false),
+                      child: TextFormField(
+                          focusNode: _textFieldFocusNode,
+                        onChanged: (text) {
+                          print('First text field: $text');
+                        },
+                        maxLines: 10,
+                        enabled: true,
+                        controller: model.commentController,
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.fromLTRB(
+                            MediaQuery.of(context).size.width * 0.02,
+                            MediaQuery.of(context).size.height * 0.02,
+                            MediaQuery.of(context).size.height * 0.02,
+                            MediaQuery.of(context).size.width * 0.02,
+                          ),
+                        border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(
+                        0.0,
+                        )),
+                        enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                        color: Colors.transparent,
+                        width: 0.0,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                        0.0,
+                        )),
+                        hintText: "Type Comment",
+                        errorStyle: TextStyle(color: Colors.red),
+                        suffixIcon: true == false ? Icon(Icons.keyboard_arrow_down) : null),
+                        validator: (value) {
+                        if (value.isEmpty) {
+                        return 'Please enter text';
+                        } else {
+                        return null;
+                        }
+                        }),
                     ),
                   ),
-                  model.showErrorMessage
-                      ? SizedBox(height: 2)
-                      : SizedBox(height: 0),
-                  model.showErrorMessage
-                      ? Padding(
-                      padding: SizeConfig.sidepadding,
-                      child: ErrorTextWidget(
-                          errorMessage: AppStrings.emptyFieldMessage))
-                      : SizedBox(height: 0),
                   SizedBox(height: 10),
                   Padding(
                     padding: SizeConfig.sidepadding,
@@ -283,14 +316,19 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.bold),
                       onTap: () async {
-
+                        _onButtonClick();
                         if(model.commentController.text.toString().length > 0 && listfiles.length > 0) {
-                          setState(() {
-                            isCheck = false;
-                          });
                           model.addComments(context, widget.appointmentID,
                               model.commentController.text.toString(),
                               listfiles);
+                          if(model.showErrorMessage == false){
+                            setState(() {
+                              isCheck = false;
+                            });
+                          }
+                          else{
+                            AppConstants.showFailToast(context, AppStrings.emptyFieldMessage);
+                          }
                           if (model.state == ViewState.Idle) {
                             print(model.response_body);
                           }
@@ -319,30 +357,42 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                   ),
                   isLoadingCommentDetails == true ? LinearProgressIndicator() : ExpansionPanelList(
                       expansionCallback: (panelIndex , isExpanded) {
-
-
-
+                        _onButtonClick();
                         setState(() {
-
-                          setState(() {
-                            _items[panelIndex]['isExpanded'] = !isExpanded;
-                          });
-
+                          for (int i = 0; i < _items.length; i++) {
+                            if (i == panelIndex) {
+                              _items[i]['isExpanded'] = !isExpanded;
+                            } else {
+                              _items[i]['isExpanded'] = false;
+                            }
+                          }
                         });
                       },
-                      children:  _items.map((item1) => ExpansionPanel(
-
-
-
+                      children:  _items.asMap().entries.map((item1) {
+                        int index = item1.key;
+                        return ExpansionPanel(
                         headerBuilder: (context, isOpen){
                           return Padding(
                               padding: EdgeInsets.all(15),
-                              child:Text(item1["title"] , style: TextStyle(fontSize: 16),)
+                              child:Row(
+                                children: [
+                                  Container(
+                                    width: 25,
+                                    height: 25,
+                                    child: Center(child: Text("${index+1}",style: TextStyle(color: AppColors.whiteColor),)),
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: AppColors.appThemeColor),
+                                  ),
+                                  SizedBox(width: 7),
+                                  Text(item1.value["title"] , style: TextStyle(fontSize: 16),),
+                                ],
+                              )
                           );
                         },
                         body: Container(
                             child: ListView.builder(
-                              itemCount: item1["description"].toString().split(",").length,
+                              itemCount: item1.value["description"].toString().split(",").length,
                               physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (BuildContext context, int index) {
                                 return Row(
@@ -353,10 +403,10 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(10),
                                         child: GestureDetector(onTap:(){
-                                          CommonUtils().downloadFile("https://enstall.boshposh.com/Upload/Appointment/"+item1["description"].toString().split(",")[index] , filename: item1["description"].toString().split(",")[index]);
+                                          CommonUtils().downloadFile("https://enstall.boshposh.com/Upload/Appointment/"+item1.value["description"].toString().split(",")[index] , filename: item1.value["description"].toString().split(",")[index]);
                                         },
                                           child: Container(key: UniqueKey()  ,child:Image.asset(
-                                            (item1["description"].toString().split(",")[index].endsWith("jpg") ||item1["description"].toString().split(",")[index].endsWith("jpeg") || item1["description"].toString().split(",")[index].endsWith("png")) ? "assets/icon/img_image.png" : (item1["description"].toString().split(",")[index].endsWith("doc") || item1["description"].toString().split(",")[index].endsWith("docx")) ? "assets/icon/img_doc.png" :  item1["description"].toString().split(",")[index].endsWith("pdf") ? "assets/icon/img_pdf.png" : "assets/icon/img_xls.png",
+                                            (item1.value["description"].toString().split(",")[index].endsWith("jpg") ||item1.value["description"].toString().split(",")[index].endsWith("jpeg") || item1.value["description"].toString().split(",")[index].endsWith("png")) ? "assets/icon/img_image.png" : (item1.value["description"].toString().split(",")[index].endsWith("doc") || item1.value["description"].toString().split(",")[index].endsWith("docx")) ? "assets/icon/img_doc.png" :  item1.value["description"].toString().split(",")[index].endsWith("pdf") ? "assets/icon/img_pdf.png" : "assets/icon/img_xls.png",
                                             width: 30,
                                             height: 30,
                                           ),),
@@ -367,7 +417,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                                       child: Container(
                                         height: 50,
                                         child: Expanded(
-                                          child: Center(child: Text(item1["description"].toString().split(",")[index])),
+                                          child: Center(child: Text(item1.value["description"].toString().split(",")[index])),
                                         ),
                                       ),
                                     ),
@@ -380,8 +430,9 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
                             )
                         ),
-                        isExpanded: item1['isExpanded'],
-                      ),).toList())
+                        isExpanded: item1.value['isExpanded'],
+                      );
+                      },).toList())
 
                 ],
               ),

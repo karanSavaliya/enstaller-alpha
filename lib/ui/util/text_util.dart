@@ -10,8 +10,10 @@ Widget commonTextFormField(
     bool enable,
     context,
     maxline,
-    bool autovalidation) {
+    bool autovalidation,
+    bool autoFoucs) {
   return TextFormField(
+    autofocus: autoFoucs,
 //    autovalidate: autovalidation,
       onChanged: (text) {
         print('First text field: $text');

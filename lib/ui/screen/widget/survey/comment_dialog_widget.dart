@@ -38,12 +38,15 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
   bool isCheck = false;
   bool isLoadingCommentDetails = true;
 
+  bool autoFoucs = true;
+  FocusNode _textFieldFocusNode = FocusNode();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-
+    _textFieldFocusNode.requestFocus();
     Future.delayed(const Duration(milliseconds: 2500), () {
 
       addData(model1);
@@ -52,6 +55,15 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
   }
 
+  @override
+  void dispose() {
+    _textFieldFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _onButtonClick() {
+    _textFieldFocusNode.unfocus();
+  }
 
   Widget FilesPicked() {
     return Container(
@@ -142,9 +154,6 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
     });
 
 
-
-
-
     Future.delayed(Duration(seconds: 2), () {
 
       setState(() {
@@ -229,15 +238,44 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                     child: Container(
                       decoration:
                       BoxDecoration(color: AppColors.veryLightGrayColor),
-                      child: commonTextFormField(
-                          model.commentController,
-                          "Type Comment",
-                          TextInputType.text,
-                          null,
-                          true,
-                          context,
-                          10,
-                          false),
+                      child: TextFormField(
+                          focusNode: _textFieldFocusNode,
+                          onChanged: (text) {
+                            print('First text field: $text');
+                          },
+                          maxLines: 10,
+                          enabled: true,
+                          controller: model.commentController,
+                          keyboardType: TextInputType.text,
+                          decoration: InputDecoration(
+                              contentPadding: EdgeInsets.fromLTRB(
+                                MediaQuery.of(context).size.width * 0.02,
+                                MediaQuery.of(context).size.height * 0.02,
+                                MediaQuery.of(context).size.height * 0.02,
+                                MediaQuery.of(context).size.width * 0.02,
+                              ),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(
+                                    0.0,
+                                  )),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.transparent,
+                                    width: 0.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(
+                                    0.0,
+                                  )),
+                              hintText: "Type Comment",
+                              errorStyle: TextStyle(color: Colors.red),
+                              suffixIcon: true == false ? Icon(Icons.keyboard_arrow_down) : null),
+                          validator: (value) {
+                            if (value.isEmpty) {
+                              return 'Please enter text';
+                            } else {
+                              return null;
+                            }
+                          }),
                     ),
                   ),
                   model.showErrorMessage
@@ -283,7 +321,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.bold),
                       onTap: () async {
-
+                        _onButtonClick();
                         if(model.commentController.text.toString().length > 0 && listfiles.length > 0) {
                           setState(() {
                             isCheck = false;
@@ -341,28 +379,38 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                           );
                         },
                         body: Container(
-                            child: GridView.builder(
-                              // Maximum width of each cell
-                              itemCount: item1["description"].toString().split(",").length, // Replace with the actual item count
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3, // Replace with your desired cross axis count
-                              ),
+                            child: ListView.builder(
+                              itemCount: item1["description"].toString().split(",").length,
                               physics: NeverScrollableScrollPhysics(),
                               itemBuilder: (BuildContext context, int index) {
-                                // Access the child at the current index
-                                return GestureDetector(onTap:(){
-
-                                  CommonUtils().downloadFile("https://enstall.boshposh.com/Upload/Appointment/"+item1["description"].toString().split(",")[index] , filename: item1["description"].toString().split(",")[index]);
-
-                                },
-                                  child: Container(key: UniqueKey()  ,child:Image.asset(
-                                    (item1["description"].toString().split(",")[index].endsWith("jpg") ||item1["description"].toString().split(",")[index].endsWith("jpeg") || item1["description"].toString().split(",")[index].endsWith("png")) ? "assets/icon/img_image.png" : (item1["description"].toString().split(",")[index].endsWith("doc") || item1["description"].toString().split(",")[index].endsWith("docx")) ? "assets/icon/img_doc.png" :  item1["description"].toString().split(",")[index].endsWith("pdf") ? "assets/icon/img_pdf.png" : "assets/icon/img_xls.png",
-                                    width: 30,
-                                    height: 30,
-                                  ),),
+                                return Row(
+                                  children: [
+                                    Container(
+                                      height: 50,
+                                      width: MediaQuery.of(context).size.width/6,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: GestureDetector(onTap:(){
+                                          CommonUtils().downloadFile("https://enstall.boshposh.com/Upload/Appointment/"+item1["description"].toString().split(",")[index] , filename: item1["description"].toString().split(",")[index]);
+                                        },
+                                          child: Container(key: UniqueKey()  ,child:Image.asset(
+                                            (item1["description"].toString().split(",")[index].endsWith("jpg") ||item1["description"].toString().split(",")[index].endsWith("jpeg") || item1["description"].toString().split(",")[index].endsWith("png")) ? "assets/icon/img_image.png" : (item1["description"].toString().split(",")[index].endsWith("doc") || item1["description"].toString().split(",")[index].endsWith("docx")) ? "assets/icon/img_doc.png" :  item1["description"].toString().split(",")[index].endsWith("pdf") ? "assets/icon/img_pdf.png" : "assets/icon/img_xls.png",
+                                            width: 30,
+                                            height: 30,
+                                          ),),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: 50,
+                                        child: Expanded(
+                                          child: Center(child: Text(item1["description"].toString().split(",")[index])),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 );
-
-                                // Perform any necessary operations on the child here
 
                               },
                               shrinkWrap: true,// Spacing between cells horizontally
