@@ -69,7 +69,6 @@ class MainMaterialApp extends StatelessWidget {
 
     if (loginUser.rememberMe) {
 
-      //FlutterStatusbarcolor.setStatusBarWhiteForeground(true);
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     }
 
