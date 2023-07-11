@@ -46,7 +46,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
     // TODO: implement initState
     super.initState();
 
-    _textFieldFocusNode.requestFocus();
+    _textFieldFocusNode.unfocus();
     Future.delayed(const Duration(milliseconds: 2500), () {
       addData(model1);
     });
@@ -232,7 +232,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                             print('First text field: $text');
                           },
                           maxLines: 10,
-                          enabled: true,
+                          autofocus: autoFoucs,
                           controller: model.commentController,
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(

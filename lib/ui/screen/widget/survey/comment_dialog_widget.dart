@@ -32,7 +32,7 @@ class CommentDialogWidget extends StatefulWidget {
 class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
 
-  List<Map<String ,dynamic>> listfiles = [];
+  List<Map<String, dynamic>> listfiles = [];
   double height = 0;
 
   bool isCheck = false;
@@ -46,13 +46,10 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
     // TODO: implement initState
     super.initState();
 
-    _textFieldFocusNode.requestFocus();
+    _textFieldFocusNode.unfocus();
     Future.delayed(const Duration(milliseconds: 2500), () {
-
       addData(model1);
-
     });
-
   }
 
   @override
@@ -67,34 +64,34 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
   Widget FilesPicked() {
     return Container(
-        child:GridView.count(
+        child: GridView.count(
           // Maximum width of each cell
-          mainAxisSpacing: 10, // Spacing between cells vertically
+          mainAxisSpacing: 10,
+          // Spacing between cells vertically
           crossAxisSpacing: 10,
           crossAxisCount: 3,
           physics: NeverScrollableScrollPhysics(),
           childAspectRatio: 1,
-          shrinkWrap: true,// Spacing between cells horizontally
+          shrinkWrap: true,
+          // Spacing between cells horizontally
           children: List.generate(
             listfiles.length, // Assuming 'myList' is the list of data
                 (index) {
-              return DeletableTag(path: listfiles[index]["value"] , onDelete: (){
-
+              return DeletableTag(
+                  path: listfiles[index]["value"], onDelete: () {
                 setState(() {
                   listfiles.removeAt(index);
                 });
-                if(listfiles.isEmpty){
+                if (listfiles.isEmpty) {
                   setState(() {
                     isCheck = false;
                   });
                 }
               });
-
             },
           ),
 
         ));
-
   }
 
   Future<void> pickfile() async {
@@ -105,12 +102,10 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
     );
 
     for (final element in result.values) {
-
       setState(() {
         print(element);
-        listfiles.add({"value":element});
+        listfiles.add({"value": element});
       });
-
     }
 
     setState(() {
@@ -121,7 +116,8 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
   List<ExpansionPanel> listexpansionPanel_ = [];
   CommentDialogViewModel model1;
-  Map<String , List<AppointmentAttachemnts>> list_map = new Map<String , List<AppointmentAttachemnts>>();
+  Map<String, List<AppointmentAttachemnts>> list_map = new Map<String,
+      List<AppointmentAttachemnts>>();
 
 
   List<Map<String, dynamic>> _items = [];
@@ -129,13 +125,13 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
   List<Map<String, dynamic>> items = [];
 
 
-  void addData(CommentDialogViewModel model){
-
-    model.appointmentDetails.asMap().forEach((index ,element) {
-
+  void addData(CommentDialogViewModel model) {
+    model.appointmentDetails.asMap().forEach((index, element) {
       List<AppointmentAttachemnts> appointmentAttachemnts = [];
 
-      appointmentAttachemnts.addAll(model.appointmentAttachemnts.where((elements) => elements.intDetailsId == element.intId).toList());
+      appointmentAttachemnts.addAll(
+          model.appointmentAttachemnts.where((elements) => elements
+              .intDetailsId == element.intId).toList());
       //list_map[element.strComments] = appointmentAttachemnts;
 
       List<String> filepath = [];
@@ -148,26 +144,20 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
       items.add({
         'id': index,
-        'title':model.appointmentDetails[index].strComments ,
-        'description':filepath.join(","),
-        'length':model.appointmentDetails.length.toString(),
+        'title': model.appointmentDetails[index].strComments,
+        'description': filepath.join(","),
+        'length': model.appointmentDetails.length.toString(),
         'isExpanded': false
       });
-
-
     });
 
 
     Future.delayed(Duration(seconds: 2), () {
-
       setState(() {
-
         _items = items;
         isLoadingCommentDetails = false;
       });
-
     });
-
   }
 
 
@@ -175,21 +165,15 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-    return AppBuilder(builder: (context)
-    {
+    return AppBuilder(builder: (context) {
       return BaseView<CommentDialogViewModel>(
         onModelReady: (model) => model.getComments2(widget.appointmentID),
-        builder: (context , model , child) {
-
+        builder: (context, model, child) {
           model1 = model;
           if (model.state == ViewState.Busy) {
             return AppConstants.circulerProgressIndicator();
           } else {
-
-
-
-            return SingleChildScrollView(child:Container(
+            return SingleChildScrollView(child: Container(
 
               constraints: BoxConstraints(
                 minHeight: 0,
@@ -248,15 +232,27 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                             print('First text field: $text');
                           },
                           maxLines: 10,
-                          enabled: true,
+                          autofocus: autoFoucs,
                           controller: model.commentController,
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
                               contentPadding: EdgeInsets.fromLTRB(
-                                MediaQuery.of(context).size.width * 0.02,
-                                MediaQuery.of(context).size.height * 0.02,
-                                MediaQuery.of(context).size.height * 0.02,
-                                MediaQuery.of(context).size.width * 0.02,
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.02,
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .height * 0.02,
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .height * 0.02,
+                                MediaQuery
+                                    .of(context)
+                                    .size
+                                    .width * 0.02,
                               ),
                               border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(
@@ -272,7 +268,8 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                                   )),
                               hintText: "Type Comment",
                               errorStyle: TextStyle(color: Colors.red),
-                              suffixIcon: true == false ? Icon(Icons.keyboard_arrow_down) : null),
+                              suffixIcon: true == false ? Icon(
+                                  Icons.keyboard_arrow_down) : null),
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter text';
@@ -302,7 +299,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                   isCheck == true ? SizedBox(height: 10) : Container(),
                   isCheck == true ? Padding(
                     padding: SizeConfig.sidepadding,
-                    child:FilesPicked(),
+                    child: FilesPicked(),
                   ) : Container(),
                   SizedBox(height: 10),
                   Padding(
@@ -317,26 +314,29 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                           fontWeight: FontWeight.bold),
                       onTap: () async {
                         _onButtonClick();
-                        if(model.commentController.text.toString().length > 0 && listfiles.length > 0) {
+                        if (model.commentController.text
+                            .toString()
+                            .length > 0 && listfiles.length > 0) {
                           model.addComments(context, widget.appointmentID,
                               model.commentController.text.toString(),
                               listfiles);
-                          if(model.showErrorMessage == false){
+                          if (model.showErrorMessage == false) {
                             setState(() {
-                              AppConstants.showSuccessToast(context, "Wait a Few seconds...");
+                              AppConstants.showSuccessToast(
+                                  context, "Wait a Few seconds...");
                               isCheck = false;
                             });
                           }
-                          else{
-                            AppConstants.showFailToast(context, AppStrings.emptyFieldMessage);
+                          else {
+                            AppConstants.showFailToast(
+                                context, AppStrings.emptyFieldMessage);
                           }
                           if (model.state == ViewState.Idle) {
                             print(model.response_body);
                           }
-                        }else{
-
-                          AppConstants.showFailToast(context, "Comments and Files both should be added");
-
+                        } else {
+                          AppConstants.showFailToast(context,
+                              "Comments and Files both should be added");
                         }
                         // model.addComments(context , widget.appointmentID , model.commentController.text.toString());
                       },
@@ -356,8 +356,10 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                   SizedBox(
                     height: 10,
                   ),
-                  isLoadingCommentDetails == true ? LinearProgressIndicator() : ExpansionPanelList(
-                      expansionCallback: (panelIndex , isExpanded) {
+                  isLoadingCommentDetails == true
+                      ? LinearProgressIndicator()
+                      : ExpansionPanelList(
+                      expansionCallback: (panelIndex, isExpanded) {
                         _onButtonClick();
                         setState(() {
                           for (int i = 0; i < _items.length; i++) {
@@ -369,48 +371,97 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                           }
                         });
                       },
-                      children:  _items.asMap().entries.map((item1) {
+                      children: _items
+                          .asMap()
+                          .entries
+                          .map((item1) {
                         int index = item1.key;
                         return ExpansionPanel(
-                          headerBuilder: (context, isOpen){
+                          headerBuilder: (context, isOpen) {
                             return Padding(
                                 padding: EdgeInsets.all(15),
-                                child:Row(
+                                child: Row(
                                   children: [
                                     Container(
                                       width: 25,
                                       height: 25,
-                                      child: Center(child: Text("${index+1}",style: TextStyle(color: AppColors.whiteColor),)),
+                                      child: Center(child: Text("${index + 1}",
+                                        style: TextStyle(
+                                            color: AppColors.whiteColor),)),
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: AppColors.appThemeColor),
                                     ),
                                     SizedBox(width: 7),
-                                    Text(item1.value["title"] , style: TextStyle(fontSize: 16),),
+                                    Text(item1.value["title"],
+                                      style: TextStyle(fontSize: 16),),
                                   ],
                                 )
                             );
                           },
                           body: Container(
                               child: ListView.builder(
-                                itemCount: item1.value["description"].toString().split(",").length,
+                                itemCount: item1.value["description"]
+                                    .toString()
+                                    .split(",")
+                                    .length,
                                 physics: NeverScrollableScrollPhysics(),
                                 itemBuilder: (BuildContext context, int index) {
                                   return Row(
                                     children: [
                                       Container(
                                         height: 50,
-                                        width: MediaQuery.of(context).size.width/6,
+                                        width: MediaQuery
+                                            .of(context)
+                                            .size
+                                            .width / 6,
                                         child: Padding(
                                           padding: const EdgeInsets.all(10),
-                                          child: GestureDetector(onTap:(){
-                                            CommonUtils().downloadFile("https://enstall.boshposh.com/Upload/Appointment/"+item1.value["description"].toString().split(",")[index] , filename: item1.value["description"].toString().split(",")[index]);
+                                          child: GestureDetector(onTap: () {
+                                            CommonUtils().downloadFile(
+                                                "https://enstall.boshposh.com/Upload/Appointment/" +
+                                                    item1.value["description"]
+                                                        .toString()
+                                                        .split(",")[index],
+                                                filename: item1
+                                                    .value["description"]
+                                                    .toString()
+                                                    .split(",")[index]);
                                           },
-                                            child: Container(key: UniqueKey()  ,child:Image.asset(
-                                              (item1.value["description"].toString().split(",")[index].endsWith("jpg") ||item1.value["description"].toString().split(",")[index].endsWith("jpeg") || item1.value["description"].toString().split(",")[index].endsWith("png")) ? "assets/icon/img_image.png" : (item1.value["description"].toString().split(",")[index].endsWith("doc") || item1.value["description"].toString().split(",")[index].endsWith("docx")) ? "assets/icon/img_doc.png" :  item1.value["description"].toString().split(",")[index].endsWith("pdf") ? "assets/icon/img_pdf.png" : "assets/icon/img_xls.png",
-                                              width: 30,
-                                              height: 30,
-                                            ),),
+                                            child: Container(key: UniqueKey(),
+                                              child: Image.asset(
+                                                (item1.value["description"]
+                                                    .toString()
+                                                    .split(",")[index].endsWith(
+                                                    "jpg") ||
+                                                    item1.value["description"]
+                                                        .toString()
+                                                        .split(",")[index]
+                                                        .endsWith("jpeg") ||
+                                                    item1.value["description"]
+                                                        .toString()
+                                                        .split(",")[index]
+                                                        .endsWith("png"))
+                                                    ? "assets/icon/img_image.png"
+                                                    : (item1
+                                                    .value["description"]
+                                                    .toString()
+                                                    .split(",")[index].endsWith(
+                                                    "doc") ||
+                                                    item1.value["description"]
+                                                        .toString()
+                                                        .split(",")[index]
+                                                        .endsWith("docx"))
+                                                    ? "assets/icon/img_doc.png"
+                                                    : item1.value["description"]
+                                                    .toString()
+                                                    .split(",")[index].endsWith(
+                                                    "pdf")
+                                                    ? "assets/icon/img_pdf.png"
+                                                    : "assets/icon/img_xls.png",
+                                                width: 30,
+                                                height: 30,
+                                              ),),
                                           ),
                                         ),
                                       ),
@@ -418,15 +469,17 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                                         child: Container(
                                           height: 50,
                                           child: Expanded(
-                                            child: Center(child: Text(item1.value["description"].toString().split(",")[index])),
+                                            child: Center(child: Text(item1
+                                                .value["description"]
+                                                .toString()
+                                                .split(",")[index])),
                                           ),
                                         ),
                                       ),
                                     ],
                                   );
-
                                 },
-                                shrinkWrap: true,// Spacing between cells horizontally
+                                shrinkWrap: true, // Spacing between cells horizontally
 
 
                               )
@@ -442,6 +495,5 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
         },
       );
     });
-
   }
 }
