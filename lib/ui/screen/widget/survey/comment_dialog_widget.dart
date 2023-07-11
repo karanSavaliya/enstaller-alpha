@@ -38,7 +38,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
   bool isCheck = false;
   bool isLoadingCommentDetails = true;
 
-  bool autoFoucs = true;
+  bool autoFoucs = false;
   FocusNode _textFieldFocusNode = FocusNode();
 
   @override
@@ -83,7 +83,11 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                 setState(() {
                   listfiles.removeAt(index);
                 });
-
+                if(listfiles.isEmpty){
+                  setState(() {
+                    isCheck = false;
+                  });
+                }
               });
 
             },
@@ -94,7 +98,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
   }
 
   Future<void> pickfile() async {
-
+    _onButtonClick();
     final result = await FilePicker.getMultiFilePath(
         type: FileType.ANY,
         fileExtension: 'jpeg,jpg,png,doc,docx,pdf,xls,xlsx,jfif,pjpeg,pjp'
@@ -278,15 +282,6 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                           }),
                     ),
                   ),
-                  model.showErrorMessage
-                      ? SizedBox(height: 2)
-                      : SizedBox(height: 0),
-                  model.showErrorMessage
-                      ? Padding(
-                      padding: SizeConfig.sidepadding,
-                      child: ErrorTextWidget(
-                          errorMessage: AppStrings.emptyFieldMessage))
-                      : SizedBox(height: 0),
                   SizedBox(height: 10),
                   Padding(
                     padding: SizeConfig.sidepadding,
@@ -323,12 +318,18 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                       onTap: () async {
                         _onButtonClick();
                         if(model.commentController.text.toString().length > 0 && listfiles.length > 0) {
-                          setState(() {
-                            isCheck = false;
-                          });
                           model.addComments(context, widget.appointmentID,
                               model.commentController.text.toString(),
                               listfiles);
+                          if(model.showErrorMessage == false){
+                            setState(() {
+                              AppConstants.showSuccessToast(context, "Wait a Few seconds...");
+                              isCheck = false;
+                            });
+                          }
+                          else{
+                            AppConstants.showFailToast(context, AppStrings.emptyFieldMessage);
+                          }
                           if (model.state == ViewState.Idle) {
                             print(model.response_body);
                           }
@@ -357,69 +358,82 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                   ),
                   isLoadingCommentDetails == true ? LinearProgressIndicator() : ExpansionPanelList(
                       expansionCallback: (panelIndex , isExpanded) {
-
-
-
+                        _onButtonClick();
                         setState(() {
-
-                          setState(() {
-                            _items[panelIndex]['isExpanded'] = !isExpanded;
-                          });
-
+                          for (int i = 0; i < _items.length; i++) {
+                            if (i == panelIndex) {
+                              _items[i]['isExpanded'] = !isExpanded;
+                            } else {
+                              _items[i]['isExpanded'] = false;
+                            }
+                          }
                         });
                       },
-                      children:  _items.map((item1) => ExpansionPanel(
-
-
-
-                        headerBuilder: (context, isOpen){
-                          return Padding(
-                              padding: EdgeInsets.all(15),
-                              child:Text(item1["title"] , style: TextStyle(fontSize: 16),)
-                          );
-                        },
-                        body: Container(
-                            child: ListView.builder(
-                              itemCount: item1["description"].toString().split(",").length,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemBuilder: (BuildContext context, int index) {
-                                return Row(
+                      children:  _items.asMap().entries.map((item1) {
+                        int index = item1.key;
+                        return ExpansionPanel(
+                          headerBuilder: (context, isOpen){
+                            return Padding(
+                                padding: EdgeInsets.all(15),
+                                child:Row(
                                   children: [
                                     Container(
-                                      height: 50,
-                                      width: MediaQuery.of(context).size.width/6,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10),
-                                        child: GestureDetector(onTap:(){
-                                          CommonUtils().downloadFile("https://enstall.boshposh.com/Upload/Appointment/"+item1["description"].toString().split(",")[index] , filename: item1["description"].toString().split(",")[index]);
-                                        },
-                                          child: Container(key: UniqueKey()  ,child:Image.asset(
-                                            (item1["description"].toString().split(",")[index].endsWith("jpg") ||item1["description"].toString().split(",")[index].endsWith("jpeg") || item1["description"].toString().split(",")[index].endsWith("png")) ? "assets/icon/img_image.png" : (item1["description"].toString().split(",")[index].endsWith("doc") || item1["description"].toString().split(",")[index].endsWith("docx")) ? "assets/icon/img_doc.png" :  item1["description"].toString().split(",")[index].endsWith("pdf") ? "assets/icon/img_pdf.png" : "assets/icon/img_xls.png",
-                                            width: 30,
-                                            height: 30,
-                                          ),),
-                                        ),
-                                      ),
+                                      width: 25,
+                                      height: 25,
+                                      child: Center(child: Text("${index+1}",style: TextStyle(color: AppColors.whiteColor),)),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: AppColors.appThemeColor),
                                     ),
-                                    Expanded(
-                                      child: Container(
-                                        height: 50,
-                                        child: Expanded(
-                                          child: Center(child: Text(item1["description"].toString().split(",")[index])),
-                                        ),
-                                      ),
-                                    ),
+                                    SizedBox(width: 7),
+                                    Text(item1.value["title"] , style: TextStyle(fontSize: 16),),
                                   ],
-                                );
+                                )
+                            );
+                          },
+                          body: Container(
+                              child: ListView.builder(
+                                itemCount: item1.value["description"].toString().split(",").length,
+                                physics: NeverScrollableScrollPhysics(),
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Row(
+                                    children: [
+                                      Container(
+                                        height: 50,
+                                        width: MediaQuery.of(context).size.width/6,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10),
+                                          child: GestureDetector(onTap:(){
+                                            CommonUtils().downloadFile("https://enstall.boshposh.com/Upload/Appointment/"+item1.value["description"].toString().split(",")[index] , filename: item1.value["description"].toString().split(",")[index]);
+                                          },
+                                            child: Container(key: UniqueKey()  ,child:Image.asset(
+                                              (item1.value["description"].toString().split(",")[index].endsWith("jpg") ||item1.value["description"].toString().split(",")[index].endsWith("jpeg") || item1.value["description"].toString().split(",")[index].endsWith("png")) ? "assets/icon/img_image.png" : (item1.value["description"].toString().split(",")[index].endsWith("doc") || item1.value["description"].toString().split(",")[index].endsWith("docx")) ? "assets/icon/img_doc.png" :  item1.value["description"].toString().split(",")[index].endsWith("pdf") ? "assets/icon/img_pdf.png" : "assets/icon/img_xls.png",
+                                              width: 30,
+                                              height: 30,
+                                            ),),
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          height: 50,
+                                          child: Expanded(
+                                            child: Center(child: Text(item1.value["description"].toString().split(",")[index])),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
 
-                              },
-                              shrinkWrap: true,// Spacing between cells horizontally
+                                },
+                                shrinkWrap: true,// Spacing between cells horizontally
 
 
-                            )
-                        ),
-                        isExpanded: item1['isExpanded'],
-                      ),).toList())
+                              )
+                          ),
+                          isExpanded: item1.value['isExpanded'],
+                        );
+                      },).toList())
 
                 ],
               ),

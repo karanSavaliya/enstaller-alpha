@@ -5,13 +5,19 @@ import 'package:flutter/material.dart';
 class ElectricityTextFieldWidget extends StatelessWidget {
   final String hintText;
   final int maxLine;
+  final VoidCallback onTap;
+  final TextEditingController controller;
 
-  ElectricityTextFieldWidget({this.hintText,this.maxLine});
+  ElectricityTextFieldWidget({this.hintText,this.maxLine,this.onTap,this.controller});
+
+  TextEditingController nullController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       maxLines: maxLine == null ? 1 : maxLine,
+      onTap: onTap,
+      controller: controller == null ? nullController : controller,
       decoration: InputDecoration(
         hintText: hintText,
         isDense: true,

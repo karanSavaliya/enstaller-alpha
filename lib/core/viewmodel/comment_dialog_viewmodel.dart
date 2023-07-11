@@ -95,8 +95,6 @@ class CommentDialogViewModel extends BaseModel {
           });
       if (responseModel != null) {
         commentController.clear();
-        AppConstants.showSuccessToast(context, "Comment Submitted");
-        Navigator.pop(context);
         var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.insertAttachment;
         var map = {
           'intDetailsId': responseModel,
@@ -113,6 +111,8 @@ class CommentDialogViewModel extends BaseModel {
         final response  = await _apiService.uploadFilesWithParameters(url , list_files , map);
         response_body  = response;
         print(response_body);
+        AppConstants.showSuccessToast(context, "Comment Submitted");
+        Navigator.pop(context);
       }
     } else {
       showErrorMessage = true;
