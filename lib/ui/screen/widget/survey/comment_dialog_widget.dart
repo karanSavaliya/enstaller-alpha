@@ -41,6 +41,9 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
   bool autoFoucs = false;
   FocusNode _textFieldFocusNode = FocusNode();
 
+  bool isLoading = false;
+  List<bool> fileDownloadCheck = [];
+
   @override
   void initState() {
     // TODO: implement initState
@@ -77,8 +80,9 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
           children: List.generate(
             listfiles.length, // Assuming 'myList' is the list of data
                 (index) {
+              fileDownloadCheck.add(false);
               return DeletableTag(
-                  path: listfiles[index]["value"], onDelete: () {
+                  index: index, fileDownloadCheck: fileDownloadCheck, isLoading: isLoading, path: listfiles[index]["value"], onDelete: () {
                 setState(() {
                   listfiles.removeAt(index);
                 });
@@ -137,6 +141,8 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
       List<String> filepath = [];
       appointmentAttachemnts.forEach((element) {
         filepath.add(element.strFileName);
+        // fileDownloadCheck[index] = true;
+        // setState(() {});
       });
 
 
@@ -174,7 +180,6 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
             return AppConstants.circulerProgressIndicator();
           } else {
             return SingleChildScrollView(child: Container(
-
               constraints: BoxConstraints(
                 minHeight: 0,
                 maxHeight: double.infinity,
@@ -322,9 +327,10 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                               listfiles);
                           if (model.showErrorMessage == false) {
                             setState(() {
+                              isLoading = true;
                               AppConstants.showSuccessToast(
                                   context, "Wait a Few seconds...");
-                              isCheck = false;
+                              isCheck = true;
                             });
                           }
                           else {
