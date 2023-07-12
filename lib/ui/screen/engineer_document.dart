@@ -1,4 +1,7 @@
 // @dart=2.9
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +12,7 @@ import '../../core/constant/appconstant.dart';
 import '../../core/constant/size_config.dart';
 import '../../core/provider/app_state_provider.dart';
 import '../shared/app_drawer_widget.dart';
+import 'document_view.dart';
 
 class EngineerDocumentScreen extends StatefulWidget {
   @override
@@ -64,7 +68,7 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
             ),
           ),
           onChanged: (val) {
-            appStateProvider.onSearch(val);
+            appStateProvider.performSearch(val);
           },
         ) : Text(AppStrings.ENGINEER_DOCUMNETS,
           style: getTextStyle(color: AppColors.whiteColor, isBold: false),
@@ -98,7 +102,7 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
             child: ListView.builder(
               physics: const ScrollPhysics(
               parent: AlwaysScrollableScrollPhysics()),
-              itemCount: appStateProvider.engineerDocumentList.length,
+              itemCount: appStateProvider.searchBoxType == false ? appStateProvider.engineerDocumentList.length : appStateProvider.filteredEngineerDocumentList.length,
               itemBuilder: (context, i) {
                 return Padding(
                   padding: SizeConfig.verticalC13Padding,
@@ -130,7 +134,7 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                 Expanded(
                                   flex: 3,
                                   child: Text(
-                                    appStateProvider.engineerDocumentList[i].docTypeName ?? "",
+                                    appStateProvider.searchBoxType == false ? appStateProvider.engineerDocumentList[i].docTypeName : appStateProvider.filteredEngineerDocumentList[i].docTypeName ?? "",
                                     textAlign: TextAlign.start,
                                     style: TextStyle(color: AppColors.whiteColor),
                                   ),
@@ -157,9 +161,27 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                 Expanded(
                                   flex: 3,
                                   child: InkWell(
-                                    onTap: () {},
+                                    onTap: () async {
+                                      String _url = appStateProvider.searchBoxType == false ? "https://enstall.boshposh.com/Upload/EngineerDocument/" + appStateProvider.engineerDocumentList[i].strEngDocument :
+                                      "https://enstall.boshposh.com/Upload/EngineerDocument/" + appStateProvider.filteredEngineerDocumentList[i].strEngDocument;
+                                      String extension = _url.split('.').last;
+                                      if (extension.toUpperCase() == "PDF") {
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DocumentView(doc: _url)));
+                                      } else {
+                                        try {
+                                          var response = await http.get(Uri.parse(_url));
+                                          var dir = await getTemporaryDirectory();
+                                          File file = new File(appStateProvider.searchBoxType == false ? dir.path + appStateProvider.engineerDocumentList[i].strEngDocument : dir.path + appStateProvider.filteredEngineerDocumentList[i].strEngDocument);
+                                          file.writeAsBytesSync(response.bodyBytes, flush: true);
+                                          share(file.path);
+                                        } catch (e) {
+                                          print("error..........................");
+                                          print(e);
+                                        }
+                                      }
+                                    },
                                     child: Text(
-                                      appStateProvider.engineerDocumentList[i].strEngDocument ?? "",
+                                      appStateProvider.searchBoxType == false ? appStateProvider.engineerDocumentList[i].strEngDocument : appStateProvider.filteredEngineerDocumentList[i].strEngDocument ?? "",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(color: AppColors.darkGrayColor,fontWeight: FontWeight.normal),
                                     ),

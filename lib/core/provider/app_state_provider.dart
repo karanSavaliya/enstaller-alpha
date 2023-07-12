@@ -39,26 +39,35 @@ class AppStateProvider extends ChangeNotifier {
     if (_searchBool) {
       _searchBool = false;
       notifyListeners();
-    }
-    else{
+    } else {
       _searchBool = true;
       notifyListeners();
     }
   }
 
-  List<EngineerDocumentModel> oldEngineerDocumentList = [];
+  final List<EngineerDocumentModel> _filteredEngineerDocumentList = [];
+  List<EngineerDocumentModel> get filteredEngineerDocumentList => _filteredEngineerDocumentList;
 
-  void onSearch(String val) {
-    oldEngineerDocumentList = _engineerDocumentList;
-    engineerDocumentList.clear();
-    _engineerDocumentList.clear();
-    notifyListeners();
-    oldEngineerDocumentList.forEach((element) {
-      if (element.docTypeName.toLowerCase().contains(val.toLowerCase()) ||
-          element.strEngDocument.toLowerCase().contains(val.toLowerCase())) {
-        _engineerDocumentList.add(element);
-        notifyListeners();
+  bool _searchBoxType = false;
+  bool get searchBoxType => _searchBoxType;
+
+  void performSearch(String query) {
+    query = query.toLowerCase();
+    _filteredEngineerDocumentList.clear();
+    if (query.isNotEmpty) {
+      _searchBoxType = true;
+      notifyListeners();
+      for (var document in _engineerDocumentList) {
+        if (document.docTypeName.toLowerCase().contains(query) ||
+            document.strEngDocument.toLowerCase().contains(query)) {
+          _filteredEngineerDocumentList.add(document);
+        }
       }
-    });
+    } else {
+      _filteredEngineerDocumentList.addAll(_engineerDocumentList);
+      _searchBoxType = false;
+      notifyListeners();
+    }
+    notifyListeners();
   }
 }

@@ -12,9 +12,9 @@ import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'add_order_screen.dart';
 import 'order_detail_screen.dart';
-
 
 class OrderScreen extends StatefulWidget {
   @override
@@ -62,7 +62,7 @@ class _OrderScreenState extends State<OrderScreen> {
                       onTap: () {
                         Navigator.of(context)
                             .push(new MaterialPageRoute(
-                                builder: (context) => AddOrderScreen()))
+                            builder: (context) => AddOrderScreen()))
                             .whenComplete(() => {model.initializeData()});
                       },
                     )),
@@ -71,44 +71,44 @@ class _OrderScreenState extends State<OrderScreen> {
             body: model.state == ViewState.Busy
                 ? AppConstants.circulerProgressIndicator()
                 : RefreshIndicator(
-                    onRefresh: () => Future.delayed(Duration.zero)
-                        .whenComplete(() => model.initializeData()),
-                    child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxHeight: MediaQuery.of(context).size.height),
-                        child: (model.list.isNotEmpty)
-                            ? Padding(
-                                padding: SizeConfig.padding,
-                                child: ListView.builder(
-                                  physics: const ScrollPhysics(
-                                      parent: AlwaysScrollableScrollPhysics()),
-                                  itemCount: model.list.length,
-                                  itemBuilder: (context, i) {
-                                    return Padding(
-                                      padding: SizeConfig.verticalC13Padding,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            color: AppColors
-                                                .appointmentBackGroundColor,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Column(
-                                          children: [
-                                            _orderModelWidget(
-                                                model.list[i], model)
+              onRefresh: () => Future.delayed(Duration.zero)
+                  .whenComplete(() => model.initializeData()),
+              child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      maxHeight: MediaQuery.of(context).size.height),
+                  child: (model.list.isNotEmpty)
+                      ? Padding(
+                    padding: SizeConfig.padding,
+                    child: ListView.builder(
+                      physics: const ScrollPhysics(
+                          parent: AlwaysScrollableScrollPhysics()),
+                      itemCount: model.list.length,
+                      itemBuilder: (context, i) {
+                        return Padding(
+                          padding: SizeConfig.verticalC13Padding,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: AppColors
+                                    .appointmentBackGroundColor,
+                                borderRadius:
+                                BorderRadius.circular(10)),
+                            child: Column(
+                              children: [
+                                _orderModelWidget(
+                                    model.list[i], model)
 //                                Divider(
 //                                  color: AppColors.darkGrayColor,
 //                                  thickness: 1.0,
 //                                ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              )
-                            : Center(child: Text(AppStrings.noDataFound))),
-                  ));
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                      : Center(child: Text(AppStrings.noDataFound))),
+            ));
       },
     );
   }
@@ -149,8 +149,8 @@ class _OrderScreenState extends State<OrderScreen> {
                     onTap: () {
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (context) => OrderDetailScreen(
-                                intId: orderModel.intOrderId,
-                              )));
+                            intId: orderModel.intOrderId,
+                          )));
                     },
                   ),
                 ),
@@ -168,10 +168,9 @@ class _OrderScreenState extends State<OrderScreen> {
                       if (orderModel.strStatus?.trim() != "Closed")
                         Navigator.of(context)
                             .push(new MaterialPageRoute(
-                                builder: (context) => AddOrderScreen(
-                                      intOrderId: orderModel.intOrderId,
-                                      intrownum: orderModel.rowNumber
-                                    )))
+                            builder: (context) => AddOrderScreen(
+                              intOrderId: orderModel.intOrderId,
+                            )))
                             .whenComplete(() => {model.initializeData()});
                     },
                   ),

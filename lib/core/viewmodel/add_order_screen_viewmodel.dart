@@ -18,6 +18,7 @@ import 'package:enstaller/ui/util/common_utils.dart';
 import 'package:flutter/cupertino.dart';
 
 class AddOrderScreenViewModel extends BaseModel {
+
   List<Map<String, dynamic>> itemList = [];
   List<Map<String, dynamic>> contractList = [];
   bool isSaving = false;
@@ -35,8 +36,13 @@ class AddOrderScreenViewModel extends BaseModel {
     //Fetch from api
     user = await Prefs.getUser();
     List<ItemOrder> iList = await _apiService.getItemsForOrder(user);
-    itemList.clear();
+
+    print(iList.length.toString()+"(((((");
+
     iList.forEach((element) {
+
+      print(element.strName);
+
       var exists = itemList.where((ele) => ele['label'] == element.strName).toList();
       var strName = element.strName;
       if (exists.length > 0) {
@@ -53,16 +59,16 @@ class AddOrderScreenViewModel extends BaseModel {
     contractList.clear();
     contractList = cList
         .map((ContractOrder contractOrder) => {
-              'label': contractOrder.strName,
-              'value': contractOrder.intId.toString()
-            })
-        .toList();
+      'label': contractOrder.strName,
+      'value': contractOrder.intId.toString()
+    }).toList();
+
     if (intId != null) {
       intOrderId = intId;
       //fetch orders
       orderLineDetailModelList =
-          await _apiService.getStockOrderLineItemsByOrderId(
-              this.intOrderId.toString(), user.intCompanyId);
+      await _apiService.getStockOrderLineItemsByOrderId(
+          this.intOrderId.toString(), user.intCompanyId);
       orderLineDetailModelList.forEach((element) {
         SaveOrderLine saveOrderLine = SaveOrderLine(
             intId: element.intId,
@@ -88,22 +94,28 @@ class AddOrderScreenViewModel extends BaseModel {
     setState(ViewState.Idle);
   }
 
+
   void addOrderItem() {
     setState(ViewState.Busy);
 
     SaveOrderLine saveOrderLine =
-        SaveOrderLine(intCompanyId: user.intCompanyId);
+    SaveOrderLine(intCompanyId: user.intCompanyId);
     if (orderItems.isNotEmpty) {
       OrderItem _previtem = orderItems[orderItems.length - 1];
       if (_previtem.saveOrderLine.intItemId != null &&
           _previtem.saveOrderLine.decQty != null)
-        orderItems.add(OrderItem(
-            key: GlobalKey(),
-            itemList: itemList,
-            contractList: contractList,
-            saveOrderLine: saveOrderLine,
-            onDelete: () => onDelete(saveOrderLine)));
+
+        print("val1");
+      orderItems.add(OrderItem(
+          key: GlobalKey(),
+          itemList: itemList,
+          contractList: contractList,
+          saveOrderLine: saveOrderLine,
+          onDelete: () => onDelete(saveOrderLine)));
     } else {
+
+      print("val2");
+
       orderItems.add(OrderItem(
           key: GlobalKey(),
           itemList: itemList,
@@ -114,16 +126,18 @@ class AddOrderScreenViewModel extends BaseModel {
     setState(ViewState.Idle);
   }
 
+
   void onDelete(SaveOrderLine saveOrderLine) {
     setState(ViewState.Busy);
     var find = orderItems.firstWhere(
-      (it) => it.saveOrderLine == saveOrderLine,
+          (it) => it.saveOrderLine == saveOrderLine,
       orElse: () => null,
     );
     if (find != null) orderItems.removeAt(orderItems.indexOf(find));
 
     setState(ViewState.Idle);
   }
+
 
   Future<void> onSave(BuildContext context) async {
     setState(ViewState.Busy);
@@ -150,7 +164,7 @@ class AddOrderScreenViewModel extends BaseModel {
           bisBulkUpload: false,
           intCreatedBy: int.parse(user.id),
           dteCollectionDate:
-              CommonUtils.commonUtilsInstance.formatDate2(DateTime.now()),
+          CommonUtils.commonUtilsInstance.formatDate2(DateTime.now()),
           bisAlive: true,
           intRegionId: 1,
           strThirdParty: "a",
@@ -208,7 +222,7 @@ class AddOrderScreenViewModel extends BaseModel {
           //post saveOrderOnline
           try {
             ResponseModel responseModelLine =
-                await _apiService.saveOrderLine(saveOrderLine);
+            await _apiService.saveOrderLine(saveOrderLine);
             if (responseModelLine.statusCode == 1 &&
                 responseModelLine.response.toLowerCase() == 'true') {
               //saved successfully
@@ -240,5 +254,4 @@ class AddOrderScreenViewModel extends BaseModel {
     Navigator.of(context).pop();
     setState(ViewState.Idle);
   }
-
 }

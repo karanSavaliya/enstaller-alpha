@@ -1,24 +1,19 @@
-
 // @dart=2.9
-import 'dart:convert';
 
 
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
-import 'package:enstaller/core/constant/image_file.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/model/save_order_line.dart';
-import 'package:enstaller/ui/screen/widget/app_text_field_widget.dart';
 import 'package:enstaller/ui/util/SearchPage.dart';
-import 'package:enstaller/ui/util/SelectFormField.dart';
 import 'package:enstaller/ui/util/dialog_util.dart';
 import 'package:flutter/material.dart';
-import 'package:select_form_field/select_form_field.dart' as sff;
-
+import 'package:select_form_field/select_form_field.dart';
 
 typedef OnDelete();
 
 class OrderItem extends StatefulWidget {
+
   final SaveOrderLine saveOrderLine;
   final OnDelete onDelete;
   final List<Map<String, dynamic>> itemList;
@@ -29,41 +24,21 @@ class OrderItem extends StatefulWidget {
 
   OrderItem(
       {Key key,
-      this.saveOrderLine,
-      this.onDelete,
-      this.itemList,
-      this.contractList})
+        this.saveOrderLine,
+        this.onDelete,
+        this.itemList,
+        this.contractList})
       : super(key: key);
 
   @override
   _OrderItemState createState() => state;
+
 }
 
 class _OrderItemState extends State<OrderItem> {
-
-
   final form = GlobalKey<FormState>();
   var id = -1;
-  var cValue , corder;
-  var item;
-
-  TextEditingController controller = new TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.saveOrderLine.intContractId != null)
-      cValue = widget.saveOrderLine.intContractId.toString();
-
-    if(widget.saveOrderLine.intItemId.toString() != "null") {
-      String vlue = widget.itemList.where((element) =>
-      element["value"].toString() == widget.saveOrderLine.intItemId.toString())
-          .toList()[0]["label"];
-      controller.text = vlue;
-    }
-
-    print("ooooooooo____"+widget.saveOrderLine.intItemId.toString());
-  }
+  var cValue;
 
 
   Future<String> showInformationDialog(BuildContext context) async {
@@ -88,6 +63,27 @@ class _OrderItemState extends State<OrderItem> {
   }
 
 
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.saveOrderLine.intContractId != null)
+      cValue = widget.saveOrderLine.intContractId.toString();
+
+    if(widget.saveOrderLine.intItemId.toString() != "null") {
+
+      String vlue = widget.itemList.where((element) =>
+      element["value"].toString() == widget.saveOrderLine.intItemId.toString()).toList()[0]["label"];
+
+      controller.text = vlue;
+
+    }
+
+  }
+
+  TextEditingController controller = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
 
@@ -101,40 +97,40 @@ class _OrderItemState extends State<OrderItem> {
           child: Column(
             children: [
               Padding(
-                padding: SizeConfig.sidepadding,
+                  padding: SizeConfig.sidepadding,
 
-              child:Container(child:TextFormField(
-                obscureText: false,
-                readOnly: true,
-                controller: controller,
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Items',
-                  hintText: 'Select Items',
-                ),
-                onTap:() async {
+                  child:Container(child:TextFormField(
+                    obscureText: false,
+                    readOnly: true,
+                    controller: controller,
+                    decoration: InputDecoration(
+                      border: UnderlineInputBorder(),
+                      labelText: 'Items',
+                      hintText: 'Select Items',
+                    ),
+                    onTap:() async {
 
-                  final res = await showInformationDialog(context);
-                  controller.text = res.split("**")[0];
+                      final res = await showInformationDialog(context);
+                      controller.text = res.split("**")[0];
 
-    setState(() {
-    id = int.parse(res.split("**")[1]);
-    print("cValue ---======> 11111  "+res.split("**")[1]);
-    var value = '';
-    widget.itemList.forEach((element) {
-    if (element['value'] == res.split("**")[1]) {
-    value = element['intContractId'].toString();
-    }
-    });
-    print("cValue ---======> 2222 --> $value");
-    cValue = value;
-    widget.saveOrderLine.intItemId = int.parse(res.split("**")[1]);
-    });
-    },
+                      setState(() {
+                        id = int.parse(res.split("**")[1]);
+                        print("cValue ---======> 11111  "+res.split("**")[1]);
+                        var value = '';
+                        widget.itemList.forEach((element) {
+                          if (element['value'] == res.split("**")[1]) {
+                            value = element['intContractId'].toString();
+                          }
+                        });
+                        print("cValue ---======> 2222 --> $value");
+                        cValue = value;
+                        widget.saveOrderLine.intItemId = int.parse(res.split("**")[1]);
+                      });
+                    },
 
 
-              ),)
-               /*child: SelectFormField(
+                  ),)
+                /*child: SelectFormField(
 
                   initialValue: widget.saveOrderLine.intItemId.toString() ?? '',
                   enabled: widget.itemList.isNotEmpty,
@@ -184,13 +180,13 @@ class _OrderItemState extends State<OrderItem> {
                     items: cValue == null
                         ? []
                         : [
-                            DropdownMenuItem<String>(
-                              child: Text(widget.contractList.firstWhere(
-                                  (element) =>
-                                      element['value'] == cValue)['label']),
-                              value: cValue.toString(),
-                            )
-                          ],
+                      DropdownMenuItem<String>(
+                        child: Text(widget.contractList.firstWhere(
+                                (element) =>
+                            element['value'] == cValue)['label']),
+                        value: cValue.toString(),
+                      )
+                    ],
                     onSaved: (val) {
                       print('intContractId value is $val');
                       widget.saveOrderLine.intContractId = int.parse(val);
@@ -208,25 +204,25 @@ class _OrderItemState extends State<OrderItem> {
                   children: [
                     Expanded(
                         child: TextFormField(
-                      maxLength: 50,
-                      initialValue:
+                          maxLength: 50,
+                          initialValue:
                           widget.saveOrderLine.decQty?.toString() ?? '',
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        labelText: AppStrings.QUANTITY,
-                        hintText: AppStrings.QUANTITY,
-                      ),
-                      validator: (value) {
-                        if (value.trim().isEmpty) {
-                          return 'Required';
-                        } else
-                          return null;
-                      },
-                      onChanged: (val) =>
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: AppStrings.QUANTITY,
+                            hintText: AppStrings.QUANTITY,
+                          ),
+                          validator: (value) {
+                            if (value.trim().isEmpty) {
+                              return 'Required';
+                            } else
+                              return null;
+                          },
+                          onChanged: (val) =>
                           widget.saveOrderLine.decQty = int.parse(val.trim()),
-                      onSaved: (val) =>
+                          onSaved: (val) =>
                           widget.saveOrderLine.decQty = int.parse(val.trim()),
-                    )),
+                        )),
                     SizeConfig.horizontalSpaceMedium(),
                     IconButton(
                         icon: Icon(
@@ -264,6 +260,4 @@ class _OrderItemState extends State<OrderItem> {
 
     return valid;
   }
-
-
 }

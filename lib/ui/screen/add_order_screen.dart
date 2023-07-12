@@ -11,9 +11,8 @@ import 'package:flutter/services.dart';
 
 class AddOrderScreen extends StatefulWidget {
   final intOrderId;
-  final intrownum;
 
-  AddOrderScreen({this.intOrderId , this.intrownum});
+  AddOrderScreen({this.intOrderId});
 
   @override
   _AddOrderScreenState createState() => _AddOrderScreenState();
@@ -21,14 +20,16 @@ class AddOrderScreen extends StatefulWidget {
 
 class _AddOrderScreenState extends State<AddOrderScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<AddOrderScreenViewModel>(
-
-      onModelReady: (model) => model.intOrderId == null ? model.initializeData(null) : model.initializeData(widget.intOrderId),
+      onModelReady: (model) => widget.intOrderId == null ?  model.initializeData(null) :model.initializeData(widget.intOrderId),
       builder: (context, model, child) {
+
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
@@ -45,57 +46,53 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
                 centerTitle: true),
             body: model.state == ViewState.Busy && !model.isSaving
                 ? AppConstants.circulerProgressIndicator()
-                : Container(
-                   height: MediaQuery.of(context).size.height,
-
-                  child: SingleChildScrollView(
-                      child: Padding(
-                        padding: SizeConfig.verticalBigPadding * 2,
-                        child: Column(
-                          children: [
-                            ListView.builder(
-                                shrinkWrap: true,
-                                physics: NeverScrollableScrollPhysics(),
-                                itemCount: model.orderItems.length,
-                                itemBuilder: (context, index) {
-                                  return model.orderItems[index];
-                                }),
-                            SizeConfig.verticalSpaceBigMedium(),
-                            Padding(
-                              padding: SizeConfig.sidepadding,
-                              child: AppButton(
-                                height: 40,
-                                radius: 15,
-                                color: AppColors.appThemeColor,
-                                textStyle: TextStyle(color: AppColors.whiteColor),
-                                buttonText: AppStrings.ADD_LINE_ITEM,
-                                onTap: () {
-                                  model.addOrderItem();
-                                },
-                              ),
-                            ),
-                            SizeConfig.verticalSpace(12),
-                            model.state == ViewState.Busy && model.isSaving
-                                ? AppConstants.circulerProgressIndicator()
-                                : Padding(
-                                    padding: SizeConfig.sidepadding,
-                                    child: AppButton(
-                                      height: 40,
-                                      radius: 15,
-                                      color: AppColors.appThemeColor,
-                                      textStyle:
-                                          TextStyle(color: AppColors.whiteColor),
-                                      buttonText: AppStrings.save,
-                                      onTap: () {
-                                        model.onSave(context);
-                                      },
-                                    ),
-                                  )
-                          ],
-                        ),
+                : SingleChildScrollView(
+              child: Padding(
+                padding: SizeConfig.verticalBigPadding * 2,
+                child: Column(
+                  children: [
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: model.orderItems.length,
+                        itemBuilder: (context, index) {
+                          return model.orderItems[index];
+                        }),
+                    SizeConfig.verticalSpaceBigMedium(),
+                    Padding(
+                      padding: SizeConfig.sidepadding,
+                      child: AppButton(
+                        height: 40,
+                        radius: 15,
+                        color: AppColors.appThemeColor,
+                        textStyle: TextStyle(color: AppColors.whiteColor),
+                        buttonText: AppStrings.ADD_LINE_ITEM,
+                        onTap: () {
+                          model.addOrderItem();
+                        },
                       ),
                     ),
-                ));
+                    SizeConfig.verticalSpace(12),
+                    model.state == ViewState.Busy && model.isSaving
+                        ? AppConstants.circulerProgressIndicator()
+                        : Padding(
+                      padding: SizeConfig.sidepadding,
+                      child: AppButton(
+                        height: 40,
+                        radius: 15,
+                        color: AppColors.appThemeColor,
+                        textStyle:
+                        TextStyle(color: AppColors.whiteColor),
+                        buttonText: AppStrings.save,
+                        onTap: () {
+                          model.onSave(context);
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ));
       },
     );
   }
