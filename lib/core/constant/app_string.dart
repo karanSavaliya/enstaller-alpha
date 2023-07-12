@@ -41,6 +41,7 @@ class AppStrings {
   static const emailnotification = 'Email Notification';
   static const SMSnotification = 'SMS Notification';
   static const DOCUMNETS = 'DOCUMENTS';
+  static const ENGINEER_DOCUMNETS = 'ENGINEER DOCUMENTS';
   static const APPOINTMENT_DETAILS = 'APPOINTMENT DETAILS';
   static const ADD_ORDER = 'ADD ORDER';
   static const UPDATE_ORDER = 'ADD ORDER';

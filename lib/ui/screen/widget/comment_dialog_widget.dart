@@ -477,9 +477,8 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                         ),
                         isExpanded: item1.value['isExpanded'],
                       );
-                    })
-                        .toList(),
-                  )
+                    }).toList(),
+                  ),
                 ],
               ),
             ));

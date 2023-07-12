@@ -26,7 +26,8 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<AddOrderScreenViewModel>(
-      onModelReady: (model) => model.initializeData(widget.intOrderId),
+
+      onModelReady: (model) => model.intOrderId == null ? model.initializeData(null) : model.initializeData(widget.intOrderId),
       builder: (context, model, child) {
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,

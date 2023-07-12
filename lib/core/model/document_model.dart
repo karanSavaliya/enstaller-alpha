@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:enstaller/core/constant/app_string.dart';
 
 class DocumentModel {

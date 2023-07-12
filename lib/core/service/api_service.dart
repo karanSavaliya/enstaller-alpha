@@ -362,7 +362,6 @@ class ApiService extends BaseApi {
   Future<dynamic> getDocumentList(DocumentModel documentModel) {
     print(documentModel.toJson());
     return postRequest(ApiUrls.getSupplierDocument, (r) {
-      print(json.decode(r.body));
       return (json.decode(r.body) as List)
           .map((e) => DocumentResponseModel.fromJson(e))
           .toList();

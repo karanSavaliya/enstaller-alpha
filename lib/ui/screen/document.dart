@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -12,7 +11,6 @@ import 'package:enstaller/ui/screen/document_view.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import 'package:http/http.dart' as http;
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -24,7 +22,7 @@ class DocumentScreen extends StatefulWidget {
 }
 
 class _DocumentScreenState extends State<DocumentScreen> {
-  //Declaration of scaffold key
+
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController controller = TextEditingController();
 
@@ -37,9 +35,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<DocumnetViewModel>(
       onModelReady: (model) => model.getDocumnetList(),
       builder: (context, model, child) {

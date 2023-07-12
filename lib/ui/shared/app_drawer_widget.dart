@@ -19,6 +19,7 @@ import 'package:enstaller/ui/screen/today_appointments.dart';
 import 'package:enstaller/ui/screen/widget/drawer_row_widget.dart';
 import 'package:flutter/material.dart';
 import '../screen/electricity_screen.dart';
+import '../screen/engineer_document.dart';
 import '../screen/gas_screen.dart';
 
 class AppDrawerWidget extends StatelessWidget {
@@ -139,6 +140,14 @@ class AppDrawerWidget extends StatelessWidget {
                       onTap: () {
                         Navigator.of(context).push(new MaterialPageRoute(
                             builder: (context) => DocumentScreen()));
+                      },
+                    ),
+                    DrawerRowWidget(
+                      title: 'Engineer Documents',
+                      assetPath: ImageFile.document,
+                      onTap: () {
+                        Navigator.of(context).push(new MaterialPageRoute(
+                            builder: (context) => EngineerDocumentScreen()));
                       },
                     ),
                     DrawerRowWidget(

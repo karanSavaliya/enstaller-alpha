@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:enstaller/app_router.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/app_themes.dart';
@@ -9,7 +8,6 @@ import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/userprovider.dart';
 import 'package:enstaller/ui/login_screen.dart';
-import 'package:enstaller/ui/screen/Reset_Password.dart';
 import 'package:enstaller/ui/screen/VerifyEmail.dart';
 import 'package:enstaller/ui/screen/home_screen.dart';
 import 'package:enstaller/ui/screen/non_technical_user_screens/customer_list_screen.dart';
@@ -17,11 +15,9 @@ import 'package:enstaller/ui/screen/warehouse_screens/check_order_assign_stcok.d
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
+import 'core/provider/app_state_provider.dart';
 import 'core/viewmodel/appthemeviewmodel.dart';
 import 'ui/screen/maps_route_planner_plotmarker.dart';
-
-
 
 void main() {
 
@@ -49,7 +45,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: AppThemeViewModel(AppThemes.light)),
-        ChangeNotifierProvider.value(value: UserProvider(logInUser))
+        ChangeNotifierProvider.value(value: UserProvider(logInUser)),
+        ChangeNotifierProvider<AppStateProvider>.value(value: AppStateProvider()),
       ],
       child: MainMaterialApp(
         loginUser: logInUser,

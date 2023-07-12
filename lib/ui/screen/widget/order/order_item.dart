@@ -55,8 +55,12 @@ class _OrderItemState extends State<OrderItem> {
     if (widget.saveOrderLine.intContractId != null)
       cValue = widget.saveOrderLine.intContractId.toString();
 
-    String vlue = widget.itemList.where((element) => element["value"].toString() == widget.saveOrderLine.intItemId.toString()).toList()[0]["label"];
-     controller.text = vlue;
+    if(widget.saveOrderLine.intItemId.toString() != "null") {
+      String vlue = widget.itemList.where((element) =>
+      element["value"].toString() == widget.saveOrderLine.intItemId.toString())
+          .toList()[0]["label"];
+      controller.text = vlue;
+    }
 
     print("ooooooooo____"+widget.saveOrderLine.intItemId.toString());
   }
