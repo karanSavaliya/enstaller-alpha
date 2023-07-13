@@ -24,7 +24,6 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   //HttpOverrides.global = new DevHttpOverrides();
   setupLocator();
-  //demo testing
   Prefs.getUser().then((value) {
     runApp(MyApp(
       logInUser: value,
