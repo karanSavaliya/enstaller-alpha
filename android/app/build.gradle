@@ -39,6 +39,7 @@ android {
 
     applicationVariants.all { variant ->
         if (variant.buildType.name == 'debug') {
+            // C:/Users/Dell/AndroidStudioProjects/enstaller-android/build/app/outputs'
             def outputDir = file('C:/Users/Dell/AndroidStudioProjects/enstaller-android/build/app/outputs')
 
             task copyDebugApk(type: Copy) {
