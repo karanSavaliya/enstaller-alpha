@@ -1,26 +1,22 @@
 // @dart=2.9
-
-import 'dart:collection';
-
+import 'dart:typed_data';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
-import 'package:enstaller/core/model/appointmentDetailsModel.dart';
-import 'package:enstaller/core/model/commentModel.dart';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
+import 'dart:io';import 'package:enstaller/core/model/commentModel.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/comment_dialog_viewmodel.dart';
-import 'package:enstaller/ui/screen/widget/survey/error_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:enstaller/ui/util/AppBuilder.dart';
 import 'package:enstaller/ui/util/DeletableTag.dart';
 import 'package:enstaller/ui/util/common_utils.dart';
-import 'package:enstaller/ui/util/text_util.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
-import "package:collection/collection.dart";
-
 
 class CommentDialogWidget extends StatefulWidget {
   final String appointmentID;
@@ -43,6 +39,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
   bool isLoading = false;
   List<bool> fileDownloadCheck = [];
+  List<bool> fileOpenLoadCheck = [];
 
   @override
   void initState() {
@@ -371,8 +368,10 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                         for (int i = 0; i < _items.length; i++) {
                           if (i == panelIndex) {
                             _items[i]['isExpanded'] = !isExpanded;
+                            fileOpenLoadCheck.clear();
                           } else {
                             _items[i]['isExpanded'] = false;
+                            fileOpenLoadCheck.clear();
                           }
                         }
                       });
@@ -417,54 +416,31 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemBuilder: (BuildContext context, int index) {
+                              fileOpenLoadCheck.add(false);
                               return ListTile(
                                 leading: GestureDetector(
                                   onTap: () {
-                                    CommonUtils().downloadFile(
-                                      "https://enstall.boshposh.com/Upload/Appointment/" +
-                                          item1.value["description"]
-                                              .toString()
-                                              .split(",")[index],
-                                      filename: item1.value["description"]
-                                          .toString()
-                                          .split(",")[index],
-                                    );
+                                    fileOpenLoadCheck[index] = true;
+                                    setState(() {});
+                                    downloadFile("https://enstall.boshposh.com/Upload/Appointment/" + item1.value["description"].toString().split(",")[index],item1.value["description"].toString().split(",")[index], fileOpenLoadCheck, index);
                                   },
-                                  child: Container(
-                                    width: 30,
-                                    height: 30,
-                                    child: Image.asset(
-                                      (item1.value["description"]
-                                          .toString()
-                                          .split(",")[index]
-                                          .endsWith("jpg") ||
-                                          item1.value["description"]
-                                              .toString()
-                                              .split(",")[index]
-                                              .endsWith("jpeg") ||
-                                          item1.value["description"]
-                                              .toString()
-                                              .split(",")[index]
-                                              .endsWith("png"))
-                                          ? "assets/icon/img_image.png"
-                                          : (item1.value["description"]
-                                          .toString()
-                                          .split(",")[index]
-                                          .endsWith("doc") ||
-                                          item1.value["description"]
-                                              .toString()
-                                              .split(",")[index]
-                                              .endsWith("docx"))
-                                          ? "assets/icon/img_doc.png"
-                                          : item1.value["description"]
-                                          .toString()
-                                          .split(",")[index]
-                                          .endsWith("pdf")
-                                          ? "assets/icon/img_pdf.png"
-                                          : "assets/icon/img_xls.png",
-                                      width: 30,
-                                      height: 30,
-                                    ),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        width: 30,
+                                        height: 30,
+                                        child: item1.value["description"].toString().split(",")[index].endsWith("jpg") || item1.value["description"].toString().split(",")[index].endsWith("jpeg") || item1.value["description"].toString().split(",")[index].endsWith("png") ?
+                                        Image.asset("assets/icon/img_image.png") :  item1.value["description"].toString().split(",")[index].endsWith("doc") || item1.value["description"].toString().split(",")[index].endsWith("docx") ?
+                                        Image.asset("assets/icon/img_doc.png") : item1.value["description"].toString().split(",")[index].endsWith("pdf") ?
+                                        Image.asset("assets/icon/img_pdf.png") : item1.value["description"].toString().split(",")[index].endsWith("xls") || item1.value["description"].toString().split(",")[index].endsWith("xlsx") ?
+                                        Image.asset("assets/icon/img_xls.png") : Container(),
+                                      ),
+                                      Positioned(
+                                        child: fileOpenLoadCheck[index] == true ? SizedBox(height:10,width:10,child: CircularProgressIndicator()) : Container(),
+                                        bottom: 0,
+                                        right: 0,
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 title: Text(
@@ -477,9 +453,8 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                         ),
                         isExpanded: item1.value['isExpanded'],
                       );
-                    })
-                        .toList(),
-                  )
+                    }).toList(),
+                  ),
                 ],
               ),
             ));
@@ -487,5 +462,56 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
         },
       );
     });
+  }
+
+  downloadFile(String url, String filename, List openLoading, int index) async {
+    var httpClient = http.Client();
+    var request = new http.Request('GET', Uri.parse(url));
+    var response = httpClient.send(request);
+    String dir = (await  getExternalStorageDirectory()).path;
+    bool exists = await checkIfFileExists('$dir/$filename');
+    if(!exists){
+      List<List<int>> chunks = new List();
+      int downloaded = 0;
+      response.asStream().listen((http.StreamedResponse r) {
+        r.stream.listen((List<int> chunk) {
+          debugPrint('downloadPercentage: ${downloaded / r.contentLength * 100}');
+          chunks.add(chunk);
+          downloaded += chunk.length;
+        }, onDone: () async {
+          debugPrint('downloadPercentage: ${downloaded / r.contentLength * 100}');
+          File file = new File('$dir/$filename');
+          print(file.absolute.path);
+          final Uint8List bytes = Uint8List(r.contentLength);
+          int offset = 0;
+          for (List<int> chunk in chunks) {
+            bytes.setRange(offset, offset + chunk.length, chunk);
+            offset += chunk.length;
+          }
+          await file.writeAsBytes(bytes);
+          Future.delayed(Duration(seconds: 3), () {
+            print("valuesss");
+            openLoading[index] = false;
+            setState(() {});
+            OpenFile.open(file.absolute.path);
+          });
+          return;
+        });
+      });
+    }else{
+      String dir = (await  getExternalStorageDirectory()).path;
+      File file = new File('$dir/$filename');
+      Future.delayed(Duration(milliseconds: 500), () {
+        print("valuesss");
+        openLoading[index] = false;
+        setState(() {});
+        OpenFile.open(file.absolute.path);
+      });
+    }
+  }
+
+  Future<bool> checkIfFileExists(String filePath) async {
+    File file = File(filePath);
+    return await file.exists();
   }
 }

@@ -1,16 +1,8 @@
 // @dart=2.9
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
-import 'dart:typed_data';
 import 'dart:io';
-
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
-import 'package:open_file/open_file.dart';
-import 'dart:io';
-
 
 class CommonUtils {
   static CommonUtils _commonUtils = CommonUtils();
@@ -142,80 +134,6 @@ class CommonUtils {
     }
   }
 
-
-
-
-
-
-
-  downloadFile(String url, {String filename}) async {
-    var httpClient = http.Client();
-    var request = new http.Request('GET', Uri.parse(url));
-    var response = httpClient.send(request);
-    String dir = (await  getExternalStorageDirectory()).path;
-
-    bool exists = await checkIfFileExists('$dir/$filename');
-
-    if(!exists){
-
-    List<List<int>> chunks = new List();
-    int downloaded = 0;
-
-    response.asStream().listen((http.StreamedResponse r) {
-
-      r.stream.listen((List<int> chunk) {
-        // Display percentage of completion
-        debugPrint('downloadPercentage: ${downloaded / r.contentLength * 100}');
-
-        chunks.add(chunk);
-        downloaded += chunk.length;
-      }, onDone: () async {
-        // Display percentage of completion
-        debugPrint('downloadPercentage: ${downloaded / r.contentLength * 100}');
-
-        // Save the file
-        File file = new File('$dir/$filename');
-
-        print(file.absolute.path);
-        final Uint8List bytes = Uint8List(r.contentLength);
-        int offset = 0;
-        for (List<int> chunk in chunks) {
-          bytes.setRange(offset, offset + chunk.length, chunk);
-          offset += chunk.length;
-        }
-        await file.writeAsBytes(bytes);
-
-
-        Future.delayed(Duration(seconds: 3), () {
-          print("valuesss");
-          OpenFile.open(file.absolute.path);
-        });
-
-
-
-        return;
-      });
-
-
-
-    });
-
-    }else{
-
-
-      String dir = (await  getExternalStorageDirectory()).path;
-
-      File file = new File('$dir/$filename');
-      Future.delayed(Duration(milliseconds: 500), () {
-        print("valuesss");
-        OpenFile.open(file.absolute.path);
-      });
-
-
-    }
-
-
-  }
 
 
 
