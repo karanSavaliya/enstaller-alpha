@@ -26,7 +26,7 @@ class ApiUrls {
   static String getStockBatch = 'WarehouseEngineer/BindBatchesBasedOnWarehouseUserId';
   static String getStockStatus = 'Stock/BindStockStatus';
   static String getPallets = 'WarehouseEngineer/BindPalletListBasedOnBatchId';
-  static String getorderAssigned = 'AssignStock/IsOrderAssigned';
+  static String getOrderAssigned = 'AssignStock/IsOrderAssigned';
   static String checkSerialNo = 'AssignStock/CheckSerialNoForOrder';
   static String saveCheckandassignorder = 'AssignStock/SaveAssignStockToOrder';
   static String updateStatusBatchWise =

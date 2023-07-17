@@ -48,8 +48,7 @@ class MapScreenState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-    progressDialog = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
+    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
     progressDialog.style(message: 'Please Wait');
     getProfileData();
   }
@@ -112,7 +111,7 @@ class MapScreenState extends State<ProfilePage>
                                                 width: 1.0),
                                             image: (profilePhotoPath != '')
                                                 ? new DecorationImage(
-                                                    image: new ExactAssetImage(
+                                                    image: profilePhoto != null ? FileImage(profilePhoto) : ExactAssetImage(
                                                         profilePhotoPath),
                                                     fit: BoxFit.cover,
                                                   )
@@ -300,8 +299,7 @@ class MapScreenState extends State<ProfilePage>
           if (_isChangeImage) {
             updateProfilePhoto();
           } else {
-            AppConstants.showFailToast(
-                context, "Please change image before updating profile photo.");
+            AppConstants.showFailToast(context, "Please change image before updating profile photo.");
           }
         });
       },
@@ -313,10 +311,8 @@ class MapScreenState extends State<ProfilePage>
     setState(() {
       user;
     });
-    ProfileDetails details =
-        await _apiService.getProfileInformation(user.intEngineerId);
-    Uint8List _bytesImage = Base64Decoder().convert(
-        details.strEngineerPhoto.replaceAll(AppConstants.base64Prefix, ''));
+    ProfileDetails details = await _apiService.getProfileInformation(user.intEngineerId);
+    Uint8List _bytesImage = Base64Decoder().convert(details.strEngineerPhoto.replaceAll(AppConstants.base64Prefix, ''));
     final dir = await path_provider.getTemporaryDirectory();
     File file = createFile("${dir.absolute.path}/profile-photo/test.png");
     file.writeAsBytesSync(_bytesImage);
@@ -343,52 +339,24 @@ class MapScreenState extends State<ProfilePage>
       _status = true;
     });
     progressDialog.hide();
-  }
-
-  Widget _getProfileTextField(
-      TextEditingController contrroller, TextInputType type) {
-    return Expanded(
-        child: TextFormField(
-      controller: contrroller,
-      keyboardType: type,
-      decoration: InputDecoration(
-        isDense: true,
-        hintText: "",
-        contentPadding: EdgeInsets.all(5),
-        border: InputBorder.none,
-        enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(3.0)),
-            borderSide: BorderSide(color: AppColors.appThemeColor)),
-        focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(3.0)),
-            borderSide: BorderSide(color: AppColors.appThemeColor)),
-        hintStyle: TextStyle(fontSize: 14),
-      ),
-      style: TextStyle(fontSize: 14),
-      cursorColor: Colors.black,
-    ));
+    getProfileData();
   }
 
   Future<void> _showMyDialog({File image}) async {
     return showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-            content: Row(
+        return AlertDialog(content: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // used for the gallery
             new Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 GestureDetector(
                     onTap: () {
-                      _choosFile(
-                          mImage: image,
-                          context: context,
-                          imageSource: ImageSource.gallery);
+                      _chooseFile(mImage: image, context: context, imageSource: ImageSource.gallery);
                     },
                     child: new CircleAvatar(
                       radius: 30.0,
@@ -415,10 +383,7 @@ class MapScreenState extends State<ProfilePage>
               children: <Widget>[
                 GestureDetector(
                     onTap: () {
-                      _choosFile(
-                          mImage: image,
-                          context: context,
-                          imageSource: ImageSource.camera);
+                      _chooseFile(mImage: image, context: context, imageSource: ImageSource.camera);
                     },
                     child: new CircleAvatar(
                       radius: 30.0,
@@ -453,9 +418,7 @@ class MapScreenState extends State<ProfilePage>
     return file;
   }
 
-//chooose file
-  Future<void> _choosFile(
-      {File mImage, BuildContext context, ImageSource imageSource}) async {
+  Future<void> _chooseFile({File mImage, BuildContext context, ImageSource imageSource}) async {
     var image = await ImagePicker.pickImage(source: imageSource);
     if (image != null) {
       var compressedFile = await FlutterImageCompress.compressWithFile(
@@ -465,7 +428,6 @@ class MapScreenState extends State<ProfilePage>
         minHeight: 1280,
       );
       final dir = await path_provider.getTemporaryDirectory();
-      // List<int> imageBytes = image.readAsBytesSync();
       File file = createFile("${dir.absolute.path}/${image.path}/test.png");
       file.writeAsBytesSync(compressedFile);
       changedBase64ProfilePhoto = base64Encode(compressedFile);

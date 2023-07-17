@@ -61,14 +61,9 @@ class TodayAppointmentViewModel extends BaseModel {
     _appointmentList.forEach((element) {
       DateTime dt = DateTime.parse(element.dteBookedDate);
       if (dt.day == getCurrentDay(DateTime.now())) {
-        if (element.strCompanyName.toLowerCase().contains(val.toLowerCase()) ||
-            element.appointmentEventType
-                .toLowerCase()
-                .contains(val.toLowerCase()) ||
-            element.engineerName.toLowerCase().contains(val.toLowerCase()) ||
-            element.strBookingReference
-                .toLowerCase()
-                .contains(val.toLowerCase())) {
+        if (element.strCompanyName.toLowerCase().contains(val.toLowerCase()) || element.appointmentEventType.toLowerCase().contains(val.toLowerCase()) || element.strBookedBy.toLowerCase().contains(val.toLowerCase()) ||
+            element.engineerName.toLowerCase().contains(val.toLowerCase()) || element.strBookingReference.toLowerCase().contains(val.toLowerCase()) || element.dteBookedDate.toLowerCase().contains(val.toLowerCase()) ||
+            element.patchCode.toLowerCase().contains(val.toLowerCase()) || element.strPostCode.toLowerCase().contains(val.toLowerCase()) || element.strJobType.toLowerCase().contains(val.toLowerCase()) || element.strBookedSlotType.toLowerCase().contains(val.toLowerCase())) {
           appointmentList.add(element);
         }
       }

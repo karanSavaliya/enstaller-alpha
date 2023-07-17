@@ -1,7 +1,4 @@
-// @dart=2.9
-
-
-
+//@dart=2.9
 import 'dart:convert';
 import 'package:enstaller/core/model/elec_closejob_model.dart';
 import 'package:enstaller/core/model/gas_job_model.dart';
@@ -30,8 +27,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SurveyScreenViewModel extends BaseModel {
-
-
   ApiService _apiService = ApiService();
   List<SurveyResponseModel> surveyQuestion = [];
   List<SurveyResponseModel> localSurveyQuestion = [];
@@ -83,10 +78,8 @@ class SurveyScreenViewModel extends BaseModel {
   }
 
   void initializeData(String appointmentID, bool edit, BuildContext context,
-    CheckCloseJobModel closeJobModel) async {
-
+      CheckCloseJobModel closeJobModel) async {
     setState(ViewState.Busy);
-
     currentAppointmentId = appointmentID;
     user = await Prefs.getUser();
     issubmitted = false;
@@ -108,17 +101,17 @@ class SurveyScreenViewModel extends BaseModel {
       if (_listofLocalSurveyQuestion.isNotEmpty) {
         _listofLocalSurveyQuestion.forEach((element) {
           SurveyResponseModel surveyResponseModel =
-              SurveyResponseModel.fromLocalJson(
-                  jsonDecode(element), dir.absolute.path);
+          SurveyResponseModel.fromLocalJson(
+              jsonDecode(element), dir.absolute.path);
           if (surveyResponseModel.intSectionId <= lastSurveyID) {
             localSurveyQuestion.add(surveyResponseModel);
           }
         });
 
-
         if (_listSectionDisableString.isNotEmpty)
           _listSectionDisableString.forEach((element) {
-            _listSectionDisable.add(SectionDisableModel.fromJson(jsonDecode(element)));
+            _listSectionDisable
+                .add(SectionDisableModel.fromJson(jsonDecode(element)));
           });
 
         localSurveyQuestion.forEach((element) {
@@ -144,7 +137,6 @@ class SurveyScreenViewModel extends BaseModel {
                 strfilename: "",
                 strRequireExplaination: element.requireExplainationstr));
         });
-
       }
 
       surveyQuestion.forEach((element) {
@@ -157,24 +149,18 @@ class SurveyScreenViewModel extends BaseModel {
           sectionDisableQuestions.putIfAbsent(
               element.intSectionId, () => templist);
 
-
-          print("#######__1"+ansList.length.toString());
-
           sectionAnswers.putIfAbsent(element.intSectionId, () => ansList);
           sectionBools.putIfAbsent(element.intSectionId, () => false);
           sectionNames.putIfAbsent(
               element.intSectionId, () => element.strSectionName);
         }
       });
-
       surveyQuestion.forEach((element) {
-
         if (_sectionQuestions[element.intSectionId].indexOf(element) == -1) {
           _sectionQuestions[element.intSectionId].add(element);
         }
 
         if (element.strQuestiontype == 'YN') {
-
           if (element.yesNoPressedVal == 1) {
             if (element.strDisableQuestions != null &&
                 element.strDisableQuestions.isNotEmpty &&
@@ -214,7 +200,6 @@ class SurveyScreenViewModel extends BaseModel {
                 element.strDisableQuestions.isNotEmpty &&
                 element.strEnableQuestions != null &&
                 element.strEnableQuestions.isNotEmpty) {
-
               String numberString;
               if (element.strEnableQuestions.contains('No:') &&
                   !element.strEnableQuestions.contains('Yes:')) {
@@ -262,9 +247,7 @@ class SurveyScreenViewModel extends BaseModel {
       });
 
       final onchange = Provider.of<OnChangeYesNo>(context, listen: false);
-
     } else {
-
       List<QuestionAnswer> _answers = await _apiService
           .getSurveyQuestionAnswerDetail(appointmentID, user.intCompanyId);
       _answers.forEach((element) {
@@ -274,16 +257,12 @@ class SurveyScreenViewModel extends BaseModel {
         if (!sectionQuestions.containsKey(element.intSectionID)) {
           _sectionQuestions.putIfAbsent(element.intSectionID, () => list);
           sectionQuestions.putIfAbsent(element.intSectionID, () => list);
-          sectionDisableQuestions.putIfAbsent(element.intSectionID, () => templist);
-
-          print("#######__2"+ansList.length.toString());
-
-
-
+          sectionDisableQuestions.putIfAbsent(
+              element.intSectionID, () => templist);
           sectionAnswers.putIfAbsent(element.intSectionID, () => ansList);
           sectionBools.putIfAbsent(element.intSectionID, () => false);
-          sectionNames.putIfAbsent(element.intSectionID, () => element.strSectionName);
-
+          sectionNames.putIfAbsent(
+              element.intSectionID, () => element.strSectionName);
         }
       });
 
@@ -292,21 +271,13 @@ class SurveyScreenViewModel extends BaseModel {
       });
 
       print('objectAnswerLength===${_answers.length}');
-
-      print("#######__3"+_answers.length.toString());
-
-
       _answers.forEach((answer) {
-
-        print("#######__4"+_answers.length.toString());
-
         if (answer.strAnswer != null && answer.strAnswer != "")
           sectionAnswers[answer.intSectionID].add(answer);
       });
     }
 
     setState(ViewState.Idle);
-
   }
 
   void onChangeYesNo(SurveyResponseModel surveyResponseModel) {
@@ -315,34 +286,34 @@ class SurveyScreenViewModel extends BaseModel {
     if (!(surveyResponseModel.intSectionId == 3)) {
       var index = _sectionQuestions[surveyResponseModel.intSectionId]
           .indexWhere((element) =>
-              element.intQuestionNo == surveyResponseModel.intQuestionNo);
+      element.intQuestionNo == surveyResponseModel.intQuestionNo);
       _sectionQuestions[surveyResponseModel.intSectionId][index] =
           surveyResponseModel;
     } else {
       var index = _sectionQuestions[surveyResponseModel.intSectionId]
           .indexWhere((element) =>
-              element.intQuestionNo == surveyResponseModel.intQuestionNo);
+      element.intQuestionNo == surveyResponseModel.intQuestionNo);
       _sectionQuestions[surveyResponseModel.intSectionId][index] =
           surveyResponseModel;
       if (_sectionQuestions[surveyResponseModel.intSectionId][index]
-              .strQuestiontype ==
+          .strQuestiontype ==
           'L') {
         print(
             '#########${_sectionQuestions[surveyResponseModel.intSectionId][index].validate}');
 
         if (_sectionQuestions[surveyResponseModel.intSectionId][index]
-                .validate ==
+            .validate ==
             'Energised') {
           if (_sectionQuestions[surveyResponseModel.intSectionId][index]
-                      .strDisableQuestions !=
-                  null &&
+              .strDisableQuestions !=
+              null &&
               _sectionQuestions[surveyResponseModel.intSectionId][index]
                   .strDisableQuestions
                   .isNotEmpty) {
             String numberString =
-                _sectionQuestions[surveyResponseModel.intSectionId][index]
-                    .strDisableQuestions
-                    .split('Energised:')[1];
+            _sectionQuestions[surveyResponseModel.intSectionId][index]
+                .strDisableQuestions
+                .split('Energised:')[1];
             List<String> listData = numberString.trim().split(",");
             listData.forEach((listElement) {
               if (!sectionDisableQuestions[surveyResponseModel.intSectionId]
@@ -356,20 +327,20 @@ class SurveyScreenViewModel extends BaseModel {
             });
           }
         } else if (_sectionQuestions[surveyResponseModel.intSectionId][index]
-                .validate ==
+            .validate ==
             'De-Energised') {
           if (_sectionQuestions[surveyResponseModel.intSectionId][index]
-                      .strDisableQuestions !=
-                  null &&
+              .strDisableQuestions !=
+              null &&
               _sectionQuestions[surveyResponseModel.intSectionId][index]
                   .strDisableQuestions
                   .isNotEmpty) {
             print(
                 'object${_sectionQuestions[surveyResponseModel.intSectionId][index].strDisableQuestions}');
             String numberString =
-                _sectionQuestions[surveyResponseModel.intSectionId][index]
-                    .strDisableQuestions
-                    .split('Energised:')[1];
+            _sectionQuestions[surveyResponseModel.intSectionId][index]
+                .strDisableQuestions
+                .split('Energised:')[1];
             List<String> listData = numberString.trim().split(",");
             listData.forEach((listElement) {
               if (sectionDisableQuestions[surveyResponseModel.intSectionId]
@@ -394,7 +365,7 @@ class SurveyScreenViewModel extends BaseModel {
           surveyResponseModel.intQuestionNo == element.intQuestionNo) {
         if (element.yesNoPressedVal == 1) {
           if ((element.strDisableQuestions != null &&
-                  element.strDisableQuestions.isNotEmpty) ||
+              element.strDisableQuestions.isNotEmpty) ||
               (element.strEnableQuestions != null &&
                   element.strEnableQuestions.isNotEmpty)) {
             String numberString;
@@ -454,11 +425,11 @@ class SurveyScreenViewModel extends BaseModel {
               } else if (enablenumberString != null &&
                   disablenumberString != null) {
                 List<String> enablelistData =
-                    enablenumberString.trim().split(",");
+                enablenumberString.trim().split(",");
                 for (int i = 0; i < enablelistData.length; i++) {
                   try {
                     SurveyResponseModel model = surveyQuestion.firstWhere((e) =>
-                        e.intQuestionNo.toString().trim() ==
+                    e.intQuestionNo.toString().trim() ==
                         enablelistData[i].trim());
 
                     if (sectionDisableQuestions[model.intSectionId]
@@ -471,11 +442,11 @@ class SurveyScreenViewModel extends BaseModel {
                   }
                 }
                 List<String> disablelistData =
-                    disablenumberString.trim().split(",");
+                disablenumberString.trim().split(",");
                 for (int i = 0; i < disablelistData.length; i++) {
                   try {
                     SurveyResponseModel model = surveyQuestion.firstWhere((e) =>
-                        e.intQuestionNo.toString().trim() ==
+                    e.intQuestionNo.toString().trim() ==
                         disablelistData[i].trim());
 
                     if (!sectionDisableQuestions[model.intSectionId]
@@ -493,7 +464,7 @@ class SurveyScreenViewModel extends BaseModel {
         } else if (element.yesNoPressedVal == 0 &&
             surveyResponseModel.intQuestionNo == element.intQuestionNo) {
           if ((element.strDisableQuestions != null &&
-                  element.strDisableQuestions.isNotEmpty) ||
+              element.strDisableQuestions.isNotEmpty) ||
               (element.strEnableQuestions != null &&
                   element.strEnableQuestions.isNotEmpty)) {
             String numberString;
@@ -556,11 +527,11 @@ class SurveyScreenViewModel extends BaseModel {
               } else if (enablenumberString != null &&
                   disablenumberString != null) {
                 List<String> enablelistData =
-                    enablenumberString.trim().split(",");
+                enablenumberString.trim().split(",");
                 for (int i = 0; i < enablelistData.length; i++) {
                   try {
                     SurveyResponseModel model = surveyQuestion.firstWhere((e) =>
-                        e.intQuestionNo.toString().trim() ==
+                    e.intQuestionNo.toString().trim() ==
                         enablelistData[i].trim());
 
                     if (sectionDisableQuestions[model.intSectionId]
@@ -573,11 +544,11 @@ class SurveyScreenViewModel extends BaseModel {
                   }
                 }
                 List<String> disablelistData =
-                    disablenumberString.trim().split(",");
+                disablenumberString.trim().split(",");
                 for (int i = 0; i < disablelistData.length; i++) {
                   try {
                     SurveyResponseModel model = surveyQuestion.firstWhere((e) =>
-                        e.intQuestionNo.toString().trim() ==
+                    e.intQuestionNo.toString().trim() ==
                         disablelistData[i].trim());
 
                     if (!sectionDisableQuestions[model.intSectionId]
@@ -612,7 +583,7 @@ class SurveyScreenViewModel extends BaseModel {
         if (element.dropDownValue.trim() == 'Energised' &&
             surveyResponseModel.intQuestionNo == 24) {
           String numberString =
-              element.strDisableQuestions.split('Energised:')[1];
+          element.strDisableQuestions.split('Energised:')[1];
           List<String> listData = numberString.trim().split(",");
           listData.forEach((listElement) {
             if (!sectionDisableQuestions[element.intSectionId]
@@ -624,7 +595,7 @@ class SurveyScreenViewModel extends BaseModel {
         } else if (element.dropDownValue.trim() == 'De-Energised' &&
             surveyResponseModel.intQuestionNo == 24) {
           String numberString =
-              element.strEnableQuestions.split('De-Energised:')[1];
+          element.strEnableQuestions.split('De-Energised:')[1];
           List<String> listData = numberString.trim().split(",");
           listData.forEach((listElement) {
             if (sectionDisableQuestions[element.intSectionId]
@@ -636,7 +607,7 @@ class SurveyScreenViewModel extends BaseModel {
         } else if (element.dropDownValue.trim() == 'Energised' &&
             surveyResponseModel.intQuestionNo == 39) {
           String numberString =
-              element.strDisableQuestions.split('Energised:')[1];
+          element.strDisableQuestions.split('Energised:')[1];
           List<String> listData = numberString.trim().split(",");
           listData.forEach((listElement) {
             if (!sectionDisableQuestions[element.intSectionId]
@@ -648,7 +619,7 @@ class SurveyScreenViewModel extends BaseModel {
         } else if (element.dropDownValue.trim() == 'De-Energised' &&
             surveyResponseModel.intQuestionNo == 39) {
           String numberString =
-              element.strEnableQuestions.split('De-Energised:')[1];
+          element.strEnableQuestions.split('De-Energised:')[1];
           List<String> listData = numberString.trim().split(",");
           listData.forEach((listElement) {
             if (sectionDisableQuestions[element.intSectionId]
@@ -795,7 +766,7 @@ class SurveyScreenViewModel extends BaseModel {
             }
           }
         } else if ((surveyResponseModel.intQuestionNo == 22 &&
-                element.intQuestionNo == 22) ||
+            element.intQuestionNo == 22) ||
             (surveyResponseModel.intQuestionNo == 37 &&
                 element.intQuestionNo == 37)) {
           String enablenumberString, disablenumberString;
@@ -826,7 +797,7 @@ class SurveyScreenViewModel extends BaseModel {
             }
           }
         } else if (surveyResponseModel.strQuestionText.trim() ==
-                "Give abort reason" &&
+            "Give abort reason" &&
             element.strQuestionText.trim() == "Give abort reason") {
           GlobalVar.abortReason = element.dropDownValue.trim();
           String disablenumberString;
@@ -894,12 +865,11 @@ class SurveyScreenViewModel extends BaseModel {
           } else {
             localSurveyQuestion[index] = element;
             _listofLocalSurveyQuestion[index] =
-                (jsonEncode(element.toLocalJson()));
+            (jsonEncode(element.toLocalJson()));
           }
         }
       });
     });
-
     List<String> _list = [];
     sectionDisableQuestions.forEach((key, value) {
       _list.add(jsonEncode(
@@ -907,16 +877,15 @@ class SurveyScreenViewModel extends BaseModel {
               .toJson()));
     });
 
-    preferences.setStringList("saved+$appointmentid", _listofLocalSurveyQuestion);
+    preferences.setStringList(
+        "saved+$appointmentid", _listofLocalSurveyQuestion);
     preferences.setStringList("disabled+$appointmentid", _list);
     preferences.setInt("LastSurveyId+$appointmentid", currentSectionId);
     preferences.setInt("LastSelectionId+$appointmentid", selected);
-
   }
 
-
-  void incrementCounter(bool isedit, String appointmentId, int _currentSectionId) {
-
+  void incrementCounter(
+      bool isedit, String appointmentId, int _currentSectionId) {
     setState(ViewState.Busy);
     if (isedit) {
       if (selected < sectionQuestions.keys.length - 1) {
@@ -928,7 +897,7 @@ class SurveyScreenViewModel extends BaseModel {
       }
       currentSectionId = _currentSectionId;
 
-      //  _saveDataLocally(appointmentId);
+      _saveDataLocally(appointmentId);
     }
 
     setState(ViewState.Idle);
@@ -946,7 +915,6 @@ class SurveyScreenViewModel extends BaseModel {
       BuildContext context,
       DetailsScreenViewModel dsmodel,
       String sectionname) async {
-
     //setState(ViewState.Busy);
     user = await Prefs.getUser();
     print(selected.toString() + 'line 1130');
@@ -956,28 +924,28 @@ class SurveyScreenViewModel extends BaseModel {
     }
 
     if (sectionname.trim() == "Abort") {
-      answerList.removeWhere(
-          (element) => int.parse(element.intsurveyid) != currentSectionId);
+      answerList.removeWhere((element) => int.parse(element.intsurveyid) != currentSectionId);
       try {
         ConnectivityResult result = await _connectivity.checkConnectivity();
         String status = _updateConnectionStatus(result);
         if (status != "NONE") {
           issubmitted = true;
-          ResponseModel responseModel =
-              await _apiService.submitListSurveyAnswer(answerList);
+          ResponseModel responseModel = await _apiService.submitListSurveyAnswer(answerList);
+          // ResponseModel responseModel =
+          // await _apiService.submitListSurveyAnswer(answerList);
+          //done
           ResponseModel abortreasonmodel = await _apiService
               .abortappointmentbyreason(AbortAppointmentReasonModel(
-                  intId: int.parse(appointmentid),
-                  isabort: true,
-                  strCancellationReason: GlobalVar.abortReason,
-                  intCompanyId: user.intCompanyId));
+              intId: int.parse(appointmentid),
+              isabort: true,
+              strCancellationReason: GlobalVar.abortReason,
+              intCompanyId: user.intCompanyId));
           SharedPreferences pref = await SharedPreferences.getInstance();
           pref.remove("saved+${appointmentid.trim()}");
           pref.remove("disabled+${appointmentid.trim()}");
           pref.remove("LastSurveyId+${appointmentid.trim()}");
           pref.remove("LastSelectionId+${appointmentid.trim()}");
           print(abortreasonmodel.response);
-          print(responseModel.response);
           if (responseModel.statusCode == 1) {
             //setState(ViewState.Idle);
             //await Future.delayed(Duration(seconds: 1));
@@ -1025,9 +993,8 @@ class SurveyScreenViewModel extends BaseModel {
         if (status != "NONE") {
           issubmitted = true;
           ResponseModel responseModel =
-              await _apiService.submitListSurveyAnswer(answerList);
+          await _apiService.submitListSurveyAnswer(answerList);
           SharedPreferences pref = await SharedPreferences.getInstance();
-
           ResponseModel response = await _apiService.updateAppointmentStatus(
               AppointmentStatusUpdateCredentials(
                   strStatus: "Completed",
@@ -1036,22 +1003,31 @@ class SurveyScreenViewModel extends BaseModel {
                   strEmailActionby: "Send by Engineer",
                   intId: appointmentid,
                   intCompanyId: user.intCompanyId));
-          if (response.statusCode == 1) {
-            GlobalVar.isloadAppointmentDetail = true;
-            GlobalVar.isloadDashboard = true;
-          }
 
-          pref.remove("saved+${appointmentid.trim()}");
-          pref.remove("disabled+${appointmentid.trim()}");
-          pref.remove("LastSurveyId+${appointmentid.trim()}");
-          pref.remove("LastSelectionId+${appointmentid.trim()}");
-          print(responseModel.response);
-          if (responseModel.statusCode == 1) {
-            issubmitted = true;
-            AppConstants.showSuccessToast(context , "Survey Submitted");
-          } else {
-            issubmitted = false;
-            AppConstants.showFailToast(context , "Error Occured while saving");
+          print("======");
+          print(response);
+          if(response.response.isEmpty){
+            AppConstants.showFailToast(context, "hello error");
+          }
+          else{
+
+            if (response.statusCode == 1) {
+              GlobalVar.isloadAppointmentDetail = true;
+              GlobalVar.isloadDashboard = true;
+            }
+
+            pref.remove("saved+${appointmentid.trim()}");
+            pref.remove("disabled+${appointmentid.trim()}");
+            pref.remove("LastSurveyId+${appointmentid.trim()}");
+            pref.remove("LastSelectionId+${appointmentid.trim()}");
+            print(responseModel.response);
+            if (responseModel.statusCode == 1) {
+              issubmitted = true;
+              AppConstants.showSuccessToast(context, "Survey Submitted");
+            } else {
+              issubmitted = false;
+              AppConstants.showFailToast(context, "Error Occured while saving");
+            }
           }
         } else {
           print("********offline*****");
@@ -1073,14 +1049,11 @@ class SurveyScreenViewModel extends BaseModel {
           AppConstants.showFailToast(context, "Submitted Offline");
 
           issubmitted = true;
-
         }
-
       } catch (e) {
         print(e.toString());
         AppConstants.showFailToast(context, e.toString());
       }
-
       selected = -1;
     }
 
@@ -1091,12 +1064,11 @@ class SurveyScreenViewModel extends BaseModel {
     } else {
       return "none";
     }
-
   }
 
   openJumboTab(DetailsScreenViewModel dsmodel, String appointmentid) async {
     var AppointmentType =
-        dsmodel.appointmentDetails.appointment.strAppointmentType.trim();
+    dsmodel.appointmentDetails.appointment.strAppointmentType.trim();
     if (AppointmentType == "Scheduled Exchange" ||
         AppointmentType == "Emergency Exchange" ||
         AppointmentType == "New Connection" ||
@@ -1140,10 +1112,8 @@ class SurveyScreenViewModel extends BaseModel {
   }
 
   void onValidation() {
-
     setState(ViewState.Busy);
     int i = 0;
-
     sectionBools.forEach((key, value) {
       if (selected == i) {
         sectionBools[key] = true;
@@ -1152,12 +1122,9 @@ class SurveyScreenViewModel extends BaseModel {
     });
 
     setState(ViewState.Idle);
-
   }
 
-
   String _updateConnectionStatus(ConnectivityResult result) {
-
     switch (result) {
       case ConnectivityResult.wifi:
         return "WIFI";
@@ -1172,28 +1139,24 @@ class SurveyScreenViewModel extends BaseModel {
         return "NO RECORD";
         break;
     }
-
   }
 
-
   void eleccloseJobSubmitOffline(
-    String appointmentid, ElecCloseJobModel elecCloseJobModel) async {
-
-
+      String appointmentid, ElecCloseJobModel elecCloseJobModel) async {
     ConnectivityResult result = await _connectivity.checkConnectivity();
     String status = _updateConnectionStatus(result);
     if (status != "NONE") {
       ResponseModel response =
-          await ApiService().saveElecJob(elecCloseJobModel);
+      await ApiService().saveElecJob(elecCloseJobModel);
       if (response.statusCode == 1) {
         try {
           ResponseModel response = await _apiService.updateAppointmentStatus(
               AppointmentStatusUpdateCredentials(
                   strStatus: "Completed",
                   intBookedBy:
-                      user == null ? "4" : user.intEngineerId.toString(),
+                  user == null ? "4" : user.intEngineerId.toString(),
                   intEngineerId:
-                      user == null ? "4" : user.intEngineerId.toString(),
+                  user == null ? "4" : user.intEngineerId.toString(),
                   strEmailActionby: "Send by Engineer",
                   intId: appointmentid,
                   intCompanyId: user.intCompanyId));
@@ -1212,9 +1175,7 @@ class SurveyScreenViewModel extends BaseModel {
       preferences.setString(
           "$appointmentid" + "ElecJob", jsonEncode(elecCloseJobModel.toJson()));
     }
-
   }
-
 
   void gascloseJobSubmitOffline(
       String appointmentid, GasCloseJobModel gasCloseJobModel) async {
@@ -1229,9 +1190,9 @@ class SurveyScreenViewModel extends BaseModel {
               AppointmentStatusUpdateCredentials(
                   strStatus: "Completed",
                   intBookedBy:
-                      user == null ? "4" : user.intEngineerId.toString(),
+                  user == null ? "4" : user.intEngineerId.toString(),
                   intEngineerId:
-                      user == null ? "4" : user.intEngineerId.toString(),
+                  user == null ? "4" : user.intEngineerId.toString(),
                   strEmailActionby: "Send by Engineer",
                   intId: appointmentid,
                   intCompanyId: user.intCompanyId));
@@ -1252,7 +1213,6 @@ class SurveyScreenViewModel extends BaseModel {
     }
   }
 
-
   void bothcloseJobSubmitOffline(
       String appointmentid,
       GasCloseJobModel gasCloseJobModel,
@@ -1262,7 +1222,7 @@ class SurveyScreenViewModel extends BaseModel {
     if (status != "NONE") {
       ResponseModel response = await ApiService().saveGasJob(gasCloseJobModel);
       ResponseModel response1 =
-          await ApiService().saveElecJob(elecCloseJobModel);
+      await ApiService().saveElecJob(elecCloseJobModel);
 
       if (response.statusCode == 1) {
         try {
@@ -1270,9 +1230,9 @@ class SurveyScreenViewModel extends BaseModel {
               AppointmentStatusUpdateCredentials(
                   strStatus: "Completed",
                   intBookedBy:
-                      user == null ? "4" : user.intEngineerId.toString(),
+                  user == null ? "4" : user.intEngineerId.toString(),
                   intEngineerId:
-                      user == null ? "4" : user.intEngineerId.toString(),
+                  user == null ? "4" : user.intEngineerId.toString(),
                   strEmailActionby: "Send by Engineer",
                   intId: appointmentid,
                   intCompanyId: user.intCompanyId));
@@ -1295,10 +1255,8 @@ class SurveyScreenViewModel extends BaseModel {
     }
   }
 
-
-  Future<String> onSubmitOffline(String appointmentid,
+  Future<void> onSubmitOffline(String appointmentid,
       List<AnswerCredential> _listofanswer, String sectionName) async {
-
     print("**********offline********");
     user = await Prefs.getUser();
     String abortReason = "";
@@ -1313,15 +1271,15 @@ class SurveyScreenViewModel extends BaseModel {
         print(
             "Sumitted offline survey to online for appointment id: -----> $appointmentid");
         ResponseModel responseModel =
-            await _apiService.submitListSurveyAnswer(_listofanswer);
+        await _apiService.submitListSurveyAnswer(_listofanswer);
         SharedPreferences pref = await SharedPreferences.getInstance();
         if (sectionName == "Abort") {
           ResponseModel abortreasonmodel = await _apiService
               .abortappointmentbyreason(AbortAppointmentReasonModel(
-                  intId: int.parse(appointmentid),
-                  isabort: true,
-                  strCancellationReason: abortReason,
-                  intCompanyId: user.intCompanyId));
+              intId: int.parse(appointmentid),
+              isabort: true,
+              strCancellationReason: abortReason,
+              intCompanyId: user.intCompanyId));
           print(abortreasonmodel.response);
         } else {
           ResponseModel response = await _apiService.updateAppointmentStatus(
@@ -1343,7 +1301,6 @@ class SurveyScreenViewModel extends BaseModel {
         pref.remove("LastSelectionId+${appointmentid.trim()}");
         print(responseModel.response);
         pref.remove("key+$appointmentid");
-
       } else {
         SharedPreferences preferences = await SharedPreferences.getInstance();
         List<String> _list = [];
@@ -1363,11 +1320,7 @@ class SurveyScreenViewModel extends BaseModel {
     } on PlatformException catch (e) {
       print(e.toString());
     }
-
-
-     return sectionName;
   }
-
 
   String checkXCANC(List<ElectricAndGasMeterModel> electricGasMeterList) {
     //setState(ViewState.Busy);
@@ -1402,13 +1355,13 @@ class SurveyScreenViewModel extends BaseModel {
   }
 
   void onRaiseButtonPressed(
-    String customerid,
-    String processId,
-    String newElectricityMSN,
-    String newGasMSN,
-    List<ElectricAndGasMeterModel> electricGasMeterList,
-    BuildContext context,
-  ) async {
+      String customerid,
+      String processId,
+      String newElectricityMSN,
+      String newGasMSN,
+      List<ElectricAndGasMeterModel> electricGasMeterList,
+      BuildContext context,
+      ) async {
     ConnectivityResult result = await _connectivity.checkConnectivity();
     String status = _updateConnectionStatus(result);
     if (status != "NONE") {
@@ -1432,14 +1385,14 @@ class SurveyScreenViewModel extends BaseModel {
   }
 
   startElecProcess(
-    String processId,
-    UserModel userModel,
-    String ups,
-    String customerID,
-    String newMSN,
-    List<ElectricAndGasMeterModel> electricGasMeterList,
-    BuildContext context,
-  ) {
+      String processId,
+      UserModel userModel,
+      String ups,
+      String customerID,
+      String newMSN,
+      List<ElectricAndGasMeterModel> electricGasMeterList,
+      BuildContext context,
+      ) {
     try {
       ElectricAndGasMeterModel model;
       electricGasMeterList.forEach((element) {
@@ -1486,9 +1439,8 @@ class SurveyScreenViewModel extends BaseModel {
           launchurl(strUrl);
         }
       } else {
-
-        AppConstants.showFailToast(context, "Electricity meter information is missing.");
-
+        AppConstants.showFailToast(
+            context, "Electricity meter information is missing.");
       }
     } catch (err) {
       print(err);
@@ -1496,14 +1448,14 @@ class SurveyScreenViewModel extends BaseModel {
   }
 
   startGasProcess(
-    String processId,
-    UserModel userModel,
-    String ups,
-    String customerID,
-    String newMSN,
-    List<ElectricAndGasMeterModel> electricGasMeterList,
-    BuildContext context,
-  ) {
+      String processId,
+      UserModel userModel,
+      String ups,
+      String customerID,
+      String newMSN,
+      List<ElectricAndGasMeterModel> electricGasMeterList,
+      BuildContext context,
+      ) {
     try {
       ElectricAndGasMeterModel model;
       electricGasMeterList.forEach((element) {

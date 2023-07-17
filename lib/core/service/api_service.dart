@@ -82,9 +82,7 @@ class ApiService extends BaseApi {
 
   Future<dynamic> updateProfilePhoto(UpdateProfile profileInfo) {
     return postRequest(ApiUrls.updateProfilePhoto, (r) {
-      print("++++++++++++");
       print(json.decode(r.body));
-      print("++++++++++++");
       return r.body;
     }, profileInfo.toJson());
   }
@@ -93,7 +91,6 @@ class ApiService extends BaseApi {
     if (userId == null || userId == "null") {
       userId = "4";
     }
-    print("------------------------");
     print(userId);
     return getRequestWithParam(ApiUrls.getProfilePhoto, (response) {
       print(response.body);
@@ -116,9 +113,6 @@ class ApiService extends BaseApi {
     if (userID == null || userID == "null") {
       userID = "4";
     }
-    print("------------------------");
-    print(userID);
-    print("-------------------------");
     return getRequestWithParam(ApiUrls.getappointmenttodaytomorrow, (response) {
       print(response.body);
       return (json.decode(response.body) as List)
@@ -162,8 +156,7 @@ class ApiService extends BaseApi {
             '&${AppStrings.intCompanyIdKey}=${user.intCompanyId}');
   }
 
-  Future<dynamic> getActivityLogsAppointmentId(
-      String appointmentID, String companyId) {
+  Future<dynamic> getActivityLogsAppointmentId(String appointmentID, String companyId) {
     return getRequestWithParam(ApiUrls.getActivityLogsAppointmentIdUrl,
         (response) {
       print(response.body);
@@ -224,14 +217,12 @@ class ApiService extends BaseApi {
   }
 
   Future<dynamic> getOrderAssigned(String strReference, String companyId) {
-    return getRequestWithParam(ApiUrls.getorderAssigned, (response) {
+    return getRequestWithParam(ApiUrls.getOrderAssigned, (response) {
       print(response.body);
       return (json.decode(response.body) as List)
           .map((e) => IsOrderAssignedModel.fromJson(e))
           .toList();
-    },
-        'strReference=$strReference' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+    }, 'strReference=$strReference' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
   Future<dynamic> checkSerialNo(
@@ -285,9 +276,7 @@ class ApiService extends BaseApi {
     return getRequestWithParam(ApiUrls.getorderByReference, (response) {
       print(response.body);
       return OrderByRefernceModel.fromJson(json.decode(response.body));
-    },
-        'strReference=$strReference' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+    }, 'strReference=$strReference' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
   Future<dynamic> getDownloadFormat(String key, String companyId) {
@@ -297,7 +286,6 @@ class ApiService extends BaseApi {
     }, 'strKey=$key' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-// TODO: Need to check again.
   Future<dynamic> getUserRole(String email) {
     return getRequest(ApiUrls.getUserRole, (response) {
       print(response.body);
@@ -311,13 +299,9 @@ class ApiService extends BaseApi {
     return getRequestWithParam(ApiUrls.getAppointmentCommentsByAppointmentUrl2,
         (response) {
       return  cm.commentModel.fromJson(json.decode(response.body));
-    } ,
-        'intappintmentid=$appointmentID');
-
+    } , 'intappintmentid=$appointmentID');
   }
 
-
-// TODO: Need to check again
   Future<dynamic> getAbortAppointmentCode(
       AppointmentStatusUpdateCredentials credentials) {
     print(credentials.toJson());
@@ -331,7 +315,6 @@ class ApiService extends BaseApi {
     }, credentials.toJson());
   }
 
-// TODO: Need to check again
   Future<dynamic> saveElecJob(ElecCloseJobModel credentials) {
     print(credentials.toJson());
     return postRequestMap(ApiUrls.saveCloseJobElectricity, (r) {
@@ -345,7 +328,6 @@ class ApiService extends BaseApi {
     }, credentials.toJson());
   }
 
-// TODO: Need to check again
   Future<dynamic> saveGasJob(GasCloseJobModel credentials) {
     print(credentials.toJson());
     return postRequestMap(ApiUrls.saveCloseJobGas, (r) {
@@ -376,9 +358,7 @@ class ApiService extends BaseApi {
       return (json.decode(response.body) as List)
           .map((e) => ElectricAndGasMeterModel.fromJson(e))
           .toList();
-    },
-        'intCustomerId=$customerID' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+    }, 'intCustomerId=$customerID' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
   Future<dynamic> submitComment(CommentCredential commentCredential) {
@@ -392,23 +372,16 @@ class ApiService extends BaseApi {
     }, commentCredential.toJson());
   }
 
-  Future<dynamic> appointmentDataEventsbyEngineer(
-      String engineerID, String companyId) {
-    return getRequestWithParam(ApiUrls.appointmentDataEventsbyEngineerUrl,
-        (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => StatusModel.fromJson(e))
-          .toList();
+  Future<dynamic> appointmentDataEventsbyEngineer(String engineerID, String companyId) {
+    return getRequestWithParam(ApiUrls.appointmentDataEventsbyEngineerUrl, (response) {
+      return (json.decode(response.body) as List).map((e) => StatusModel.fromJson(e)).toList();
     }, 'intId=$engineerID' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-  Future<dynamic> assignEnginerAppointment(
-      AppointmentStatusUpdateCredentials credentials) {
+  Future<dynamic> assignEnginerAppointment(AppointmentStatusUpdateCredentials credentials) {
     print(credentials.toJson());
     return postRequestMap(ApiUrls.assignEngineerAppointmentUrl, (r) {
       final response = json.decode(r.body);
-
       if (response) {
         return ResponseModel(statusCode: 1, response: 'Successfully Updated');
       } else {
@@ -417,12 +390,10 @@ class ApiService extends BaseApi {
     }, credentials.toJson());
   }
 
-  Future<dynamic> updateAppointmentStatus(
-      AppointmentStatusUpdateCredentials credentials) {
+  Future<dynamic> updateAppointmentStatus(AppointmentStatusUpdateCredentials credentials) {
     print(credentials.toJson());
     return postRequestMap(ApiUrls.updateAppointmentStatusUrl, (r) {
       final response = json.decode(r.body);
-
       if (response) {
         return ResponseModel(statusCode: 1, response: 'Successfully Updated');
       } else {
@@ -431,12 +402,9 @@ class ApiService extends BaseApi {
     }, credentials.toJson());
   }
 
-  Future<dynamic> abortappointmentbyreason(
-      AbortAppointmentReasonModel credentials) {
-    print(credentials.toJson());
+  Future<dynamic> abortappointmentbyreason(AbortAppointmentReasonModel credentials) {
     return postRequestMap(ApiUrls.abortappointmentreason, (r) {
       final response = json.decode(r.body);
-      print(response);
       if (response) {
         return ResponseModel(
             statusCode: 1, response: 'Abort sent for approval');
@@ -447,8 +415,6 @@ class ApiService extends BaseApi {
   }
 
   Future<dynamic> confirmAbortAppointment(ConfirmAbortAppointment credentials) {
-    print(credentials.toJson());
-
     return postRequestMap(ApiUrls.updateAbortAppointment, (r) {
       final response = json.decode(r.body);
       if (response) {
@@ -459,37 +425,21 @@ class ApiService extends BaseApi {
     }, credentials.toJson());
   }
 
-  Future<dynamic> getSurveyQuestionAppointmentWise(
-      String appointmentID, UserModel loginUser) {
-    return getRequestWithParam(ApiUrls.getSurveyQuestionAppointmentWiseUrl,
-        (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => SurveyResponseModel.fromJson(e))
-          .toList();
-    },
-        'intappointmentId=$appointmentID' +
-            '&${AppStrings.intCompanyIdKey}=${loginUser.intCompanyId}');
+  Future<dynamic> getSurveyQuestionAppointmentWise(String appointmentID, UserModel loginUser) {
+    return getRequestWithParam(ApiUrls.getSurveyQuestionAppointmentWiseUrl, (response) {
+      return (json.decode(response.body) as List).map((e) => SurveyResponseModel.fromJson(e)).toList();
+    }, 'intappointmentId=$appointmentID' + '&${AppStrings.intCompanyIdKey}=${loginUser.intCompanyId}');
   }
 
-  Future<dynamic> getSurveyQuestionAnswerDetail(
-      String appointmentID, String companyId) {
-    return getRequestWithParam(ApiUrls.getSurveyQuestionAnswerDetailUrl,
-        (response) {
-      print("############____"+response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => QuestionAnswer.fromJson(e))
-          .toList();
-    },
-        'intappointmentId=$appointmentID' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+  Future<dynamic> getSurveyQuestionAnswerDetail(String appointmentID, String companyId) {
+    return getRequestWithParam(ApiUrls.getSurveyQuestionAnswerDetailUrl, (response) {
+      return (json.decode(response.body) as List).map((e) => QuestionAnswer.fromJson(e)).toList();
+    }, 'intappointmentId=$appointmentID' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-  Future<dynamic> updateCallForwardAppointment(
-      String appointmentID, String companyId) {
+  Future<dynamic> updateCallForwardAppointment(String appointmentID, String companyId) {
     return getRequestWithParam(ApiUrls.updateCallForwardAppointment, (r) {
       final response = json.decode(r.body);
-
       if (response) {
         return ResponseModel(statusCode: 1, response: 'Successfully Updated');
       } else {
@@ -498,7 +448,6 @@ class ApiService extends BaseApi {
     }, 'intId=$appointmentID' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-// TODO: Need to check again.
   Future<dynamic> submitSurveyAnswer(AnswerCredential credentials) {
     return postRequest(ApiUrls.addSurveyQuestionAnswerDetailUrl, (r) {
       final response = json.decode(r.body);
@@ -506,7 +455,6 @@ class ApiService extends BaseApi {
       return ResponseModel(statusCode: 1, response: 'Successfully Updated');
     }, credentials.toJson());
   }
-
 
   Future<dynamic> onclickpdf(PDFOpenModel pdFopenModel) {
     return postRequest(ApiUrls.supplierDocumentUpdateEngineerRead, (r) {
@@ -516,96 +464,53 @@ class ApiService extends BaseApi {
     }, pdFopenModel.toJson());
   }
 
-
-  // TODO: Need to check again.
   Future<dynamic> submitListSurveyAnswer(List<AnswerCredential> credentials) {
     return postRequestList(ApiUrls.addSurveyQuestionAnswerDetailUrl, (r) {
       final response = json.decode(r.body);
       print('response-->$response');
+      //return response;
       return ResponseModel(statusCode: 1, response: 'Successfully Updated');
     }, json.encode(credentials));
   }
 
-
   Future<dynamic> getCustomerById(String customerID, String companyId) {
     return getRequestWithParam(ApiUrls.getCustomerByIdUrl, (response) {
-      print(response.body);
       return CustomerDetails.fromJson(json.decode(response.body));
-    },
-        'intCustomerId=$customerID' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+    }, 'intCustomerId=$customerID' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
-
 
   Future<dynamic> getTableById(String appointmentID, String companyId) {
     return getRequestWithParam(ApiUrls.getJmbCloseAppointmentData, (response) {
       print(response.body);
       return CheckCloseJobModel.fromJson(json.decode(response.body));
-    },
-        'appointmentId=$appointmentID' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+    }, 'appointmentId=$appointmentID' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-
-  Future<dynamic> getEngineerAppointments(
-      String engeenerID, String date, String companyId) {
+  Future<dynamic> getEngineerAppointments(String engeenerID, String date, String companyId) {
     return getRequestWithParam(ApiUrls.getEngineerAppointmentsUrl, (response) {
-      print(response.body);
-      return (json.decode(response.body)['table'] as List)
-          .map((e) => AppTable.fromJson(e))
-          .toList();
-    },
-        'today=$date' +
-            '&intId=$engeenerID' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+      return (json.decode(response.body)['table'] as List).map((e) => AppTable.fromJson(e)).toList();
+    }, 'today=$date' + '&intId=$engeenerID' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-
-  Future<dynamic> getTodaysAppointments(
-      String engeenerID, String date, String companyId) {
+  Future<dynamic> getTodaysAppointments(String engeenerID, String date, String companyId) {
     return getRequestWithParam(ApiUrls.getEngineerAppointmentsUrl, (response) {
-      print(response.body);
-      return (json.decode(response.body)['table'] as List)
-          .map((e) => Appointment.fromJson(e))
-          .toList();
-    },
-        'today=$date' +
-            '&intId=$engeenerID' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+      return (json.decode(response.body)['table'] as List).map((e) => Appointment.fromJson(e)).toList();
+    }, 'today=$date' + '&intId=$engeenerID' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-
-
-
-
-
-  Future<dynamic> getRoutePlanDetailEngineerWise(
-      String enginneerID, String dteDate) {
+  Future<dynamic> getRoutePlanDetailEngineerWise(String enginneerID, String dteDate) {
     return getRequestWithParam(ApiUrls.apiRoutePlanner, (response) {
-      print(response.body);
-      return (json.decode(response.body)['table1'] as List)
-          .map((e) => Table1.fromJson(e))
-          .toList();
-    },
-            'dteDate=$dteDate' +
-            '&${AppStrings.intEngineerid}=$enginneerID');
+      return (json.decode(response.body)['table1'] as List).map((e) => Table1.fromJson(e)).toList();
+    }, 'dteDate=$dteDate' + '&${AppStrings.intEngineerid}=$enginneerID');
   }
 
-
-
-  Future<dynamic> getRoutePlannerEngineerBaseLocation(
-      String enginneerID) {
+  Future<dynamic> getRoutePlannerEngineerBaseLocation(String enginneerID) {
     return getRequestWithParam(ApiUrls.getRoutePlannerEngineerBaseLocation, (response) {
-      print(response.body+"/////");
       return EngineerBaseLocation.fromJson(json.decode(response.body));
-    },
-            '&${AppStrings.intEngineerid}=$enginneerID');
+    }, '&${AppStrings.intEngineerid}=$enginneerID');
   }
 
-
-
-  Future<dynamic> getMAICheckProcess(
-      String customerID, String processId, String companyId) {
+  Future<dynamic> getMAICheckProcess(String customerID, String processId, String companyId) {
     return getRequestWithParam(ApiUrls.getMAICheckProcess, (r) {
       final response = json.decode(r.body);
       if (response.toString().toLowerCase() == 'true') {
@@ -613,45 +518,28 @@ class ApiService extends BaseApi {
       } else {
         return ResponseModel(statusCode: 0, response: 'Please try again');
       }
-    },
-        'intcustomerid=$customerID' +
-            '&strProcessid=$processId' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+    }, 'intcustomerid=$customerID' + '&strProcessid=$processId' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-  Future<dynamic> getItemsForOrder(UserModel user) {
-    print(user.id);
+  Future<dynamic> getItemsForOrder(UserModel user) {print(user.id);
     return getRequestWithParam(ApiUrls.getItemsForOrder, (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => ItemOrder.fromJson(e))
-          .toList();
-    },
-        'intUserId=${user.id.toString()}' +
-            '&${AppStrings.intCompanyIdKey}=${user.intCompanyId}');
+      return (json.decode(response.body) as List).map((e) => ItemOrder.fromJson(e)).toList();
+    }, 'intUserId=${user.id.toString()}' + '&${AppStrings.intCompanyIdKey}=${user.intCompanyId}');
   }
 
   Future<dynamic> getContractsForOrder(UserModel user) {
     return getRequestWithParam(ApiUrls.getContractsForOrder, (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => ContractOrder.fromJson(e))
-          .toList();
-    },
-        'intUserId=${user.id.toString()}' +
-            '&${AppStrings.intCompanyIdKey}=${user.intCompanyId}');
+      return (json.decode(response.body) as List).map((e) => ContractOrder.fromJson(e)).toList();
+    }, 'intUserId=${user.id.toString()}' + '&${AppStrings.intCompanyIdKey}=${user.intCompanyId}');
   }
 
   Future<dynamic> saveOrder(SaveOrder saveOrder) {
     return postRequest(ApiUrls.saveOrder, (r) {
       final response = json.decode(r.body);
-      print(response.runtimeType);
-
       if (response.runtimeType == int) {
         return ResponseModel(statusCode: 1, response: response.toString());
       } else {
-        return ResponseModel(
-            statusCode: 0, response: AppStrings.UNABLE_TO_SAVE);
+        return ResponseModel(statusCode: 0, response: AppStrings.UNABLE_TO_SAVE);
       }
     }, saveOrder.toJson());
   }
@@ -659,247 +547,143 @@ class ApiService extends BaseApi {
   Future<dynamic> saveOrderLine(SaveOrderLine saveOrderLine) {
     return postRequestMap(ApiUrls.saveOrderLine, (r) {
       final response = json.decode(r.body);
-      print(response);
       if (response) {
         return ResponseModel(statusCode: 1, response: response.toString());
       } else {
-        return ResponseModel(
-            statusCode: 0, response: AppStrings.UNABLE_TO_SAVE);
+        return ResponseModel(statusCode: 0, response: AppStrings.UNABLE_TO_SAVE);
       }
     }, saveOrderLine.toJson());
   }
 
-  Future<dynamic> getStockCheckRequestList(
-      String intEngineerId, String companyId) {
+  Future<dynamic> getStockCheckRequestList(String intEngineerId, String companyId) {
     return getRequestWithParam(ApiUrls.getStockCheckRequestList, (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => StockCheckModel.fromJson(e))
-          .toList();
-    },
-        'intEngineerId=$intEngineerId' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+      return (json.decode(response.body) as List).map((e) => StockCheckModel.fromJson(e)).toList();
+    }, 'intEngineerId=$intEngineerId' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
   Future<dynamic> getSerialsByRequestId(String intRequestId, String companyId) {
     return getRequestWithParam(ApiUrls.getSerialsByRequestId, (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => SerialNoModel.fromJson(e))
-          .toList();
-    },
-        'intRequestId=$intRequestId' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+      return (json.decode(response.body) as List).map((e) => SerialNoModel.fromJson(e)).toList();
+    }, 'intRequestId=$intRequestId' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-// TODO: - Need to check again.
-  Future<dynamic> validateSerialsForReply(
-      List<SerialNoModel> list, String companyId) {
+  Future<dynamic> validateSerialsForReply(List<SerialNoModel> list, String companyId) {
     final Map<String, dynamic> map = new Map<String, dynamic>();
     map['listSerialModel'] = list.map((e) => e.toJson()).toList();
     map['${AppStrings.intCompanyIdKey}'] = companyId;
-    print("map is: $map");
     return postRequestList(ApiUrls.validateSerialsForReply, (r) {
       final response = json.decode(r.body);
-      print(response);
       if (response != null) {
-        return (response as List)
-            .map((e) => SerialNoModel.fromJson1(e))
-            .toList();
+        return (response as List).map((e) => SerialNoModel.fromJson1(e)).toList();
       } else {
-        return ResponseModel(
-            statusCode: 0, response: AppStrings.UNABLE_TO_VALIDATE);
+        return ResponseModel(statusCode: 0, response: AppStrings.UNABLE_TO_VALIDATE);
       }
     }, json.encode(map));
   }
 
-  Future<dynamic> saveEngineerReply(
-      StockRequestReplyModel stockRequestReplyModel) {
+  Future<dynamic> saveEngineerReply(StockRequestReplyModel stockRequestReplyModel) {
     return postRequestList(ApiUrls.saveEngineerReply, (r) {
       final response = json.decode(r.body);
-      print(response);
       if (response) {
         return ResponseModel(statusCode: 1, response: response.toString());
       } else {
-        return ResponseModel(
-            statusCode: 0, response: AppStrings.UNABLE_TO_SAVE);
+        return ResponseModel(statusCode: 0, response: AppStrings.UNABLE_TO_SAVE);
       }
     }, json.encode(stockRequestReplyModel.toJson()));
   }
 
   Future<dynamic> getOrderListByEngId(String engId, String companyId) {
-    print(engId);
     return getRequestWithParam(ApiUrls.getOrderListByEngId, (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => OrderModel.fromJson(e))
-          .toList();
+      return (json.decode(response.body) as List).map((e) => OrderModel.fromJson(e)).toList();
     }, 'intEngId=$engId' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
   Future<dynamic> getStockOrderById(String intId, String companyId) {
-    print(intId);
     return getRequestWithParam(ApiUrls.getStockOrderById, (response) {
-      print(response.body);
       return OrderDetailModel.fromJson(json.decode(response.body));
     }, 'intId=$intId' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-
-  Future<dynamic> getStockOrderLineDetails(
-      String intOrderId, String companyId) {
-    print(intOrderId);
+  Future<dynamic> getStockOrderLineDetails(String intOrderId, String companyId) {
     return getRequestWithParam(ApiUrls.getStockOrderLineDetails, (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => OrderLineDetailModel.fromJson(e))
-          .toList();
+      return (json.decode(response.body) as List).map((e) => OrderLineDetailModel.fromJson(e)).toList();
     }, 'intOrderId=$intOrderId' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-
-  Future<dynamic> getStockOrderLineItemsByOrderId(
-      String intOrderId, String companyId) {
-    print(intOrderId);
-    return getRequestWithParam(ApiUrls.getStockOrderLineItemsByOrderId,
-        (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => OrderLineDetailModel.fromJson(e))
-          .toList();
+  Future<dynamic> getStockOrderLineItemsByOrderId(String intOrderId, String companyId) {
+    return getRequestWithParam(ApiUrls.getStockOrderLineItemsByOrderId, (response) {
+      return (json.decode(response.body) as List).map((e) => OrderLineDetailModel.fromJson(e)).toList();
     }, 'intOrderId=$intOrderId' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-  Future<dynamic> getOrderExportCSVDetails(
-      String intOrderId, String companyId) {
-    print(intOrderId);
+  Future<dynamic> getOrderExportCSVDetails(String intOrderId, String companyId) {
     return getRequestWithParam(ApiUrls.getOrderExportCSVDetails, (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => OrderExportModel.fromJson(e))
-          .toList();
+      return (json.decode(response.body) as List).map((e) => OrderExportModel.fromJson(e)).toList();
     }, 'intOrderId=$intOrderId' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-  Future<dynamic> getSerialListByEmployeeId(
-      String intEngineerId, String companyId) {
+  Future<dynamic> getSerialListByEmployeeId(String intEngineerId, String companyId) {
     return getRequestWithParam(ApiUrls.getSerialListByEmployeeId, (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => SerialItemModel.fromJson(e))
-          .toList();
-    },
-        'intEngineerId=$intEngineerId' +
-            '&${AppStrings.intCompanyIdKey}=$companyId');
+      return (json.decode(response.body) as List).map((e) => SerialItemModel.fromJson(e)).toList();
+    }, 'intEngineerId=$intEngineerId' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-
-
-
-  Future<dynamic> getMapRoutePlanner(
-      String lat_lng_origin, String lat_lng_destination) {
+  Future<dynamic> getMapRoutePlanner(String lat_lng_origin, String lat_lng_destination) {
     return getRequestWithParamOther(ApiUrls.map_routing_url , (response) {
-
-
-      print("-------++++++"+response.body);
       var responseval = response.body;
-
       return responseval;
-    },
-        'waypoints='+lat_lng_origin+'|'+lat_lng_destination+'&mode=drive&apiKey=41c4b45ff598430bb5417de5feef8f15');
+    }, 'waypoints='+lat_lng_origin+'|'+lat_lng_destination+'&mode=drive&apiKey=41c4b45ff598430bb5417de5feef8f15');
   }
-
-
 
   Future<dynamic> getAgentListByLoginUser(UserModel user) {
     String userId = user.id;
     String companyId = user.intCompanyId;
     return getRequestWithParam(ApiUrls.agentListUrl, (response) {
-      print(response.body);
       return AgentResponseModel.fromJson(json.decode(response.body));
     }, 'intId=30056' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-
-
   saveSortorderofLocation(Map data) async {
-
-
     UserModel user = await Prefs.getUser();
-
     var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.getInsertUpdateRoutePlanData;
     final response = await http.post(Uri.parse(url) , body: jsonEncode(data) ,  headers: {
     'Authorization': 'Bearer ${user.accessToken}' , "Content-Type": "application/json"
     });
-
-    print(response.body);
-
     return response.body.toString();
   }
 
-
-
-
    VerifyEmail(Map data) async {
-
     UserModel user = await Prefs.getUser();
     var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.verifyEmail;
     final response = await http.post(Uri.parse(url) , body: jsonEncode(data) ,  headers: {
       'Authorization': 'Bearer ${user.accessToken}' , "Content-Type": "application/json"
     });
-
-    print(response.body);
-
     return response.body.toString();
   }
 
-
   Future<dynamic> checkIfEnrouted(UserModel model) {
-    return getRequestWithParam(ApiUrls.isEnrouted_url,
-            (response) {
-
-          return response.body.toString();
-        },
-        'intEngineerId='+model.intEngineerId);
+    return getRequestWithParam(ApiUrls.isEnrouted_url, (response) {
+      return response.body.toString();
+    }, 'intEngineerId='+model.intEngineerId);
   }
 
-
   Future<String> saveAppointments(Map data) async {
-
     UserModel user = await Prefs.getUser();
     var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.saveAppointments;
     final response = await http.post(Uri.parse(url) , body: jsonEncode(data) ,  headers: {
       'Authorization': 'Bearer ${user.accessToken}' , "Content-Type": "application/json"
     });
-
     return response.body.toString();
   }
 
-
-
-
-
   Future<String> uploadFilesWithParameters(String url , List<File> files , Map<String,String> map) async {
-
-    // Prepare parameters
-   /* var map = {
-      'intDetailsId': 'value1',
-      'intAppointmentId': 'value2',
-      'intCreatedBy': 'value2',
-    };*/
-
     UserModel user = await Prefs.getUser();
     var token = user.accessToken;
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.headers['Authorization'] = 'Bearer $token';
-
-    // Add files to request
     for (var file in files) {
       var stream = http.ByteStream(file.openRead());
       var length = await file.length();
-
-      print(files[0].absolute.path+"---"+CommonUtils().getFileMimeType(file.absolute.path).toString()+"------"+file.path.split('/').last);
-
       var multipartFile = http.MultipartFile(
         'esignFile',
         stream,
@@ -909,17 +693,8 @@ class ApiService extends BaseApi {
       );
       request.files.add(multipartFile);
     }
-
-    // Add parameters to request
     request.fields.addAll(map);
-
-    // Send the request
     var response = await request.send();
-
     return  response.stream.bytesToString();
   }
-
-
-
-
 }

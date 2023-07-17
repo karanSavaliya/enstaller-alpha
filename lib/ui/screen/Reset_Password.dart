@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -13,25 +12,20 @@ import 'package:enstaller/ui/screen/widget/app_text_field_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:flutter/material.dart';
 
-
 class ResetScreenArguments {
-
   String emailId;
   ResetScreenArguments({
     this.emailId,
   });
-
 }
 
 
 class ResetPassword extends StatefulWidget {
-
   String emailId;
   ResetPassword({ this.emailId});
 
   @override
   ResetPasswordState createState() => ResetPasswordState();
-
 }
 
 
@@ -45,28 +39,17 @@ class ResetPasswordState extends State<ResetPassword> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-
     print(widget.emailId);
-
-
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
         body: BaseView<LogInViewModel>(
             builder: (context, model, child) {
-
               model.EmailidController.text = widget.emailId;
-
               return SingleChildScrollView(child:Column(
-
                 children: <Widget>[
-
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.04,
                   ),
@@ -82,7 +65,6 @@ class ResetPasswordState extends State<ResetPassword> {
                     decoration: BoxDecoration(color: AppColors.whiteColor),
                   ),
                   Container(
-//                width: SizeConfig.screenWidth,
                     height: SizeConfig.screenHeight * .76,
                     decoration: BoxDecoration(
                       color: AppColors.loginBottomColor,
@@ -111,7 +93,6 @@ class ResetPasswordState extends State<ResetPassword> {
                           preFix: Icons.person_outline,
                           assetPath: ImageFile.loginPass,
                         ),
-
                         SizeConfig.verticalSpace(SizeConfig.screenHeight * .03),
                         AppTextFieldWidget(
                           width: SizeConfig.screenWidth * .8,
@@ -120,7 +101,6 @@ class ResetPasswordState extends State<ResetPassword> {
                           preFix: Icons.person_outline,
                           assetPath: ImageFile.loginPass,
                         ),
-
                         SizeConfig.verticalSpace(SizeConfig.screenHeight * .03),
                         AppTextFieldWidget(
                           width: SizeConfig.screenWidth * .8,
@@ -129,8 +109,6 @@ class ResetPasswordState extends State<ResetPassword> {
                           preFix: Icons.person_outline,
                           assetPath: ImageFile.otp,
                         ),
-
-
                         SizeConfig.verticalSpace(SizeConfig.screenHeight * .05),
                         model.state == ViewState.Busy
                             ? AppConstants.circulerProgressIndicator()
@@ -139,34 +117,23 @@ class ResetPasswordState extends State<ResetPassword> {
                           textStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               color: AppColors.whiteColor,
-                              fontSize: SizeConfig.screenHeight * .02),
+                              fontSize: SizeConfig.screenHeight * .02,
+                          ),
                           height:
                           MediaQuery.of(context).size.height * 0.06,
                           width: SizeConfig.screenWidth * .8,
                           color: AppColors.appThemeColor,
                           radius: 20,
                           onTap: () {
-
                             model.ResetPasswordModel(context);
                           },
                         ),
-
                       ],
                     ),
                   )
-
                 ],
-
               ));
-
             })
-
-
-
-
     );
-
   }
-
-
 }
