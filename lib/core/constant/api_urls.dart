@@ -109,4 +109,5 @@ class ApiUrls {
 
   static String engineerDocumentList = baseUrl + "Engineer/GetEnginnerDocumentList";
 
+  static String engineerProfilePhotoUrl = "https://enstall.boshposh.com/Upload/EngineerPhoto";
 }

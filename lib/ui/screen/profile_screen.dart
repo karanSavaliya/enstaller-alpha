@@ -1,16 +1,11 @@
 // @dart=2.9
-
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
-import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/profile_details.dart';
 import 'package:enstaller/core/model/update_profile.dart';
-import 'package:enstaller/core/model/update_profile_response_model.dart';
 import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
@@ -19,10 +14,12 @@ import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:progress_dialog/progress_dialog.dart';
+
+import '../../core/constant/api_urls.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -41,6 +38,7 @@ class MapScreenState extends State<ProfilePage>
   File profilePhoto;
   String profilePhotoPath = '';
   String changedBase64ProfilePhoto = '';
+  var image;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   ApiService _apiService = ApiService();
@@ -98,9 +96,18 @@ class MapScreenState extends State<ProfilePage>
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 ((base64ProfilePhoto != '')
-                                    ? new ShowBase64Image(
-                                        base64String: base64ProfilePhoto,
-                                        applyStyle: true)
+                                    ? new Container(
+                                    width: 140.0,
+                                    height: 140.0,
+                                    decoration: new BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: AppColors.lightGreyColor,
+                                            width: 1.0),
+                                        image: new DecorationImage(
+                                          image: NetworkImage('${ApiUrls.engineerProfilePhotoUrl}/$base64ProfilePhoto'),
+                                          fit: BoxFit.cover,
+                                        )))
                                     : new Container(
                                         width: 140.0,
                                         height: 140.0,
@@ -258,7 +265,6 @@ class MapScreenState extends State<ProfilePage>
 
   @override
   void dispose() {
-    // Clean up the controller when the Widget is disposed
     myFocusNode.dispose();
     super.dispose();
   }
@@ -297,7 +303,7 @@ class MapScreenState extends State<ProfilePage>
         setState(() {
           print("Image File Path ==> $profilePhotoPath");
           if (_isChangeImage) {
-            updateProfilePhoto();
+            _uploadImage();
           } else {
             AppConstants.showFailToast(context, "Please change image before updating profile photo.");
           }
@@ -312,29 +318,46 @@ class MapScreenState extends State<ProfilePage>
       user;
     });
     ProfileDetails details = await _apiService.getProfileInformation(user.intEngineerId);
-    Uint8List _bytesImage = Base64Decoder().convert(details.strEngineerPhoto.replaceAll(AppConstants.base64Prefix, ''));
+    //Uint8List _bytesImage = Base64Decoder().convert(details.strEngineerPhoto.replaceAll(AppConstants.base64Prefix, ''));
     final dir = await path_provider.getTemporaryDirectory();
     File file = createFile("${dir.absolute.path}/profile-photo/test.png");
-    file.writeAsBytesSync(_bytesImage);
+    //file.writeAsBytesSync(_bytesImage);
     setState(() {
       profilePhotoPath = '';
-      base64ProfilePhoto = base64Encode(_bytesImage);
+      base64ProfilePhoto = details.strEngineerPhoto;
+      print(base64ProfilePhoto);
+      print("===");
       _isChangeImage = false;
     });
   }
 
-  Future<void> updateProfilePhoto() async {
+  void _uploadImage() async {
     progressDialog.show();
-    String success = await _apiService.updateProfilePhoto(UpdateProfile(
-        strFile: changedBase64ProfilePhoto,
-        intEngineerId: user.intEngineerId,
-        intUserId: user.id));
-    if (success == 'true') {
-      _isChangeImage = false;
-    } else {
-      AppConstants.showFailToast(
-          context, "Error Occured while update profile photo.");
+    if (image == null) {
+      progressDialog.hide();
+      return;
     }
+
+    UserModel user = await Prefs.getUser();
+
+    var request = http.MultipartRequest('POST', Uri.parse(ApiUrls.baseUrl + ApiUrls.updateProfilePhoto));
+    request.headers['Authorization'] = 'Bearer ${user.accessToken}';
+    request.fields['intUserId'] = user.id;
+    request.fields['intEngineerId'] = user.intEngineerId;
+
+    var imageFile = await http.MultipartFile.fromPath('strfile', image.path);
+    request.files.add(imageFile);
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      AppConstants.showSuccessToast(context, "Profile photo updated successfully.");
+      setState(() {
+        _isChangeImage = false;
+      });
+    } else {
+      AppConstants.showFailToast(context, "Error Occupied while update profile photo.");
+    }
+
     setState(() {
       _status = true;
     });
@@ -419,7 +442,8 @@ class MapScreenState extends State<ProfilePage>
   }
 
   Future<void> _chooseFile({File mImage, BuildContext context, ImageSource imageSource}) async {
-    var image = await ImagePicker.pickImage(source: imageSource);
+    image = await ImagePicker.pickImage(source: imageSource);
+    setState(() {});
     if (image != null) {
       var compressedFile = await FlutterImageCompress.compressWithFile(
         image?.path,
@@ -431,6 +455,7 @@ class MapScreenState extends State<ProfilePage>
       File file = createFile("${dir.absolute.path}/${image.path}/test.png");
       file.writeAsBytesSync(compressedFile);
       changedBase64ProfilePhoto = base64Encode(compressedFile);
+
       setState(() {
         base64ProfilePhoto = '';
         profilePhoto = file;
