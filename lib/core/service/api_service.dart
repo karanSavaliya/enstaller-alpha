@@ -102,8 +102,7 @@ class ApiService extends BaseApi {
     if (userID == null || userID == "null") {
       userID = "4";
     }
-    return getRequestWithParam(ApiUrls.getMeterSerialNoEngineerwiseUrl,
-        (response) {
+    return getRequestWithParam(ApiUrls.getMeterSerialNoEngineerwiseUrl, (response) {
       print("Response: =====>" + response.body);
       Prefs.saveMeterSerialNoData(response.body);
     }, 'intUserId=$userID');
@@ -116,8 +115,7 @@ class ApiService extends BaseApi {
     return getRequestWithParam(ApiUrls.getappointmenttodaytomorrow, (response) {
       print(response.body);
       return (json.decode(response.body) as List)
-          .map((e) => Appointment.fromJson(e))
-          .toList();
+          .map((e) => Appointment.fromJson(e)).toList();
     }, 'id=$userID');
   }
 

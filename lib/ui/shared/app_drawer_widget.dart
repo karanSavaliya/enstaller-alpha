@@ -94,22 +94,22 @@ class AppDrawerWidget extends StatelessWidget {
                 removeTop: true,
                 child: ListView(
                   children: [
-                    // DrawerRowWidget(
-                    //   title: 'Electricity',
-                    //   assetPath: ImageFile.dashboard,
-                    //   onTap: () {
-                    //     Navigator.of(context).push(new MaterialPageRoute(
-                    //         builder: (context) => Electricity()));
-                    //   },
-                    // ),
-                    // DrawerRowWidget(
-                    //   title: 'Gas',
-                    //   assetPath: ImageFile.dashboard,
-                    //   onTap: () {
-                    //     Navigator.of(context).push(new MaterialPageRoute(
-                    //         builder: (context) => Gas()));
-                    //   },
-                    // ),
+                    DrawerRowWidget(
+                      title: 'Electricity',
+                      assetPath: ImageFile.dashboard,
+                      onTap: () {
+                        Navigator.of(context).push(new MaterialPageRoute(
+                            builder: (context) => Electricity()));
+                      },
+                    ),
+                    DrawerRowWidget(
+                      title: 'Gas',
+                      assetPath: ImageFile.dashboard,
+                      onTap: () {
+                        Navigator.of(context).push(new MaterialPageRoute(
+                            builder: (context) => Gas()));
+                      },
+                    ),
                     DrawerRowWidget(
                       title: 'Dashboard',
                       assetPath: ImageFile.dashboard,

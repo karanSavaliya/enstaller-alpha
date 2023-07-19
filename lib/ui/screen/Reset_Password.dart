@@ -33,7 +33,6 @@ class ResetPasswordState extends State<ResetPassword> {
 
   bool isChecked = false;
   bool autoValidation = false;
-  var _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {

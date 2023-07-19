@@ -67,8 +67,7 @@ class Prefs {
     return currentIndex;
   }
 
-  static void setUserProfile(UserModel userModel,
-      {int roleId, String wareHouseId}) async {
+  static void setUserProfile(UserModel userModel, {int roleId, String wareHouseId}) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.setString("access_token", userModel.accessToken.toString());
     preferences.setString("token_type", userModel.tokenType);

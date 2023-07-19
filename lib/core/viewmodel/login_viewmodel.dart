@@ -85,11 +85,9 @@ class LogInViewModel extends BaseModel {
         }
         response.userDetails.rememberMe = true;
 
-        Prefs.setUserProfile(response.userDetails,
-            roleId: GlobalVar.roleId, wareHouseId: GlobalVar.warehosueID);
+        Prefs.setUserProfile(response.userDetails, roleId: GlobalVar.roleId, wareHouseId: GlobalVar.warehosueID);
 
-        final SharedPreferences preferences =
-            await SharedPreferences.getInstance();
+        final SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.setString('ups', passwordController.text);
         if (response.userDetails.bisNonTechnical == true) {
           Navigator.of(context).pushReplacementNamed("/customerListScreen");
