@@ -20,25 +20,19 @@ import 'core/viewmodel/appthemeviewmodel.dart';
 import 'ui/screen/maps_route_planner_plotmarker.dart';
 
 void main() {
-
   WidgetsFlutterBinding.ensureInitialized();
-  //HttpOverrides.global = new DevHttpOverrides();
   setupLocator();
   Prefs.getUser().then((value) {
     runApp(MyApp(
       logInUser: value,
     ));
   });
-
 }
 
-
 class MyApp extends StatelessWidget {
-
   UserModel logInUser;
   MyApp({this.logInUser});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -68,8 +62,7 @@ class MainMaterialApp extends StatelessWidget {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
     }
 
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

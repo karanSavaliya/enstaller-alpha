@@ -325,8 +325,6 @@ class MapScreenState extends State<ProfilePage>
     setState(() {
       profilePhotoPath = '';
       base64ProfilePhoto = details.strEngineerPhoto;
-      print(base64ProfilePhoto);
-      print("===");
       _isChangeImage = false;
     });
   }
