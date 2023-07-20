@@ -25,7 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     SizeConfig.sizeConfigInit(context);
-   // FlutterStatusbarcolor.setStatusBarColor(Colors.transparent);
     return Scaffold(
       body: BaseView<LogInViewModel>(
         builder: (context, model, child) {

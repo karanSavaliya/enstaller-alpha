@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:enstaller/ui/screen/detail_screen.dart';
 import 'package:enstaller/ui/screen/maps_route_planner_plotmarker.dart';
 import 'package:enstaller/ui/screen/survey.dart';
