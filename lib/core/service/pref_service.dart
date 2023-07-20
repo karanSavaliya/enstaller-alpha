@@ -1,8 +1,5 @@
 // @dart=2.9
-
-
 import 'dart:convert';
-
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/model/meter_serial_number_model.dart';
 import 'package:enstaller/core/model/send/answer_credential.dart';
