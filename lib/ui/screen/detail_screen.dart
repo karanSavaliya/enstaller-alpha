@@ -808,54 +808,20 @@ class _DetailScreenState extends State<DetailScreen> {
                       textStyle: TextStyle(color: AppColors.whiteColor),
                       radius: 15,
                       onTap: () {
-
-                        //print(model.appointmentDetails.appointment.bisAbortRequested.toString()+"\\\\\\\\");
-
-                        if (model.appointmentDetails.appointment
-                            .bisAbortRequested == true &&
-                            model.appointmentDetails.appointment
-                                .bisAbortRequestApproved == false) {
-                          AppConstants.showFailToast(context,
-                              "You can not start survey as abort survey is requested");
-                        } else if (model.appointmentDetails.appointment
-                            .bisAbortRequested == true &&
-                            model.appointmentDetails.appointment
-                                .bisAbortRequestApproved == true) {
-                          AppConstants.showFailToast(context,
-                              "You can not start survey as this survey is aborted");
+                        if (model.appointmentDetails.appointment.bisAbortRequested == true && model.appointmentDetails.appointment.bisAbortRequestApproved == false) {
+                          AppConstants.showFailToast(context, "You can not start survey as abort survey is requested");
+                        } else if (model.appointmentDetails.appointment.bisAbortRequested == true && model.appointmentDetails.appointment.bisAbortRequestApproved == true) {
+                          AppConstants.showFailToast(context, "You can not start survey as this survey is aborted");
                         } else {
-                          if (model.isSurveyEnable() && model.appointmentDetails
-                              .appointment
-                              .appointmentEventType != "Rescheduled") {
-                            bool _isedit = model.appointmentDetails.appointment
-                                .surveyReceived ==
-                                AppStrings.yes
-                                ? true
-                                : false;
-                            String _status = model.appointmentDetails
-                                .appointment
-                                .appointmentEventType ??
-                                "";
-                            if (!_isedit && _status != "OnSite")
-                              model.onUpdateStatusOnSite(
-                                  context, widget.arguments.appointmentID);
+                          if (model.isSurveyEnable() && model.appointmentDetails.appointment.appointmentEventType != "Rescheduled") {
+                            bool _isedit = model.appointmentDetails.appointment.surveyReceived == AppStrings.yes ? true : false;
+                            String _status = model.appointmentDetails.appointment.appointmentEventType ?? "";
+                            if (!_isedit && _status != "OnSite") model.onUpdateStatusOnSite(context, widget.arguments.appointmentID);
 
-                            Navigator.of(context)
-                                .pushNamed(SurveyScreen.routeName,
-                                arguments: SurveyArguments(
-                                    customerID: widget.arguments.customerID,
-                                    dsmodel: model,
-                                    appointmentID: widget.arguments
-                                        .appointmentID,
-                                    edit: model.appointmentDetails.appointment
-                                        .surveyReceived == AppStrings.yes
-                                        ? true
-                                        : false))
-                                .then((value) {
+                            Navigator.of(context).pushNamed(SurveyScreen.routeName, arguments: SurveyArguments(customerID: widget.arguments.customerID, dsmodel: model, appointmentID: widget.arguments.appointmentID, edit: model.appointmentDetails.appointment.surveyReceived == AppStrings.yes ? true : false)).then((value) {
+
                               if (GlobalVar.isloadAppointmentDetail) {
-                                model.initializeData(
-                                    widget.arguments.appointmentID,
-                                    widget.arguments.customerID);
+                                model.initializeData(widget.arguments.appointmentID, widget.arguments.customerID);
                                 GlobalVar.isloadAppointmentDetail = false;
                               }
                             });

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../../core/constant/app_colors.dart';
 import '../../core/constant/app_string.dart';
 import '../../core/constant/image_file.dart';
+import 'package:provider/provider.dart';
 import '../../core/model/send/answer_credential.dart';
+import '../../core/provider/app_state_provider.dart';
 import '../shared/app_drawer_widget.dart';
 import '../shared/warehouse_app_drawer.dart';
 import 'widget/electricity/electricity_text_field_widget.dart';
@@ -17,131 +19,16 @@ class _GasState extends State<Gas> {
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  int _currentStep = 0;
-
-  String _visitSuccessful;
-  void _handleVisitSuccessfulSelection(String visitSuccessful) {
-    setState(() {
-      _visitSuccessful = visitSuccessful;
-    });
-  }
-
-  String _readingTaken;
-  void _handleReadingTakenSelection(String readingTaken) {
-    setState(() {
-      _readingTaken = readingTaken;
-    });
-  }
-
-  TextEditingController _textEditingControllerAppointmentDate = TextEditingController();
-  DateTime _selectedAppointmentDate;
-  Future<void> _selectAppointmentDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedAppointmentDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (picked != null) {
-      setState(() {
-        _selectedAppointmentDate = picked;
-        _textEditingControllerAppointmentDate.text = _formatDate(picked);
-      });
-    }
-  }
-
-  TextEditingController _textEditingControllerSiteVisitDate = TextEditingController();
-  DateTime _selectedSiteVisitDate;
-  Future<void> _selectSiteVisitDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedSiteVisitDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (picked != null) {
-      setState(() {
-        _selectedSiteVisitDate = picked;
-        _textEditingControllerSiteVisitDate.text = _formatDate(picked);
-      });
-    }
-  }
-
-  String _formatDate(DateTime date) {
-    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year.toString()}";
-  }
-
-  List<String> listUseTemplate = [];
-  void _handleUseTemplateSelection(String useTemplate, int index) {
-    setState(() {
-      listUseTemplate[index] = useTemplate;
-    });
-  }
-
-  List<TextEditingController> listInstallationStatusController = [TextEditingController()];
-  List<TextEditingController> listAssetProviderMPIDController = [TextEditingController()];
-  List<TextEditingController> listAssetClassCodeController = [TextEditingController()];
-  List<TextEditingController> listPaymentMethodCodeController = [TextEditingController()];
-  List<TextEditingController> listModelCodeController = [TextEditingController()];
-  List<TextEditingController> listManufacturerCodeController = [TextEditingController()];
-  List<TextEditingController> listYearOfManufacturerController = [TextEditingController()];
-  List<TextEditingController> listSerialNumberController = [TextEditingController()];
-  List<TextEditingController> listLocationCodeController = [TextEditingController()];
-  List<TextEditingController> listLocationNoteController = [TextEditingController()];
-  List<TextEditingController> listAssetStatusCodeController = [TextEditingController()];
-  List<TextEditingController> listMeterTypeController = [TextEditingController()];
-  List<TextEditingController> listMechanismCodeController = [TextEditingController()];
-  List<TextEditingController> listMeasuringCapacityController = [TextEditingController()];
-  List<TextEditingController> listMeterUsageCodeController = [TextEditingController()];
-  List<TextEditingController> listCollarStatusCodeController = [TextEditingController()];
-  List<TextEditingController> listOAMIInspectionDateController = [TextEditingController()];
-  List<TextEditingController> listPulseValueController = [TextEditingController()];
-  List<TextEditingController> listGasActOwnerRoleController = [TextEditingController()];
-  List<TextEditingController> listAssetRemovalDateController = [TextEditingController()];
-
-  List<TextEditingController> listNumberOfDigitsController = [TextEditingController()];
-  List<TextEditingController> listUnitsOfMeasureController = [TextEditingController()];
-  List<TextEditingController> listMultiplicationFactorController = [TextEditingController()];
-  List<TextEditingController> listReadingIndexController = [TextEditingController()];
-
-  DateTime _selectedOAMIInspectionDate;
-  Future<void> _selectOAMIInspectionDate(BuildContext context, int index) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedOAMIInspectionDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (picked != null) {
-      setState(() {
-        _selectedOAMIInspectionDate = picked;
-        listOAMIInspectionDateController[index].text = _formatDate(picked);
-      });
-    }
-  }
-
-  DateTime _selectedAssetRemovalDate;
-  Future<void> _selectAssetRemovalDate(BuildContext context, int index) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedAssetRemovalDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (picked != null) {
-      setState(() {
-        _selectedAssetRemovalDate = picked;
-        listAssetRemovalDateController[index].text = _formatDate(picked);
-      });
-    }
+  @override
+  void initState(){
+    super.initState();
+    AppStateProvider appStateProvider = Provider.of<AppStateProvider>(context,listen: false);
+    appStateProvider.initForm();
   }
 
   @override
   Widget build(BuildContext context) {
+    AppStateProvider appStateProvider = Provider.of<AppStateProvider>(context);
     return Scaffold(
       backgroundColor: AppColors.scafoldColor,
       key: _scaffoldKey,
@@ -173,30 +60,46 @@ class _GasState extends State<Gas> {
         actions: [],
       ),
       body: Stepper(
-        currentStep: _currentStep,
-        onStepTapped: (int index) {
-          setState(() {
-            _currentStep = index;
-          });
+        currentStep: appStateProvider.currentStep,
+        onStepTapped: (step) {
+          return;
         },
         onStepContinue: () {
-          setState(() {
-            if (_currentStep < 8 - 1) {
-              _currentStep += 1;
+          if(appStateProvider.currentStep != 6){
+            appStateProvider.fieldDataCheck(appStateProvider.currentStep, context);
+            if(appStateProvider.isCheckData == true){
+              setState(() {
+                if (appStateProvider.currentStep < 7 - 1) {
+                  appStateProvider.currentStepNext();
+                  appStateProvider.isCheckDataFalseSet();
+                }
+              });
             }
-          });
+          }
+          else{
+            appStateProvider.fieldDataCheck(appStateProvider.currentStep, context);
+            if(appStateProvider.isCheckData == true){
+              setState(() {
+                if (appStateProvider.currentStep < 7 - 1) {
+                  appStateProvider.currentStepNext();
+                  appStateProvider.isCheckDataFalseSet();
+                }
+              });
+              appStateProvider.insertData(context);
+            }
+          }
         },
         onStepCancel: () {
           setState(() {
-            if (_currentStep > 0) {
-              _currentStep -= 1;
+            if (appStateProvider.currentStep > 0) {
+              appStateProvider.currentStepCancel();
             }
           });
         },
         steps: [
           Step(
-            isActive: _currentStep == 0,
-            state: _currentStep >= 0 ? StepState.complete : StepState.indexed,
+            isActive: appStateProvider.currentStep == 0,
+            state: appStateProvider.currentStep >= 0 ? StepState.complete : StepState.indexed,
             title: Text('Gas Flow'),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,33 +107,47 @@ class _GasState extends State<Gas> {
               children: [
                 ElectricityTextFieldWidget(
                   hintText: "MEM MpId",
+                  controller: appStateProvider.memMpId,
+                  maxLength: 3,
+                  required: "required",
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Supplier MpId",
+                  controller: appStateProvider.supplierMpId,
+                  maxLength: 3,
+                  required: "required",
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "MPRN",
+                  controller: appStateProvider.mprn,
+                  maxLength: 10,
+                  required: "required",
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "External System Identity",
+                  controller: appStateProvider.externalSystemIdentity,
+                  required: "required",
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Correlation Id",
+                  controller: appStateProvider.correlationId,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Sapphire Work Id",
+                  controller: appStateProvider.sapphireWorkId,
+                  required: "required",
                 ),
               ],
             ),
           ),
           Step(
-            isActive: _currentStep == 1,
-            state: _currentStep >= 1 ? StepState.complete : StepState.indexed,
+            isActive: appStateProvider.currentStep == 1,
+            state: appStateProvider.currentStep >= 1 ? StepState.complete : StepState.indexed,
             title: Text('Existing Meter System'),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -238,39 +155,55 @@ class _GasState extends State<Gas> {
               children: [
                 ElectricityTextFieldWidget(
                   hintText: "Meter Link Code",
+                  controller: appStateProvider.meterLinkCode,
+                  maxLength: 1,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Status Code",
+                  controller: appStateProvider.statusCode,
+                  maxLength: 2,
+                  required: "required",
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Location Code",
+                  required: "required",
+                  controller: appStateProvider.locationCode,
+                  maxLength: 2,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Location Notes",
                   maxLine: 3,
+                  controller: appStateProvider.locationNotes,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Access Instructions",
                   maxLine: 3,
+                  controller: appStateProvider.accessInstructions,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Conversion Factor",
+                  required: "required",
+                  controller: appStateProvider.conversionFactor,
+                  keyboardType: "number",
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Metering Pressure",
+                  required: "required",
+                  controller: appStateProvider.meteringPressure,
+                  keyboardType: "number",
                 ),
               ],
             ),
           ),
           Step(
-            isActive: _currentStep == 2,
-            state: _currentStep >= 2 ? StepState.complete : StepState.indexed,
+            isActive: appStateProvider.currentStep == 2,
+            state: appStateProvider.currentStep >= 2 ? StepState.complete : StepState.indexed,
             title: Text('Site Address'),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -278,45 +211,56 @@ class _GasState extends State<Gas> {
               children: [
                 ElectricityTextFieldWidget(
                   hintText: "Postcode",
+                  required: "required",
+                  controller: appStateProvider.postCode,
+                  maxLength: 10,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "SubBuilding Name",
+                  controller: appStateProvider.subBuildingName,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Building Name",
+                  controller: appStateProvider.buildingName,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Dependent Through Fare",
+                  controller: appStateProvider.dependentThroughFare,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Through Fare",
+                  controller: appStateProvider.throughFare,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Double Dependent Locality",
+                  controller: appStateProvider.doubleDependentLocality,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Dependent Locality",
+                  controller: appStateProvider.dependentLocality,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "PostTown",
+                  controller: appStateProvider.postTown,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "County",
+                  controller: appStateProvider.county,
                 ),
               ],
             ),
           ),
           Step(
-            isActive: _currentStep == 3,
-            state: _currentStep >= 3 ? StepState.complete : StepState.indexed,
+            isActive: appStateProvider.currentStep == 3,
+            state: appStateProvider.currentStep >= 3 ? StepState.complete : StepState.indexed,
             title: Text('Create Work'),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,32 +268,40 @@ class _GasState extends State<Gas> {
               children: [
                 ElectricityTextFieldWidget(
                   hintText: "Appointment Date",
-                  onTap: () => _selectAppointmentDate(context),
-                  controller: _textEditingControllerAppointmentDate,
+                  onTap: () => appStateProvider.selectAppointmentDate(context),
+                  controller: appStateProvider.textEditingControllerAppointmentDate,
+                  maxLength: 10,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Additional Information For Work",
                   maxLine: 3,
+                  controller: appStateProvider.additionalInformationForWork,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Transaction Reference",
+                  controller: appStateProvider.transactionReference,
+                  maxLength: 15,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Transaction Type Code",
+                  controller: appStateProvider.transactionTypeCode,
+                  maxLength: 5,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Transaction Type Reason Code",
+                  controller: appStateProvider.transactionTypeReasonCode,
+                  maxLength: 5,
                 ),
               ],
             ),
           ),
           Step(
-            isActive: _currentStep == 4,
-            state: _currentStep >= 4 ? StepState.complete : StepState.indexed,
+            isActive: appStateProvider.currentStep == 4,
+            state: appStateProvider.currentStep >= 4 ? StepState.complete : StepState.indexed,
             title: Text('Complete Work'),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -357,8 +309,10 @@ class _GasState extends State<Gas> {
               children: [
                 ElectricityTextFieldWidget(
                   hintText: "Site Visit Date",
-                  controller: _textEditingControllerSiteVisitDate,
-                  onTap: () => _selectSiteVisitDate(context),
+                  required: "required",
+                  controller: appStateProvider.textEditingControllerSiteVisitDate,
+                  onTap: () => appStateProvider.selectSiteVisitDate(context),
+                  maxLength: 10,
                 ),
                 SizedBox(height: 10),
                 Text("\t\tVisit Successful"),
@@ -368,14 +322,14 @@ class _GasState extends State<Gas> {
                     Text("True"),
                     Radio(
                       value: 'true',
-                      groupValue: _visitSuccessful,
-                      onChanged: _handleVisitSuccessfulSelection,
+                      groupValue: appStateProvider.visitSuccessful,
+                      onChanged: appStateProvider.handleVisitSuccessfulSelection,
                     ),
                     Text("False"),
                     Radio(
                       value: 'false',
-                      groupValue: _visitSuccessful,
-                      onChanged: _handleVisitSuccessfulSelection,
+                      groupValue: appStateProvider.visitSuccessful,
+                      onChanged: appStateProvider.handleVisitSuccessfulSelection,
                     ),
                   ],
                 ),
@@ -387,48 +341,60 @@ class _GasState extends State<Gas> {
                     Text("True"),
                     Radio(
                       value: 'true',
-                      groupValue: _readingTaken,
-                      onChanged: _handleReadingTakenSelection,
+                      groupValue: appStateProvider.readingTaken,
+                      onChanged: appStateProvider.handleReadingTakenSelection,
                     ),
                     Text("False"),
                     Radio(
                       value: 'false',
-                      groupValue: _readingTaken,
-                      onChanged: _handleReadingTakenSelection,
+                      groupValue: appStateProvider.readingTaken,
+                      onChanged: appStateProvider.handleReadingTakenSelection,
                     ),
                   ],
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
+                  required: "required",
                   hintText: "Engineer Name",
+                  controller: appStateProvider.engineerName,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
+                  required: "required",
                   hintText: "Transaction Status Code",
+                  maxLength: 5,
+                  controller: appStateProvider.transactionStatusCode,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Transaction Status Change Reason Code",
+                  controller: appStateProvider.transactionStatusChange,
+                  maxLength: 5,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Site Visit Note",
+                  controller: appStateProvider.siteVisitNote,
                   maxLine: 3,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Transaction Type Code",
+                  maxLength: 5,
+                  controller: appStateProvider.transactionTypeCodeForCompleteWork,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Transaction Type Reason Code",
+                  maxLength: 5,
+                  controller: appStateProvider.transactionTypeReasonCodeForCompleteWork,
                 ),
               ],
             ),
           ),
           Step(
-            isActive: _currentStep == 5,
-            state: _currentStep >= 5 ? StepState.complete : StepState.indexed,
+            isActive: appStateProvider.currentStep == 5,
+            state: appStateProvider.currentStep >= 5 ? StepState.complete : StepState.indexed,
             title: Text('Meter System'),
             content: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -436,429 +402,346 @@ class _GasState extends State<Gas> {
               children: [
                 ElectricityTextFieldWidget(
                   hintText: "Meter Link Code",
+                  maxLength: 1,
+                  controller: appStateProvider.meterLinkCodeForMeterSystem,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Status Code",
+                  maxLength: 2,
+                  controller: appStateProvider.statusCodeForMeterSystem,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Location Code",
+                  maxLength: 2,
+                  controller: appStateProvider.locationCodeForMeterSystem,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Location Note",
                   maxLine: 3,
+                  controller: appStateProvider.locationNotesForMeterSystem,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Access Instructions",
+                  controller: appStateProvider.accessInstructionsForMeterSystem,
                   maxLine: 3,
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Conversion Factor",
+                  controller: appStateProvider.conversionFactorForMeterSystem,
+                  keyboardType: "number",
                 ),
                 SizedBox(height: 10),
                 ElectricityTextFieldWidget(
                   hintText: "Metering Pressure",
+                  keyboardType: "number",
+                  controller: appStateProvider.meteringPressureForMeterSystem,
                 ),
               ],
             ),
           ),
           Step(
-            isActive: _currentStep == 6,
-            state: _currentStep >= 6 ? StepState.complete : StepState.indexed,
+            isActive: appStateProvider.currentStep == 6,
+            state: appStateProvider.currentStep >= 6 ? StepState.complete : StepState.indexed,
             title: Text('Assets'),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: listInstallationStatusController.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    listUseTemplate.add("null");
-                    return Column(
+            content: ListView.builder(
+              shrinkWrap: true,
+              physics: ScrollPhysics(),
+              itemCount: appStateProvider.formDataList.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Text("Assets ${index + 1}"),
                         Row(
                           children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("\t\tAssets ${index+1}",style: TextStyle(fontWeight: FontWeight.bold)),
-                                      Row(
-                                        children: [
-                                          index != 0 ? GestureDetector(
-                                            onTap: (){
-                                              setState(() {
-                                                listInstallationStatusController[index].clear();
-                                                listInstallationStatusController[index].dispose();
-                                                listInstallationStatusController.removeAt(index);
-                                                listAssetProviderMPIDController[index].clear();
-                                                listAssetProviderMPIDController[index].dispose();
-                                                listAssetProviderMPIDController.removeAt(index);
-                                                listAssetClassCodeController[index].clear();
-                                                listAssetClassCodeController[index].dispose();
-                                                listAssetClassCodeController.removeAt(index);
-                                                listPaymentMethodCodeController[index].clear();
-                                                listPaymentMethodCodeController[index].dispose();
-                                                listPaymentMethodCodeController.removeAt(index);
-                                                listModelCodeController[index].clear();
-                                                listModelCodeController[index].dispose();
-                                                listModelCodeController.removeAt(index);
-                                                listManufacturerCodeController[index].clear();
-                                                listManufacturerCodeController[index].dispose();
-                                                listManufacturerCodeController.removeAt(index);
-                                                listYearOfManufacturerController[index].clear();
-                                                listYearOfManufacturerController[index].dispose();
-                                                listYearOfManufacturerController.removeAt(index);
-                                                listSerialNumberController[index].clear();
-                                                listSerialNumberController[index].dispose();
-                                                listSerialNumberController.removeAt(index);
-                                                listLocationCodeController[index].clear();
-                                                listLocationCodeController[index].dispose();
-                                                listLocationCodeController.removeAt(index);
-                                                listLocationNoteController[index].clear();
-                                                listLocationNoteController[index].dispose();
-                                                listLocationNoteController.removeAt(index);
-                                                listAssetStatusCodeController[index].clear();
-                                                listAssetStatusCodeController[index].dispose();
-                                                listAssetStatusCodeController.removeAt(index);
-                                                listMeterTypeController[index].clear();
-                                                listMeterTypeController[index].dispose();
-                                                listMeterTypeController.removeAt(index);
-                                                listMechanismCodeController[index].clear();
-                                                listMechanismCodeController[index].dispose();
-                                                listMechanismCodeController.removeAt(index);
-                                                listMeasuringCapacityController[index].clear();
-                                                listMeasuringCapacityController[index].dispose();
-                                                listMeasuringCapacityController.removeAt(index);
-                                                listMeterUsageCodeController[index].clear();
-                                                listMeterUsageCodeController[index].dispose();
-                                                listMeterUsageCodeController.removeAt(index);
-                                                listCollarStatusCodeController[index].clear();
-                                                listCollarStatusCodeController[index].dispose();
-                                                listCollarStatusCodeController.removeAt(index);
-                                                listOAMIInspectionDateController[index].clear();
-                                                listOAMIInspectionDateController[index].dispose();
-                                                listOAMIInspectionDateController.removeAt(index);
-                                                listPulseValueController[index].clear();
-                                                listPulseValueController[index].dispose();
-                                                listPulseValueController.removeAt(index);
-                                                listGasActOwnerRoleController[index].clear();
-                                                listGasActOwnerRoleController[index].dispose();
-                                                listGasActOwnerRoleController.removeAt(index);
-                                                listAssetRemovalDateController[index].clear();
-                                                listAssetRemovalDateController[index].dispose();
-                                                listAssetRemovalDateController.removeAt(index);
-                                              });
-                                            },
-                                            child: Center(
-                                              child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.red,
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                child: Text("Remove",style: TextStyle(color: AppColors.whiteColor)),
-                                              ),
-                                            ),
-                                          ) : const SizedBox(),
-                                          SizedBox(width: 7),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                listInstallationStatusController.add(TextEditingController());
-                                                listAssetProviderMPIDController.add(TextEditingController());
-                                                listAssetClassCodeController.add(TextEditingController());
-                                                listPaymentMethodCodeController.add(TextEditingController());
-                                                listModelCodeController.add(TextEditingController());
-                                                listManufacturerCodeController.add(TextEditingController());
-                                                listYearOfManufacturerController.add(TextEditingController());
-                                                listSerialNumberController.add(TextEditingController());
-                                                listLocationCodeController.add(TextEditingController());
-                                                listLocationNoteController.add(TextEditingController());
-                                                listAssetStatusCodeController.add(TextEditingController());
-                                                listMeterTypeController.add(TextEditingController());
-                                                listMechanismCodeController.add(TextEditingController());
-                                                listMeasuringCapacityController.add(TextEditingController());
-                                                listMeterUsageCodeController.add(TextEditingController());
-                                                listCollarStatusCodeController.add(TextEditingController());
-                                                listOAMIInspectionDateController.add(TextEditingController());
-                                                listPulseValueController.add(TextEditingController());
-                                                listGasActOwnerRoleController.add(TextEditingController());
-                                                listAssetRemovalDateController.add(TextEditingController());
-                                              });
-                                            },
-                                            child: Center(
-                                              child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                                decoration: BoxDecoration(
-                                                  color: AppColors.appThemeColor,
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                child: Text("Add",style: TextStyle(color: AppColors.whiteColor)),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                            index != 0 ? GestureDetector(
+                              onTap: () {
+                                appStateProvider.removeForm(index);
+                              },
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(25),
                                   ),
-                                  SizedBox(height: 7),
-                                  Text("\t\tUse Template"),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text("True"),
-                                      Radio(
-                                        value: 'true',
-                                        groupValue: listUseTemplate[index],
-                                        onChanged: (value){
-                                          _handleUseTemplateSelection(value,index);
-                                        },
-                                      ),
-                                      Text("False"),
-                                      Radio(
-                                        value: 'false',
-                                        groupValue: listUseTemplate[index],
-                                        onChanged: (value){
-                                          _handleUseTemplateSelection(value,index);
-                                        },
-                                      ),
-                                    ],
+                                  child: const Text("Remove", style: TextStyle(color: AppColors.whiteColor)),
+                                ),
+                              ),
+                            ) : const SizedBox(),
+                            const SizedBox(width: 7),
+                            GestureDetector(
+                              onTap: () {
+                                appStateProvider.addForm();
+                              },
+                              child: Center(
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.appThemeColor,
+                                    borderRadius: BorderRadius.circular(25),
                                   ),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Installation Status",
-                                    controller: listInstallationStatusController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Asset Provider MPID",
-                                    controller: listAssetProviderMPIDController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Asset Class Code",
-                                    controller: listAssetClassCodeController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Payment Method Code",
-                                    controller: listPaymentMethodCodeController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Model Code",
-                                    controller: listModelCodeController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Manufacturer Code",
-                                    controller: listManufacturerCodeController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Year Of Manufacturer",
-                                    controller: listYearOfManufacturerController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Serial Number",
-                                    controller: listSerialNumberController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Location Code",
-                                    controller: listLocationCodeController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Location Note",
-                                    controller: listLocationNoteController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Asset Status Code",
-                                    controller: listAssetStatusCodeController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Meter Type",
-                                    controller: listMeterTypeController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Mechanism Code",
-                                    controller: listMechanismCodeController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Measuring Capacity",
-                                    controller: listMeasuringCapacityController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Meter Usage Code",
-                                    controller: listMeterUsageCodeController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Collar Status Code",
-                                    controller: listCollarStatusCodeController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "OAMI Inspection Date",
-                                    onTap: () => _selectOAMIInspectionDate(context,index),
-                                    controller: listOAMIInspectionDateController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Pulse Value",
-                                    controller: listPulseValueController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Gas Act Owner Role",
-                                    controller: listGasActOwnerRoleController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Asset Removal Date",
-                                    onTap: () => _selectAssetRemovalDate(context,index),
-                                    controller: listAssetRemovalDateController[index],
-                                  ),
-                                ],
+                                  child: const Text("Add", style: TextStyle(color: AppColors.whiteColor)),
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 7),
                       ],
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-          Step(
-            isActive: _currentStep == 7,
-            state: _currentStep >= 7 ? StepState.complete : StepState.indexed,
-            title: Text('Registers'),
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: listNumberOfDigitsController.length,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Column(
+                    ),
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("\t\tRegister ${index+1}",style: TextStyle(fontWeight: FontWeight.bold)),
-                                      Row(
-                                        children: [
-                                          index != 0 ? GestureDetector(
-                                            onTap: (){
-                                              setState(() {
-                                                listNumberOfDigitsController[index].clear();
-                                                listNumberOfDigitsController[index].dispose();
-                                                listNumberOfDigitsController.removeAt(index);
-                                                listUnitsOfMeasureController[index].clear();
-                                                listUnitsOfMeasureController[index].dispose();
-                                                listUnitsOfMeasureController.removeAt(index);
-                                                listMultiplicationFactorController[index].clear();
-                                                listMultiplicationFactorController[index].dispose();
-                                                listMultiplicationFactorController.removeAt(index);
-                                                listReadingIndexController[index].clear();
-                                                listReadingIndexController[index].dispose();
-                                                listReadingIndexController.removeAt(index);
-                                              });
-                                            },
-                                            child: Center(
-                                              child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.red,
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                child: Text("Remove",style: TextStyle(color: AppColors.whiteColor)),
-                                              ),
-                                            ),
-                                          ) : const SizedBox(),
-                                          SizedBox(width: 7),
-                                          GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                listNumberOfDigitsController.add(TextEditingController());
-                                                listUnitsOfMeasureController.add(TextEditingController());
-                                                listMultiplicationFactorController.add(TextEditingController());
-                                                listReadingIndexController.add(TextEditingController());
-                                              });
-                                            },
-                                            child: Center(
-                                              child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                                                decoration: BoxDecoration(
-                                                  color: AppColors.appThemeColor,
-                                                  borderRadius: BorderRadius.circular(25),
-                                                ),
-                                                child: Text("Add",style: TextStyle(color: AppColors.whiteColor)),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 7),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Number Of Digits",
-                                    controller: listNumberOfDigitsController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Units Of Measure",
-                                    controller: listUnitsOfMeasureController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Multiplication Factor",
-                                    controller: listMultiplicationFactorController[index],
-                                  ),
-                                  SizedBox(height: 10),
-                                  ElectricityTextFieldWidget(
-                                    hintText: "Reading Index",
-                                    controller: listReadingIndexController[index],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        Radio<String>(
+                          value: 'True',
+                          groupValue: appStateProvider.formDataList[index]['useTemplate'],
+                          onChanged: (value) {
+                            setState(() {
+                              appStateProvider.formDataList[index]['useTemplate'] = value;
+                            });
+                          },
                         ),
-                        SizedBox(height: 7),
+                        const Text('True'),
+                        Radio<String>(
+                          value: 'False',
+                          groupValue: appStateProvider.formDataList[index]['useTemplate'],
+                          onChanged: (value) {
+                            setState(() {
+                              appStateProvider.formDataList[index]['useTemplate'] = value;
+                            });
+                          },
+                        ),
+                        const Text('False'),
                       ],
-                    );
-                  },
-                ),
-              ],
+                    ),
+                    ElectricityTextFieldWidget(
+                      required: "required",
+                      hintText: "InstallationStatus",
+                      controller: appStateProvider.formDataList[index]['installationStatus'],
+                      maxLength: 10,
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      required: "required",
+                      hintText: "Asset Provider Mpid",
+                      maxLength: 3,
+                      controller: appStateProvider.formDataList[index]['assetProviderMPID'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Asset Class Mode",
+                      maxLength: 5,
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['assetClassCode'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Payment Method Mode",
+                      maxLength: 2,
+                      controller: appStateProvider.formDataList[index]['paymentMethodCode'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Model Code",
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['modelCode'],
+                      maxLength: 10,
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Manufacturer Code",
+                      maxLength: 3,
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['manufacturerCode'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Year Of Manufacture",
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['yearOfManufacture'],
+                      keyboardType: "number",
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Serial Number",
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['serialNumber'],
+                      maxLength: 14,
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Location Code",
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['locationCode'],
+                      maxLength: 2,
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Location Notes",
+                      controller: appStateProvider.formDataList[index]['locationNotes'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Assets Status Code",
+                      maxLength: 2,
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['assetStatusCode'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Meter Type",
+                      maxLength: 5,
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['meterType'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Mechanism Code",
+                      maxLength: 5,
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['mechanismCode'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Measuring Capacity",
+                      keyboardType: "number",
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['measuringCapacity'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Meter Usage Code",
+                      maxLength: 1,
+                      controller: appStateProvider.formDataList[index]['meterUsageCode'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Collar Status Code",
+                      maxLength: 5,
+                      controller: appStateProvider.formDataList[index]['collarStatusCode'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "OAMI Inspection Date",
+                      controller: appStateProvider.formDataList[index]['oamiInspectionDate'],
+                      onTap: () => appStateProvider.selectOAMIDate(context, index),
+                      maxLength: 10,
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Pulse Value",
+                      required: "required",
+                      keyboardType: "number",
+                      controller: appStateProvider.formDataList[index]['pulseValue'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Gas Act Owner Role",
+                      required: "required",
+                      maxLength: 1,
+                      controller: appStateProvider.formDataList[index]['gasActOwnerRole'],
+                    ),
+                    const SizedBox(height: 10),
+                    ElectricityTextFieldWidget(
+                      hintText: "Asset Removal Date",
+                      required: "required",
+                      controller: appStateProvider.formDataList[index]['assetRemovalDate'],
+                      onTap: () => appStateProvider.selectRemovalDate(context, index),
+                      maxLength: 10,
+                    ),
+                    const SizedBox(height: 10),
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: appStateProvider.formDataList[index]['registers'].length,
+                      itemBuilder: (context, subIndex) {
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Registers ${subIndex + 1}"),
+                                Row(
+                                  children: [
+                                    subIndex != 0 ? GestureDetector(
+                                      onTap: () {
+                                        appStateProvider.removeSubForm(index, subIndex);
+                                      },
+                                      child: Center(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                          decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          child: const Text("Remove", style: TextStyle(color: AppColors.whiteColor)),
+                                        ),
+                                      ),
+                                    ) : const SizedBox(),
+                                    const SizedBox(width: 7),
+                                    GestureDetector(
+                                      onTap: () {
+                                        appStateProvider.addSubForm(index);
+                                      },
+                                      child: Center(
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                          decoration: BoxDecoration(
+                                            color: AppColors.appThemeColor,
+                                            borderRadius: BorderRadius.circular(25),
+                                          ),
+                                          child: const Text("Add", style: TextStyle(color: AppColors.whiteColor)),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            ElectricityTextFieldWidget(
+                              hintText: "Number Of Digits",
+                              keyboardType: "number",
+                              required: "required",
+                              controller: appStateProvider.formDataList[index]['registers'][subIndex]['numberOfDigits'],
+                            ),
+                            SizedBox(height: 10),
+                            ElectricityTextFieldWidget(
+                              hintText: "Units Of Measure",
+                              maxLength: 5,
+                              required: "required",
+                              controller: appStateProvider.formDataList[index]['registers'][subIndex]['unitsOfMeasure'],
+                            ),
+                            SizedBox(height: 10),
+                            ElectricityTextFieldWidget(
+                              hintText: "Multiplication Factor",
+                              keyboardType: "number",
+                              required: "required",
+                              controller: appStateProvider.formDataList[index]['registers'][subIndex]['multiplicationFactor'],
+                            ),
+                            SizedBox(height: 10),
+                            ElectricityTextFieldWidget(
+                              hintText: "Reading Index",
+                              maxLength: 12,
+                              required: "required",
+                              controller: appStateProvider.formDataList[index]['registers'][subIndex]['readingIndex'],
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        );
+                      },
+                    ),
+                    Container(height: 3, color: AppColors.appThemeColor),
+                  ],
+                );
+              },
             ),
           ),
         ],

@@ -1,9 +1,6 @@
 // @dart=2.9
-
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
-
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
@@ -28,7 +25,6 @@ import 'package:enstaller/ui/screen/widget/survey/show_p_image_widget.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:enstaller/ui/shared/custom_expanded_tile_widget.dart';
 import 'package:enstaller/ui/util/onchangeyesnoprovider.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
@@ -104,7 +100,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 widget.arguments.dsmodel.checkCloseJobModel),
             builder: (context, model, child) {
               if (model.state == ViewState.Busy) {
-                print('busyyyyyyyyyy');
                 return AppConstants.circulerProgressIndicator();
               } else {
                 mainModel = model;
@@ -115,8 +110,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      model.sectionQuestions.keys.isEmpty &&
-                              model.sectionAnswers.keys.isEmpty
+                      model.sectionQuestions.keys.isEmpty && model.sectionAnswers.keys.isEmpty
                           ? Center(child: Text(AppStrings.surveyDataNotFound))
                           : ListView.builder(
                               controller: scrollController,
@@ -125,8 +119,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               key: Key('builder ${model.selected.toString()}'),
                               itemCount: model.sectionQuestions.keys.length,
                               itemBuilder: (BuildContext ctxt, int index) {
-                                String _headertext =
-                                    _getHeaderText(index, model);
+                                String _headertext = _getHeaderText(index, model);
                                 return CustomExpandedTile(
                                   expanded: model.selected == index,
                                   firstChild: InkWell(

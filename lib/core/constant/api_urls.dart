@@ -1,10 +1,7 @@
 
 class ApiUrls {
   static bool isLive = false;
-  static String baseUrl = isLive
-      ? 'https://enstallapi.enpaas.com/api/'
-      : 'https://enstallapi.boshposh.com/api/';
-
+  static String baseUrl = isLive ? 'https://enstallapi.enpaas.com/api/' : 'https://enstallapi.boshposh.com/api/';
   static String baseUrlOther = "https://api.geoapify.com/v1/";
 
   static String logInUrl = 'users/login';
@@ -18,7 +15,6 @@ class ApiUrls {
   static String getActivityLogsAppointmentIdUrl = 'appointments/GetActivityLogsAppointmentId';
   static String getAppointmentCommentsByAppointmentUrl = 'AppointmentComments/GetAppointmentCommentsByAppointment';
   static String getAppointmentCommentsByAppointmentUrl2 = 'AppointmentComments/GetAppointmentCommentsList';
-
   static String saveAppointmentComments = 'AppointmentComments/SaveAppointmentComments';
   static String getAppointmentDetailsUrl = 'appointments/Get';
   static String getUserRole = 'stkUser/GetUserRole';
@@ -29,47 +25,28 @@ class ApiUrls {
   static String getOrderAssigned = 'AssignStock/IsOrderAssigned';
   static String checkSerialNo = 'AssignStock/CheckSerialNoForOrder';
   static String saveCheckandassignorder = 'AssignStock/SaveAssignStockToOrder';
-  static String updateStatusBatchWise =
-      'WarehouseEngineer/UpdateStatusBatchSerialWise';
+  static String updateStatusBatchWise = 'WarehouseEngineer/UpdateStatusBatchSerialWise';
   static String getorderByReference = 'AssignStock/GetOrderByReference';
-  static String getCheckStockOrderLineDetails =
-      'Order/GetStockOrderLineDetails';
+  static String getCheckStockOrderLineDetails = 'Order/GetStockOrderLineDetails';
   static String getdownloadformat = 'ConfigSetting/ConfigSettingListOne';
-  static String getCustomerMeterListByCustomerUrl =
-      'CustomerMeter/GetCustomerMeterListByCustomer';
-  static String appointmentDataEventsbyEngineerUrl =
-      'AppointmentEvents/AppointmentDataEventsbyEngineer';
-  static String assignEngineerAppointmentUrl =
-      'appointments/AssignEngineerAppointment';
-  static String updateAppointmentStatusUrl =
-      'appointments/UpdateAppointmentStatus';
-  static String abortappointmentreason =
-      'appointments/UpdateAbortAppointmentbyReason';
-  static String getSurveyQuestionAppointmentWiseUrl =
-      'SurveyQuetion/GetSurveyQuestionAppointmentWise';
-  static String addSurveyQuestionAnswerDetailUrl =
-      'SurveyQuestionAnswer/AddSurveyQuestionAnswerDetail';
-  static String supplierDocumentUpdateEngineerRead =
-      'SupplierDocument/SupplierDocumentUpdateEngineerRead';
+  static String getCustomerMeterListByCustomerUrl = 'CustomerMeter/GetCustomerMeterListByCustomer';
+  static String appointmentDataEventsbyEngineerUrl = 'AppointmentEvents/AppointmentDataEventsbyEngineer';
+  static String assignEngineerAppointmentUrl = 'appointments/AssignEngineerAppointment';
+  static String updateAppointmentStatusUrl = 'appointments/UpdateAppointmentStatus';
+  static String abortappointmentreason = 'appointments/UpdateAbortAppointmentbyReason';
+  static String getSurveyQuestionAppointmentWiseUrl = 'SurveyQuetion/GetSurveyQuestionAppointmentWise';
+  static String addSurveyQuestionAnswerDetailUrl = 'SurveyQuestionAnswer/AddSurveyQuestionAnswerDetail';
+  static String supplierDocumentUpdateEngineerRead = 'SupplierDocument/SupplierDocumentUpdateEngineerRead';
   static String getCustomerByIdUrl = 'Customer/GetCustomerById';
-  static String getJmbCloseAppointmentData =
-      'jmbClose/GetJmbCloseAppointmentData';
-  static String getEngineerAppointmentsUrl =
-      'appointments/GetEngineerAppointments';
-  static String getAppointmentByEngineerIdUrl =
-      'appointments/GetAppointmentByEngineerId';
-  static String getSurveyQuestionAnswerDetailUrl =
-      'SurveyQuestionAnswer/GetSurveyQuestionAnswerDetail';
-  static String getSupplierDocument =
-      'SupplierDocument/GetSupplierDocumentListUserwise';
-  static String getEmailTemplateSenderHistoryUserWise =
-      'EmailTemplateSenderHistory/GetEmailTemplateSenderHistoryUserWise';
-  static String getSMSClickSendNotificationUserWise =
-      'SMSClickSendHistory/GetSMSClickSendNotificationUserWise';
+  static String getJmbCloseAppointmentData = 'jmbClose/GetJmbCloseAppointmentData';
+  static String getEngineerAppointmentsUrl = 'appointments/GetEngineerAppointments';
+  static String getAppointmentByEngineerIdUrl = 'appointments/GetAppointmentByEngineerId';
+  static String getSurveyQuestionAnswerDetailUrl = 'SurveyQuestionAnswer/GetSurveyQuestionAnswerDetail';
+  static String getSupplierDocument = 'SupplierDocument/GetSupplierDocumentListUserwise';
+  static String getEmailTemplateSenderHistoryUserWise = 'EmailTemplateSenderHistory/GetEmailTemplateSenderHistoryUserWise';
+  static String getSMSClickSendNotificationUserWise = 'SMSClickSendHistory/GetSMSClickSendNotificationUserWise';
   static String getMAICheckProcess = 'DCCMAI/GetMAICheckProcess';
-  //order
-  static String updateCallForwardAppointment =
-      'appointments/UpdateCallForwardAppointment';
+  static String updateCallForwardAppointment = 'appointments/UpdateCallForwardAppointment';
   static String getItemsForOrder = 'Order/BindUserContractWiseItemModel';
   static String getContractsForOrder = 'Location/GetStockContractList';
   static String saveOrder = 'Order/InsertUpdateDeleteOrder';
@@ -78,22 +55,15 @@ class ApiUrls {
   static String getStockOrderById = 'Order/GetStockOrderById';
   static String getStockOrderLineDetails = 'Order/GetStockOrderLineDetails';
   static String getOrderExportCSVDetails = 'Order/OrderExportCSVDetails';
-  //stock check
-  static String getStockCheckRequestList =
-      'StockCheckRequest/GetEngineerWiseStockRquestList';
+  static String getStockCheckRequestList = 'StockCheckRequest/GetEngineerWiseStockRquestList';
   static String validateSerialsForReply = 'StockCheckRequest/ValidateSerials';
   static String saveEngineerReply = 'StockCheckRequest/SaveEngineerReply';
-  static String getSerialsByRequestId =
-      'StockCheckRequest/GetSerialsByRequestId';
-  static String getStockOrderLineItemsByOrderId =
-      'Order/GetStockOrderLineItemsByOrderId';
-  static String getSerialListByEmployeeId =
-      'stkEngineerWiseStock/GetSerialListByEmployeeId';
+  static String getSerialsByRequestId = 'StockCheckRequest/GetSerialsByRequestId';
+  static String getStockOrderLineItemsByOrderId = 'Order/GetStockOrderLineItemsByOrderId';
+  static String getSerialListByEmployeeId = 'stkEngineerWiseStock/GetSerialListByEmployeeId';
   static String saveCloseJobElectricity = 'jmbCloseJob/SaveCloseJobElectricity';
   static String saveCloseJobGas = 'jmbCloseJob/SaveCloseJobGas';
-
   static String agentListUrl = 'Agent/GetAgentWorkAllocationList';
-
   static String apiRoutePlanner = 'RoutePlanner/GetRoutePlanDetailEngineerWise';
   static String getRoutePlannerEngineerBaseLocation = 'RoutePlanner/GetRoutePlannerEngineerBaseLocation';
   static String getInsertUpdateRoutePlanData =  'RoutePlanner/InsertUpdateRoutePlanData';
@@ -101,13 +71,10 @@ class ApiUrls {
   static String resetEmail =  'UserLoginActivity/CheckCode';
   static String saveAppointments  = 'AppointmentComments/SaveAppointmentComments';
   static String insertAttachment = 'AppointmentComments/InsetAppointmentAttachmentFile';
-
-
   static String map_routing_url = 'routing';
   static String isEnrouted_url = "appointments/GetCheckInRouteAppointment";
 
-
   static String engineerDocumentList = baseUrl + "Engineer/GetEnginnerDocumentList";
-
+  static String saveSapphireGasFlow = baseUrl + "SapphireGasFlow/SaveSapphireGasFlow";
   static String engineerProfilePhotoUrl = "https://enstall.boshposh.com/Upload/EngineerPhoto";
 }

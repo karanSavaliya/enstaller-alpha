@@ -5,11 +5,9 @@ import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/model/profile_details.dart';
-import 'package:enstaller/core/model/update_profile.dart';
 import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
-import 'package:enstaller/ui/screen/widget/survey/show_base64_image.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +16,6 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:progress_dialog/progress_dialog.dart';
-
 import '../../core/constant/api_urls.dart';
 
 class ProfilePage extends StatefulWidget {

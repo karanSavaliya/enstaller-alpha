@@ -1026,7 +1026,7 @@ class SurveyScreenViewModel extends BaseModel {
               AppConstants.showSuccessToast(context, "Survey Submitted");
             } else {
               issubmitted = false;
-              AppConstants.showFailToast(context, "Error Occured while saving");
+              AppConstants.showFailToast(context, "Error Occurred while saving");
             }
           }
         } else {
