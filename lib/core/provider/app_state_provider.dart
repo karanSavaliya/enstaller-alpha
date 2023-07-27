@@ -77,19 +77,6 @@ class AppStateProvider extends ChangeNotifier {
 
   // =======> Save Sapphire Gas Flow Start <=======
 
-  int _currentStep = 0;
-  int get currentStep => _currentStep;
-
-  void currentStepNext(){
-    _currentStep += 1;
-    notifyListeners();
-  }
-
-  void currentStepCancel(){
-    _currentStep -= 1;
-    notifyListeners();
-  }
-
   String _visitSuccessful = "true";
   String get visitSuccessful => _visitSuccessful;
   void handleVisitSuccessfulSelection(String visitSuccessful) {
@@ -331,74 +318,21 @@ class AppStateProvider extends ChangeNotifier {
     return !nonRequiredFields.contains(key);
   }
 
-  void fieldDataCheck(int _currentStep, BuildContext context){
-    if(_currentStep == 0){
-      if(_memMpId.text.isNotEmpty && _supplierMpId.text.isNotEmpty && _mprn.text.isNotEmpty && _externalSystemIdentity.text.isNotEmpty && _sapphireWorkId.text.isNotEmpty){
-        _isCheckData = true;
-        notifyListeners();
-      }
-      else{
-        _isCheckData = false;
-        notifyListeners();
-        AppConstants.showFailToast(context, "Required Fields Compulsory");
-      }
-    }
-    else if(_currentStep == 1){
-      if(_statusCode.text.isNotEmpty && _locationCode.text.isNotEmpty && _conversionFactor.text.isNotEmpty && _meteringPressure.text.isNotEmpty){
-        _isCheckData = true;
-        notifyListeners();
-      }
-      else{
-        _isCheckData = false;
-        notifyListeners();
-        AppConstants.showFailToast(context, "Required Fields Compulsory");
-      }
-    }
-    else if(_currentStep == 2){
-      if(_postCode.text.isNotEmpty){
-        _isCheckData = true;
-        notifyListeners();
-      }
-      else{
-        _isCheckData = false;
-        notifyListeners();
-        AppConstants.showFailToast(context, "Required Fields Compulsory");
-      }
-    }
-    else if(_currentStep == 3){
-      _isCheckData = true;
-      notifyListeners();
-    }
-    else if(_currentStep == 4){
-      if(_textEditingControllerSiteVisitDate.text.isNotEmpty && _visitSuccessful!=null && _readingTaken!=null && _engineerName.text.isNotEmpty && _transactionStatusCode.text.isNotEmpty){
-        _isCheckData = true;
-        notifyListeners();
-      }
-      else{
-        _isCheckData = false;
-        notifyListeners();
-        AppConstants.showFailToast(context, "Required Fields Compulsory");
-      }
-    }
-    else if(_currentStep == 5){
+  void fieldDataCheck(BuildContext context){
+    if(_memMpId.text.isNotEmpty && _supplierMpId.text.isNotEmpty && _mprn.text.isNotEmpty && _externalSystemIdentity.text.isNotEmpty && _sapphireWorkId.text.isNotEmpty
+        && _statusCode.text.isNotEmpty && _locationCode.text.isNotEmpty && _conversionFactor.text.isNotEmpty && _meteringPressure.text.isNotEmpty
+        && _postCode.text.isNotEmpty
+        && _textEditingControllerSiteVisitDate.text.isNotEmpty && _visitSuccessful!=null && _readingTaken!=null && _engineerName.text.isNotEmpty && _transactionStatusCode.text.isNotEmpty
+        && areAllFieldsFilled()
+    ){
       _isCheckData = true;
       notifyListeners();
     }
     else{
-      if (areAllFieldsFilled()) {
-        _isCheckData = true;
-        notifyListeners();
-      } else {
-        _isCheckData = false;
-        notifyListeners();
-        AppConstants.showFailToast(context, "Required Fields Compulsory");
-      }
+      _isCheckData = false;
+      notifyListeners();
+      AppConstants.showFailToast(context, "Required Fields Compulsory");
     }
-  }
-
-  void isCheckDataFalseSet(){
-    _isCheckData = false;
-    notifyListeners();
   }
 
   List<Map<String, dynamic>> _formDataList = [];
@@ -639,7 +573,6 @@ class AppStateProvider extends ChangeNotifier {
         SaveSapphireGasFlow apiResponse = await api.saveSapphireGasFlow(context, firstJsonData);
         if (apiResponse.status == 5 && apiResponse.isCompleted == true) {
           clearAllGasFormData();
-          _currentStep = 0;
           notifyListeners();
           AppConstants.showSuccessToast(context, "Saved Successfully");
         } else {
@@ -651,7 +584,7 @@ class AppStateProvider extends ChangeNotifier {
     }
   }
 
-  // =======> Save Sapphire Electricity Gas Flow Start <=======
+  // =======> Save Sapphire Electricity Flow Start <=======
 
   final TextEditingController _memMpIdElectricity = TextEditingController();
   TextEditingController get memMpIdElectricity => _memMpIdElectricity;
