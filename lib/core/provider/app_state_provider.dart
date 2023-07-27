@@ -75,8 +75,6 @@ class AppStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // =======> Engineer Documents End <=======
-
   // =======> Save Sapphire Gas Flow Start <=======
 
   int _currentStep = 0;
@@ -408,7 +406,7 @@ class AppStateProvider extends ChangeNotifier {
 
   void addForm() {
     _formDataList.add({
-      'useTemplate': 'False',
+      'useTemplate': 'True',
       'installationStatus': TextEditingController(text: ''),
       'assetProviderMPID': TextEditingController(),
       'assetClassCode': TextEditingController(),
@@ -533,7 +531,7 @@ class AppStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void insertData(BuildContext context) async {
+  void saveSapphireGasFlow(BuildContext context) async {
     for (var formData in _formDataList) {
 
       Map<String, dynamic> assetMap = {
@@ -653,5 +651,413 @@ class AppStateProvider extends ChangeNotifier {
     }
   }
 
-  // =======> Save Sapphire Gas Flow End <=======
+  // =======> Save Sapphire Electricity Gas Flow Start <=======
+
+  final TextEditingController _memMpIdElectricity = TextEditingController();
+  TextEditingController get memMpIdElectricity => _memMpIdElectricity;
+  final _supplierMpIdElectricity = TextEditingController();
+  TextEditingController get supplierMpIdElectricity => _supplierMpIdElectricity;
+  final _mprnElectricity = TextEditingController();
+  TextEditingController get mprnElectricity => _mprnElectricity;
+  final _externalSystemIdentityElectricity = TextEditingController();
+  TextEditingController get externalSystemIdentityElectricity => _externalSystemIdentityElectricity;
+  final _correlationIdElectricity = TextEditingController();
+  TextEditingController get correlationIdElectricity => _correlationIdElectricity;
+  final _sapphireWorkIdElectricity = TextEditingController();
+  TextEditingController get sapphireWorkIdElectricity => _sapphireWorkIdElectricity;
+
+  final _textEditingControllerAppointmentDateElectricity = TextEditingController();
+  TextEditingController get textEditingControllerAppointmentDateElectricity => _textEditingControllerAppointmentDateElectricity;
+  DateTime _selectedAppointmentDateElectricity;
+  DateTime get selectedAppointmentDateElectricity => _selectedAppointmentDateElectricity;
+  Future<void> selectAppointmentDateElectricity(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedAppointmentDateElectricity ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      _selectedAppointmentDateElectricity = picked;
+      _textEditingControllerAppointmentDateElectricity.text = formatDate(picked);
+      notifyListeners();
+    }
+  }
+
+  final TextEditingController _additionalInformationForWorkElectricity = TextEditingController();
+  TextEditingController get additionalInformationForWorkElectricity => _additionalInformationForWorkElectricity;
+  final _requestedEnergisationStatusElectricity = TextEditingController();
+  TextEditingController get requestedEnergisationStatusElectricity => _requestedEnergisationStatusElectricity;
+  final _retrievalMethodElectricity = TextEditingController();
+  TextEditingController get retrievalMethodElectricity => _retrievalMethodElectricity;
+  final _removeMeteringPointMetersElectricity = TextEditingController();
+  TextEditingController get removeMeteringPointMetersElectricity => _removeMeteringPointMetersElectricity;
+  final _standardSettlementCodeElectricity = TextEditingController();
+  TextEditingController get standardSettlementCodeElectricity => _standardSettlementCodeElectricity;
+  final _nonSettlementFunctionCodeElectricity = TextEditingController();
+  TextEditingController get nonSettlementFunctionCodeElectricity => _nonSettlementFunctionCodeElectricity;
+
+  final _textEditingControllerSiteVisitDateElectricity = TextEditingController();
+  TextEditingController get textEditingControllerSiteVisitDateElectricity => _textEditingControllerSiteVisitDateElectricity;
+  DateTime _selectedSiteVisitDateElectricity;
+  DateTime get selectedSiteVisitDateElectricity => _selectedSiteVisitDateElectricity;
+  Future<void> selectSiteVisitDateElectricity(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedSiteVisitDateElectricity ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      _selectedSiteVisitDateElectricity = picked;
+      _textEditingControllerSiteVisitDateElectricity.text = formatDate(picked);
+      notifyListeners();
+    }
+  }
+
+  String _visitSuccessfulElectricity = "true";
+  String get visitSuccessfulElectricity => _visitSuccessfulElectricity;
+  void handleVisitSuccessfulSelectionElectricity(String visitSuccessful) {
+    _visitSuccessfulElectricity = visitSuccessful;
+    notifyListeners();
+  }
+
+  String _readingTakenElectricity = "true";
+  String get readingTakenElectricity => _readingTakenElectricity;
+  void handleReadingTakenSelectionElectricity(String readingTaken) {
+    _readingTakenElectricity = readingTaken;
+    notifyListeners();
+  }
+
+  final TextEditingController _engineerNameElectricity = TextEditingController();
+  TextEditingController get engineerNameElectricity => _engineerNameElectricity;
+  final _siteVisitNotesElectricity = TextEditingController();
+  TextEditingController get siteVisitNotesElectricity => _siteVisitNotesElectricity;
+  final _failureToEneOrDeElectricity = TextEditingController();
+  TextEditingController get failureToEneOrDeElectricity => _failureToEneOrDeElectricity;
+  final _siteVisitCheckCodeElectricity = TextEditingController();
+  TextEditingController get siteVisitCheckCodeElectricity => _siteVisitCheckCodeElectricity;
+  final _assetConditionCodeElectricity = TextEditingController();
+  TextEditingController get assetConditionCodeElectricity => _assetConditionCodeElectricity;
+  final _assetConditionAdditionalElectricity = TextEditingController();
+  TextEditingController get assetConditionAdditionalElectricity => _assetConditionAdditionalElectricity;
+
+  final _energisationStatusElectricity = TextEditingController();
+  TextEditingController get energisationStatusElectricity => _energisationStatusElectricity;
+
+  String _isSmartElectricity = "true";
+  String get isSmartElectricity => _isSmartElectricity;
+  void handleIsSmartSelectionElectricity(String isSmart) {
+    _isSmartElectricity = isSmart;
+    notifyListeners();
+  }
+
+  final _meterLocationCodeElectricity = TextEditingController();
+  TextEditingController get meterLocationCodeElectricity => _meterLocationCodeElectricity;
+  final _standardSettlementCodeForMeterSystemElectricity = TextEditingController();
+  TextEditingController get standardSettlementCodeForMeterSystemElectricity => _standardSettlementCodeForMeterSystemElectricity;
+  final _nonSettlementFunctionCodeForMeterSystemElectricity = TextEditingController();
+  TextEditingController get nonSettlementFunctionCodeForMeterSystemElectricity => _nonSettlementFunctionCodeForMeterSystemElectricity;
+  final _retrievalMethodForMeterSystemElectricity = TextEditingController();
+  TextEditingController get retrievalMethodForMeterSystemElectricity => _retrievalMethodForMeterSystemElectricity;
+
+  final _copRefElectricity = TextEditingController();
+  TextEditingController get copRefElectricity => _copRefElectricity;
+  final _copIssueNumberElectricity = TextEditingController();
+  TextEditingController get copIssueNumberElectricity => _copIssueNumberElectricity;
+
+  String _remoteEnableElectricity = "true";
+  String get remoteEnableElectricity => _remoteEnableElectricity;
+  void handleRemoteEnableSelectionElectricity(String remoteEnable) {
+    _remoteEnableElectricity = remoteEnable;
+    notifyListeners();
+  }
+
+  final _eventIndicatorElectricity = TextEditingController();
+  TextEditingController get eventIndicatorElectricity => _eventIndicatorElectricity;
+
+  DateTime _selectedMeterRemovalDateForMetersElectricity;
+  DateTime get selectedMeterRemovalDateElectricity => _selectedMeterRemovalDateForMetersElectricity;
+  Future<void> selectedMeterRemovalDateForMetersElectricity(BuildContext context, int index) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedMeterRemovalDateForMetersElectricity ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      _selectedMeterRemovalDateForMetersElectricity = picked;
+      _formDataListElectricityMeters[index]['meterRemovalDateElectricity'].text = formatDate(picked);
+      notifyListeners();
+    }
+    notifyListeners();
+  }
+
+  List<Map<String, dynamic>> _formDataListElectricityMeters = [];
+  List<Map<String, dynamic>> get formDataListElectricityMeters => _formDataListElectricityMeters;
+
+  void addFormElectricityMeters() {
+    _formDataListElectricityMeters.add({
+      'useTemplateElectricity': true,
+      'installationStatusElectricity': TextEditingController(),
+      'serialNumberElectricity': TextEditingController(),
+      'equipmentTypeNameElectricity': TextEditingController(),
+      'meterTypeElectricity': TextEditingController(),
+      'ownerMpidElectricity': TextEditingController(),
+      'currentRatingElectricity': TextEditingController(),
+      'timingSerialNumberElectricity': TextEditingController(),
+      'ctRatioElectricity': TextEditingController(),
+      'vtRatioElectricity': TextEditingController(),
+      'prePaymentDataUnavailableElectricity': TextEditingController(),
+      'debtRecoveryRateElectricity': TextEditingController(),
+      'hasEmergencyCredit': true,
+      'initialCreditElectricity': TextEditingController(),
+      'standingChangeElectricity': TextEditingController(),
+      'totalDebitElectricity': TextEditingController(),
+      'totalDebitOutstandingElectricity': TextEditingController(),
+      'totalCreditAcceptedElectricity': TextEditingController(),
+      'totalTokensInsertedElectricity': TextEditingController(),
+      'creditBalanceElectricity': TextEditingController(),
+      'emergencyCreditElectricity': TextEditingController(),
+      'prePaymentMeterShutdownStatusElectricity': TextEditingController(),
+      'meterRemovalDateElectricity': TextEditingController(),
+      'subForms': [
+        {
+          'useTemplateForRegistersElectricity': true,
+          'meterRegisterIdElectricity': TextEditingController(),
+          'isSettlementElectricity': true,
+          'registerTypeElectricity': TextEditingController(),
+          'numberOfDigitsElectricity': TextEditingController(),
+          'measurementQuantityElectricity': TextEditingController(),
+          'multiplierElectricity': TextEditingController(),
+          'registerReadingElectricity': TextEditingController(),
+          'readingTypeElectricity': TextEditingController(),
+          'readingNotValidReasonCodeElectricity': TextEditingController(),
+          'prepaymentUnitRateElectricity': TextEditingController(),
+          'subSubForms': [
+            {
+              'timePatternRegimeElectricity': TextEditingController(),
+              'settlementMapCoefficientElectricity': TextEditingController(),
+            },
+          ],
+        },
+      ],
+    });
+    notifyListeners();
+  }
+
+  void initFormElectricityMeters() {
+    _formDataListElectricityMeters.add({
+      'useTemplateElectricity': true,
+      'installationStatusElectricity': TextEditingController(),
+      'serialNumberElectricity': TextEditingController(),
+      'equipmentTypeNameElectricity': TextEditingController(),
+      'meterTypeElectricity': TextEditingController(),
+      'ownerMpidElectricity': TextEditingController(),
+      'currentRatingElectricity': TextEditingController(),
+      'timingSerialNumberElectricity': TextEditingController(),
+      'ctRatioElectricity': TextEditingController(),
+      'vtRatioElectricity': TextEditingController(),
+      'prePaymentDataUnavailableElectricity': TextEditingController(),
+      'debtRecoveryRateElectricity': TextEditingController(),
+      'hasEmergencyCredit': true,
+      'initialCreditElectricity': TextEditingController(),
+      'standingChangeElectricity': TextEditingController(),
+      'totalDebitElectricity': TextEditingController(),
+      'totalDebitOutstandingElectricity': TextEditingController(),
+      'totalCreditAcceptedElectricity': TextEditingController(),
+      'totalTokensInsertedElectricity': TextEditingController(),
+      'creditBalanceElectricity': TextEditingController(),
+      'emergencyCreditElectricity': TextEditingController(),
+      'prePaymentMeterShutdownStatusElectricity': TextEditingController(),
+      'meterRemovalDateElectricity': TextEditingController(),
+      'subForms': [
+        {
+          'useTemplateForRegistersElectricity': true,
+          'meterRegisterIdElectricity': TextEditingController(),
+          'isSettlementElectricity': true,
+          'registerTypeElectricity': TextEditingController(),
+          'numberOfDigitsElectricity': TextEditingController(),
+          'measurementQuantityElectricity': TextEditingController(),
+          'multiplierElectricity': TextEditingController(),
+          'registerReadingElectricity': TextEditingController(),
+          'readingTypeElectricity': TextEditingController(),
+          'readingNotValidReasonCodeElectricity': TextEditingController(),
+          'prepaymentUnitRateElectricity': TextEditingController(),
+          'subSubForms': [
+            {
+              'timePatternRegimeElectricity': TextEditingController(),
+              'settlementMapCoefficientElectricity': TextEditingController(),
+            },
+          ],
+        },
+      ],
+    });
+    notifyListeners();
+  }
+
+  void removeFormElectricityMeters(int index) {
+    _formDataListElectricityMeters.removeAt(index);
+    notifyListeners();
+  }
+
+  void addSubFormElectricityMeters(int index) {
+    _formDataListElectricityMeters[index]['subForms'].add({
+      'useTemplateForRegistersElectricity': true,
+      'meterRegisterIdElectricity': TextEditingController(),
+      'isSettlementElectricity': true,
+      'registerTypeElectricity': TextEditingController(),
+      'numberOfDigitsElectricity': TextEditingController(),
+      'measurementQuantityElectricity': TextEditingController(),
+      'multiplierElectricity': TextEditingController(),
+      'registerReadingElectricity': TextEditingController(),
+      'readingTypeElectricity': TextEditingController(),
+      'readingNotValidReasonCodeElectricity': TextEditingController(),
+      'prepaymentUnitRateElectricity': TextEditingController(),
+      'subSubForms': [
+        {
+          'timePatternRegimeElectricity': TextEditingController(),
+          'settlementMapCoefficientElectricity': TextEditingController(),
+        },
+      ],
+    });
+    notifyListeners();
+  }
+
+  void removeSubFormElectricityMeters(int parentIndex, int subIndex) {
+    _formDataListElectricityMeters[parentIndex]['subForms'].removeAt(subIndex);
+    notifyListeners();
+  }
+
+  void addSubSubFormElectricityMeters(int parentIndex, int subIndex) {
+    _formDataListElectricityMeters[parentIndex]['subForms'][subIndex]['subSubForms'].add({
+      'timePatternRegimeElectricity': TextEditingController(),
+      'settlementMapCoefficientElectricity': TextEditingController(),
+    });
+    notifyListeners();
+  }
+
+  void removeSubSubFormElectricityMeters(int parentIndex, int subIndex, int subSubIndex) {
+    _formDataListElectricityMeters[parentIndex]['subForms'][subIndex]['subSubForms'].removeAt(subSubIndex);
+    notifyListeners();
+  }
+
+  List<Map<String, dynamic>> _formDataListElectricityOutstation = [];
+  List<Map<String, dynamic>> get formDataListElectricityOutstation => _formDataListElectricityOutstation;
+
+  void initFormElectricityOutstation() {
+    _formDataListElectricityOutstation.add({
+      'serialNumberElectricityOutstation': TextEditingController(),
+      'outstationTypeElectricityOutstation': TextEditingController(),
+      'numberOfChannelsElectricityOutstation': TextEditingController(),
+      'numberOfDigitsElectricityOutstation': TextEditingController(),
+      'pinElectricityOutstation': TextEditingController(),
+      'multiplierElectricityOutstation': TextEditingController(),
+      'usernameLevel1ElectricityOutstation': TextEditingController(),
+      'passwordLevel1ElectricityOutstation': TextEditingController(),
+      'usernameLevel2ElectricityOutstation': TextEditingController(),
+      'passwordLevel2ElectricityOutstation': TextEditingController(),
+      'usernameLevel3ElectricityOutstation': TextEditingController(),
+      'passwordLevel3ElectricityOutstation': TextEditingController(),
+      'commsMethodElectricityOutstation': TextEditingController(),
+      'commsAddressElectricityOutstation': TextEditingController(),
+      'commsBaudRateElectricityOutstation': TextEditingController(),
+      'commsDialInOutElectricityOutstation': TextEditingController(),
+      'commsProviderElectricityOutstation': TextEditingController(),
+      'subForms1': [
+        {
+          'channelNumberElectricityOutstation': TextEditingController(),
+          'pulseMultiplierElectricityOutstation': TextEditingController(),
+          'measurementQuantityElectricityOutstation': TextEditingController(),
+        },
+      ],
+      'subForms2': [
+        {
+          'meterSerialNumberElectricityOutstation': TextEditingController(),
+          'meterRegisterIdElectricityOutstation': TextEditingController(),
+          'meterMemoryLocationTypeElectricityOutstation': TextEditingController(),
+          'meterMemoryLocationElectricityOutstation': TextEditingController(),
+          'timestampMemoryLocationElectricityOutstation': TextEditingController(),
+        },
+      ],
+    });
+    notifyListeners();
+  }
+
+  void addFormElectricityOutstation() {
+    _formDataListElectricityOutstation.add({
+      'serialNumberElectricityOutstation': TextEditingController(),
+      'outstationTypeElectricityOutstation': TextEditingController(),
+      'numberOfChannelsElectricityOutstation': TextEditingController(),
+      'numberOfDigitsElectricityOutstation': TextEditingController(),
+      'pinElectricityOutstation': TextEditingController(),
+      'multiplierElectricityOutstation': TextEditingController(),
+      'usernameLevel1ElectricityOutstation': TextEditingController(),
+      'passwordLevel1ElectricityOutstation': TextEditingController(),
+      'usernameLevel2ElectricityOutstation': TextEditingController(),
+      'passwordLevel2ElectricityOutstation': TextEditingController(),
+      'usernameLevel3ElectricityOutstation': TextEditingController(),
+      'passwordLevel3ElectricityOutstation': TextEditingController(),
+      'commsMethodElectricityOutstation': TextEditingController(),
+      'commsAddressElectricityOutstation': TextEditingController(),
+      'commsBaudRateElectricityOutstation': TextEditingController(),
+      'commsDialInOutElectricityOutstation': TextEditingController(),
+      'commsProviderElectricityOutstation': TextEditingController(),
+      'subForms1': [
+        {
+          'channelNumberElectricityOutstation': TextEditingController(),
+          'pulseMultiplierElectricityOutstation': TextEditingController(),
+          'measurementQuantityElectricityOutstation': TextEditingController(),
+        },
+      ],
+      'subForms2': [
+        {
+          'meterSerialNumberElectricityOutstation': TextEditingController(),
+          'meterRegisterIdElectricityOutstation': TextEditingController(),
+          'meterMemoryLocationTypeElectricityOutstation': TextEditingController(),
+          'meterMemoryLocationElectricityOutstation': TextEditingController(),
+          'timestampMemoryLocationElectricityOutstation': TextEditingController(),
+        },
+      ],
+    });
+    notifyListeners();
+  }
+
+  void removeFormElectricityOutstation(int index) {
+    _formDataListElectricityOutstation.removeAt(index);
+    notifyListeners();
+  }
+
+  void addSubForm1ElectricityOutstation(int index) {
+    _formDataListElectricityOutstation[index]['subForms1'].add({
+      'channelNumberElectricityOutstation': TextEditingController(),
+      'pulseMultiplierElectricityOutstation': TextEditingController(),
+      'measurementQuantityElectricityOutstation': TextEditingController(),
+    });
+    notifyListeners();
+  }
+
+  void removeSubForm1ElectricityOutstation(int parentIndex, int subIndex) {
+    _formDataListElectricityOutstation[parentIndex]['subForms1'].removeAt(subIndex);
+    notifyListeners();
+  }
+
+  void addSubForm2ElectricityOutstation(int index) {
+    _formDataListElectricityOutstation[index]['subForms2'].add({
+      'meterSerialNumberElectricityOutstation': TextEditingController(),
+      'meterRegisterIdElectricityOutstation': TextEditingController(),
+      'meterMemoryLocationTypeElectricityOutstation': TextEditingController(),
+      'meterMemoryLocationElectricityOutstation': TextEditingController(),
+      'timestampMemoryLocationElectricityOutstation': TextEditingController(),
+    });
+    notifyListeners();
+  }
+
+  void removeSubForm2ElectricityOutstation(int parentIndex, int subIndex) {
+    _formDataListElectricityOutstation[parentIndex]['subForms2'].removeAt(subIndex);
+    notifyListeners();
+  }
 }

@@ -85,7 +85,7 @@ class _GasState extends State<Gas> {
                   appStateProvider.isCheckDataFalseSet();
                 }
               });
-              appStateProvider.insertData(context);
+              appStateProvider.saveSapphireGasFlow(context);
             }
           }
         },
@@ -454,6 +454,8 @@ class _GasState extends State<Gas> {
               itemCount: appStateProvider.formDataList.length,
               itemBuilder: (context, index) {
                 return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SizedBox(height: 10),
                     Row(
@@ -497,8 +499,12 @@ class _GasState extends State<Gas> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 10),
+                    Text("\t\tUse Template"),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        const Text('True'),
                         Radio<String>(
                           value: 'True',
                           groupValue: appStateProvider.formDataList[index]['useTemplate'],
@@ -508,7 +514,7 @@ class _GasState extends State<Gas> {
                             });
                           },
                         ),
-                        const Text('True'),
+                        const Text('False'),
                         Radio<String>(
                           value: 'False',
                           groupValue: appStateProvider.formDataList[index]['useTemplate'],
@@ -518,7 +524,6 @@ class _GasState extends State<Gas> {
                             });
                           },
                         ),
-                        const Text('False'),
                       ],
                     ),
                     ElectricityTextFieldWidget(
