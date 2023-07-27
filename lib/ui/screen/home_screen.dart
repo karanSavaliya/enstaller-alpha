@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
           sectionName = "Abort";
       });
       await SurveyScreenViewModel()
-          .onSubmitOffline(appointmentid, _answerlist, sectionName);
+          .onSubmitOffline(appointmentid, _answerlist, sectionName, context);
       print("End sumitting survey for --> $appointmentid");
     }
   }

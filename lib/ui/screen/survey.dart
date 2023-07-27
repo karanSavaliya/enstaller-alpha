@@ -72,11 +72,9 @@ class _SurveyScreenState extends State<SurveyScreen> {
   @override
   Widget build(BuildContext context) {
     mainContext = context;
-    progressDialog = ProgressDialog(context,
-        type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
+    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
     progressDialog.style(message: 'Please Wait');
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context);
@@ -453,10 +451,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                         element.intQuestionNo ==
                                         model.lastSelectedQuestion);
                                 int index = model
-                                    .sectionQuestions[model.lastSection]
-                                    .indexWhere((element) =>
-                                        element.intQuestionNo ==
-                                        model.lastSelectedQuestion);
+                                    .sectionQuestions[model.lastSection].indexWhere((element) =>
+                                        element.intQuestionNo == model.lastSelectedQuestion);
                                 surveyResponseModel.yesNoPressedVal = null;
                                 surveyResponseModel.validate = null;
                                 model.sectionQuestions[model.lastSection]
@@ -472,8 +468,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                 }
 
                 return Padding(
-                  padding:
-                      const EdgeInsets.only(left: 20.0, top: 10.0, bottom: 5.0),
+                  padding: const EdgeInsets.only(left: 20.0, top: 10.0, bottom: 5.0),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [

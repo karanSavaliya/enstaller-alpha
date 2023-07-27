@@ -27,7 +27,7 @@ class AppointmentViewModel extends BaseModel{
     _appointmentList = await _apiService.getAppointmentList(user.intEngineerId.toString());
     appointmentList = _appointmentList;
 
-    appointmentList.removeWhere((element) => element.appointmentEventType == "Cancelled" || element.appointmentEventType == "Aborted" || element.appointmentEventType == "Completed");
+    appointmentList.removeWhere((element) => element.appointmentEventType == "Cancelled" || element.appointmentEventType == "Aborted");
 
     setState(ViewState.Idle);
 

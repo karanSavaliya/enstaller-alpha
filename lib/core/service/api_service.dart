@@ -59,6 +59,8 @@ import 'package:http_parser/http_parser.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
 
+import '../constant/appconstant.dart';
+
 class ApiService extends BaseApi {
 
   Future<dynamic> loginWithUserNamePassword(LoginCredential loginCredential) {
@@ -462,13 +464,38 @@ class ApiService extends BaseApi {
     }, pdFopenModel.toJson());
   }
 
-  Future<dynamic> submitListSurveyAnswer(List<AnswerCredential> credentials) {
+  void updateStatus(String appointmentid) async{
+    ApiService _apiService = ApiService();
+    UserModel user = await Prefs.getUser();
+    ResponseModel response = await _apiService.updateAppointmentStatus(
+        AppointmentStatusUpdateCredentials(
+          strStatus: "Completed",
+          intBookedBy: user.intEngineerId.toString(),
+          intEngineerId: user.intEngineerId.toString(),
+          strEmailActionby: "Send by Engineer",
+          intId: appointmentid,
+          intCompanyId: user.intCompanyId,
+          intUserId:"0",
+        ));
+  }
+
+  Future<dynamic> submitListSurveyAnswer(List<AnswerCredential> credentials,BuildContext context,String appointmentid, String status) {
     return postRequestList(ApiUrls.addSurveyQuestionAnswerDetailUrl, (r) {
-      final response = json.decode(r.body);
-      print('response-->$response');
-      //return response;
-      return ResponseModel(statusCode: 1, response: 'Successfully Updated');
-    }, json.encode(credentials));
+      final response = r.statusCode.toString();
+
+      print('response-->${r.body}');
+
+      if(r.statusCode == 200) {
+        if(status != "Abort"){
+          updateStatus(appointmentid);
+        }
+        AppConstants.showSuccessToast(context, "Survey Successfully submitted");
+        return ResponseModel(statusCode: 1, response: 'Survey Successfully submitted');
+      }else{
+        AppConstants.showFailToast(context , "Failed submitting Survey");
+        return ResponseModel(statusCode: 1, response: 'Failed submitting Survey');
+      }
+      }, json.encode(credentials));
   }
 
   Future<dynamic> getCustomerById(String customerID, String companyId) {

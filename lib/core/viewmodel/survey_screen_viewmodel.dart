@@ -930,7 +930,7 @@ class SurveyScreenViewModel extends BaseModel {
         String status = _updateConnectionStatus(result);
         if (status != "NONE") {
           issubmitted = true;
-          ResponseModel responseModel = await _apiService.submitListSurveyAnswer(answerList);
+          ResponseModel responseModel = await _apiService.submitListSurveyAnswer(answerList,context,appointmentid,"Abort");
           // ResponseModel responseModel =
           // await _apiService.submitListSurveyAnswer(answerList);
           //done
@@ -992,8 +992,7 @@ class SurveyScreenViewModel extends BaseModel {
         String status = _updateConnectionStatus(result);
         if (status != "NONE") {
           issubmitted = true;
-          ResponseModel responseModel =
-          await _apiService.submitListSurveyAnswer(answerList);
+          ResponseModel responseModel = await _apiService.submitListSurveyAnswer(answerList,context,appointmentid,"NotAbort");
           SharedPreferences pref = await SharedPreferences.getInstance();
           ResponseModel response = await _apiService.updateAppointmentStatus(
               AppointmentStatusUpdateCredentials(
@@ -1051,8 +1050,8 @@ class SurveyScreenViewModel extends BaseModel {
           issubmitted = true;
         }
       } catch (e) {
-        print(e.toString());
-        AppConstants.showFailToast(context, e.toString());
+        // print(e.toString());
+        // AppConstants.showFailToast(context, e.toString());
       }
       selected = -1;
     }
@@ -1256,7 +1255,7 @@ class SurveyScreenViewModel extends BaseModel {
   }
 
   Future<void> onSubmitOffline(String appointmentid,
-      List<AnswerCredential> _listofanswer, String sectionName) async {
+      List<AnswerCredential> _listofanswer, String sectionName,BuildContext context) async {
     print("**********offline********");
     user = await Prefs.getUser();
     String abortReason = "";
@@ -1271,7 +1270,7 @@ class SurveyScreenViewModel extends BaseModel {
         print(
             "Sumitted offline survey to online for appointment id: -----> $appointmentid");
         ResponseModel responseModel =
-        await _apiService.submitListSurveyAnswer(_listofanswer);
+        await _apiService.submitListSurveyAnswer(_listofanswer,context,appointmentid,"NotAbort");
         SharedPreferences pref = await SharedPreferences.getInstance();
         if (sectionName == "Abort") {
           ResponseModel abortreasonmodel = await _apiService
