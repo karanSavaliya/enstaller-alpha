@@ -61,7 +61,6 @@ class LogInViewModel extends BaseModel {
         AppConstants.showFailToast(context, response.errorMessage);
       } else {
         setState(ViewState.Idle);
-
         Map<String, dynamic> decodedToken =
             JwtDecoder.decode(response.userDetails.accessToken);
         if (decodedToken != null) {

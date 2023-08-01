@@ -75,6 +75,7 @@ abstract class BaseApi {
     print("URL: " + path);
     print("Parameters");
     print(param);
+    print(ApiUrls.baseUrl + path + '?' + param);
     return _processResponse(
         await http.get(
             Uri.parse(ApiUrls.baseUrl + path + '?' + param),
@@ -82,10 +83,6 @@ abstract class BaseApi {
         ),
         success);
   }
-
-
-
-
 
   @protected
   Future<dynamic> getRequestWithParamOther(
@@ -100,7 +97,6 @@ abstract class BaseApi {
         ),
         success);
   }
-
 
   @protected
   Future<dynamic> postRequest(String path, Function(Response) success,

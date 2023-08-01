@@ -121,6 +121,8 @@ class Prefs {
   static Future<void> saveMeterSerialNoData(String response) async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     UserModel loginUser = await getUser();
+    print("999");
+    print(loginUser);
     preferences.setString("MeterSerialNo+${loginUser.id}}", response);
     preferences.commit();
     print("Response Saved: =====>");
@@ -129,6 +131,8 @@ class Prefs {
   static Future<List<MeterSerialNumber>> getMeterSerialNoList() async {
     final SharedPreferences preferences = await SharedPreferences.getInstance();
     UserModel loginUser = await getUser();
+    print(loginUser.id);
+    print(preferences.getString("MeterSerialNo+${loginUser.id}}"));
     String body = preferences.getString("MeterSerialNo+${loginUser.id}}");
     print("Meter Serial No List: --> " + body);
     if (body != null && body.isNotEmpty) {
@@ -157,6 +161,9 @@ class Prefs {
       String serialNo, String questionText) async {
     if (validMSNSurveyQuestion.contains(questionText.toLowerCase())) {
       List<MeterSerialNumber> list = await Prefs.getMeterSerialNoList();
+
+      print(list.length);
+      print("-------------------------");
       if (list.length > 0) {
         MeterSerialNumber model;
         list.forEach((element) {

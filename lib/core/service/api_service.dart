@@ -81,7 +81,6 @@ class ApiService extends BaseApi {
 
   }
 
-
   Future<dynamic> updateProfilePhoto(UpdateProfile profileInfo) {
     return postRequest(ApiUrls.updateProfilePhoto, (r) {
       print(json.decode(r.body));
@@ -166,15 +165,12 @@ class ApiService extends BaseApi {
     }, 'intId=$appointmentID' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-
-  Future<dynamic> getAppointmentDetails(
-      String appointmentID, String companyId) {
+  Future<dynamic> getAppointmentDetails(String appointmentID, String companyId) {
     return getRequest(ApiUrls.getAppointmentDetailsUrl, (response) {
       print("-----------res-----"+response.body);
       return AppointmentDetails.fromJson(json.decode(response.body));
     }, '/$appointmentID' + '?${AppStrings.intCompanyIdKey}=$companyId');
   }
-
 
   Future<dynamic> getStockLocation(String warehouseID, String companyId) {
     return getRequestWithParam(ApiUrls.getStockLocation, (response) {
@@ -225,8 +221,7 @@ class ApiService extends BaseApi {
     }, 'strReference=$strReference' + '&${AppStrings.intCompanyIdKey}=$companyId');
   }
 
-  Future<dynamic> checkSerialNo(
-      String strSerialNo, String orderID, String companyId) {
+  Future<dynamic> checkSerialNo(String strSerialNo, String orderID, String companyId) {
     return getRequestWithParam(ApiUrls.checkSerialNo, (response) {
       print(response.body);
       return (json.decode(response.body) as List)
@@ -249,7 +244,6 @@ class ApiService extends BaseApi {
     }, model.toJson());
   }
 
-// TODO: Need to check again.
   Future<dynamic> saveStatusUpdate(StockStatusSaveModel model) {
     return postRequestMap(ApiUrls.updateStatusBatchWise, (r) {
       final response = json.decode(r.body);

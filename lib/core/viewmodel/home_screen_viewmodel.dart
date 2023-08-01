@@ -48,7 +48,6 @@ class HomeScreenViewModel extends BaseModel {
       setTableData(uniqueDates[0], masterAppointmentList);
     }
 
-    // Store meter serial numbers for login user
     await _apiService.storeMeterSerialNoForEngineer(userModel.id);
     masterAppointmentList.removeWhere((element) => element.appointmentEventType == "Cancelled" || element.appointmentEventType == "Aborted" || element.appointmentEventType == "Completed");
 

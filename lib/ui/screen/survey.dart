@@ -698,7 +698,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
             base64String: surveyResponseModel.validate
                 .replaceAll(AppConstants.base64Prefix, ''));
       }
-      print("11111111111111111111111111111111");
       return Image.file(
         surveyResponseModel?.image,
         height: 100,
@@ -1756,14 +1755,12 @@ class _MyTileState extends State<MyTile> {
           SizeConfig.horizontalSpaceSmall(),
           ElevatedButton(
             style: ElevatedButton.styleFrom(elevation: 1.0),
-            // elevation: 1.0,
             child: Text(!editable ? AppStrings.edit : AppStrings.done),
             onPressed: () async {
-              // When edit is pressed, make the editable true
               bool isValidMSN = true;
               if (widget.checkForValidMSN) {
-                // Show Alert for non valid msn
                 if (controller.text != '') {
+                  print(controller.text);
                   String questionText =
                       widget.surveyResponseModel?.strQuestionText ?? "";
                   bool isValidSerial = await Prefs.isValidSerialNoIsAssigned(

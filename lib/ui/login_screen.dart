@@ -106,8 +106,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     AppConstants.showFailToast(
                                         context, "password is required");
                                   } else {
-//                            Navigator.of(context).push(new MaterialPageRoute(builder: (context)=>HomeScreen()));
-
                                     model.logInWithUserNameAndPassword(context);
                                   }
                                 },
