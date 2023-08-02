@@ -74,7 +74,8 @@ class ApiUrls {
   static String map_routing_url = 'routing';
   static String isEnrouted_url = "appointments/GetCheckInRouteAppointment";
 
-  static String engineerDocumentList = baseUrl + "Engineer/GetEnginnerDocumentList";
+  static String engineerDocumentList = baseUrl + "Engineer/GetEngineerCertificate";
   static String saveSapphireGasFlow = baseUrl + "SapphireGasFlow/SaveSapphireGasFlow";
   static String engineerProfilePhotoUrl = "https://enstall.boshposh.com/Upload/EngineerPhoto";
+  static String engineerDocumentUrl = "https://enstall.boshposh.com/Upload/EngineerDocument/";
 }

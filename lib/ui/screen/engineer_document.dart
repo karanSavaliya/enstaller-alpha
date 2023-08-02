@@ -6,6 +6,7 @@ import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import '../../core/constant/api_urls.dart';
 import '../../core/constant/app_colors.dart';
 import '../../core/constant/app_string.dart';
 import '../../core/constant/appconstant.dart';
@@ -134,7 +135,7 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                 Expanded(
                                   flex: 3,
                                   child: Text(
-                                    appStateProvider.searchBoxType == false ? appStateProvider.engineerDocumentList[i].docTypeName : appStateProvider.filteredEngineerDocumentList[i].docTypeName ?? "",
+                                    appStateProvider.searchBoxType == false ? appStateProvider.engineerDocumentList[i].documentType : appStateProvider.filteredEngineerDocumentList[i].documentType ?? "",
                                     textAlign: TextAlign.start,
                                     style: TextStyle(color: AppColors.whiteColor),
                                   ),
@@ -162,8 +163,8 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                   flex: 3,
                                   child: InkWell(
                                     onTap: () async {
-                                      String _url = appStateProvider.searchBoxType == false ? "https://enstall.boshposh.com/Upload/EngineerDocument/" + appStateProvider.engineerDocumentList[i].strEngDocument :
-                                      "https://enstall.boshposh.com/Upload/EngineerDocument/" + appStateProvider.filteredEngineerDocumentList[i].strEngDocument;
+                                      String _url = appStateProvider.searchBoxType == false ? "${ApiUrls.engineerDocumentUrl}" + appStateProvider.engineerDocumentList[i].document + ".pdf":
+                                      "${ApiUrls.engineerDocumentUrl}" + appStateProvider.filteredEngineerDocumentList[i].document + ".pdf";
                                       String extension = _url.split('.').last;
                                       if (extension.toUpperCase() == "PDF") {
                                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => DocumentView(doc: _url)));
@@ -171,7 +172,7 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                         try {
                                           var response = await http.get(Uri.parse(_url));
                                           var dir = await getTemporaryDirectory();
-                                          File file = new File(appStateProvider.searchBoxType == false ? dir.path + appStateProvider.engineerDocumentList[i].strEngDocument : dir.path + appStateProvider.filteredEngineerDocumentList[i].strEngDocument);
+                                          File file = new File(appStateProvider.searchBoxType == false ? dir.path + appStateProvider.engineerDocumentList[i].document : dir.path + appStateProvider.filteredEngineerDocumentList[i].document);
                                           file.writeAsBytesSync(response.bodyBytes, flush: true);
                                           share(file.path);
                                         } catch (e) {
@@ -181,7 +182,7 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                       }
                                     },
                                     child: Text(
-                                      appStateProvider.searchBoxType == false ? appStateProvider.engineerDocumentList[i].strEngDocument : appStateProvider.filteredEngineerDocumentList[i].strEngDocument ?? "",
+                                      appStateProvider.searchBoxType == false ? appStateProvider.engineerDocumentList[i].document : appStateProvider.filteredEngineerDocumentList[i].document ?? "",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(color: AppColors.darkGrayColor,fontWeight: FontWeight.normal),
                                     ),

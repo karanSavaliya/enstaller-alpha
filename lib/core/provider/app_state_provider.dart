@@ -62,8 +62,8 @@ class AppStateProvider extends ChangeNotifier {
       _searchBoxType = true;
       notifyListeners();
       for (var document in _engineerDocumentList) {
-        if (document.docTypeName.toLowerCase().contains(query) ||
-            document.strEngDocument.toLowerCase().contains(query)) {
+        if (document.documentType.toLowerCase().contains(query) ||
+            document.document.toLowerCase().contains(query)) {
           _filteredEngineerDocumentList.add(document);
         }
       }

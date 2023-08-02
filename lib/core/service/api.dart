@@ -9,14 +9,25 @@ import '../model/save_sapphire_gas_flow_model.dart';
 import '../model/user_model.dart';
 
 class Api {
+
   Future<List<EngineerDocumentModel>> fetchEngineerDocuments(String apiUrl) async {
     UserModel user = await Prefs.getUser();
-    Uri uri = Uri.parse('$apiUrl?intEngineerId=${int.parse(user.intEngineerId)}');
-    final response = await http.get(
+    Uri uri = Uri.parse(apiUrl);
+
+    Map<String, dynamic> requestData = {
+      'EngineerId': user.intEngineerId.toString(),
+      'RowsPerPage': 10,
+      'PageNumber': 1,
+      'strsearchtxt': "",
+    };
+
+    final response = await http.post(
       uri,
       headers: {
         'Authorization': 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json',
       },
+      body: jsonEncode(requestData),
     );
 
     if (response.statusCode == 200) {
