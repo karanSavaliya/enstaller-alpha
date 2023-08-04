@@ -26,10 +26,6 @@ class _GasState extends State<Gas> {
     appStateProvider.initForm();
   }
 
-  final List<String> items = ['Gas Flow', 'Existing Meter System', 'Site Address', 'Create Work', 'Complete Work', 'Meter System', 'Assets'];
-
-  int _currentExpandedTileIndex = 0;
-
   @override
   Widget build(BuildContext context) {
     AppStateProvider appStateProvider = Provider.of<AppStateProvider>(context);
@@ -66,22 +62,13 @@ class _GasState extends State<Gas> {
       body: Padding(
         padding: const EdgeInsets.all(7.0),
         child: ListView.builder(
-          itemCount: items.length,
+          itemCount: appStateProvider.items.length,
           physics: ScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (context, index) {
             return Card(
               child: ExpansionTile(
-                onExpansionChanged: (expanded) {
-                  setState(() {
-                    if (expanded) {
-                      _currentExpandedTileIndex = index;
-                    } else {
-                      _currentExpandedTileIndex = 0;
-                    }
-                  });
-                },
-                initiallyExpanded: _currentExpandedTileIndex == index,
+                initiallyExpanded: appStateProvider.currentExpandedTileIndex == index,
                 title: Row(
                   children: [
                     Container(
@@ -97,7 +84,7 @@ class _GasState extends State<Gas> {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Text(items[index],style: TextStyle(color: AppColors.appThemeColor,fontWeight: FontWeight.bold)),
+                    Text(appStateProvider.items[index],style: TextStyle(color: AppColors.appThemeColor,fontWeight: FontWeight.bold)),
                   ],
                 ),
                 children: <Widget>[
@@ -138,12 +125,6 @@ class _GasState extends State<Gas> {
                         ElectricityTextFieldWidget(
                           hintText: "Correlation Id",
                           controller: appStateProvider.correlationId,
-                        ),
-                        SizedBox(height: 10),
-                        ElectricityTextFieldWidget(
-                          hintText: "Sapphire Work Id",
-                          controller: appStateProvider.sapphireWorkId,
-                          required: "required",
                         ),
                       ],
                     ),

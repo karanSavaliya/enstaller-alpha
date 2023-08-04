@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../constant/api_urls.dart';
 import '../constant/appconstant.dart';
 import '../model/engineer_document_model.dart';
+import '../model/save_sapphire_electricity_flow_model.dart';
 import '../model/save_sapphire_gas_flow_model.dart';
 import '../service/api.dart';
 
@@ -77,6 +78,12 @@ class AppStateProvider extends ChangeNotifier {
 
   // =======> Save Sapphire Gas Flow Start <=======
 
+  final List<String> _items = ['Gas Flow', 'Existing Meter System', 'Site Address', 'Create Work', 'Complete Work', 'Meter System', 'Assets'];
+  List<String> get items => _items;
+
+  int _currentExpandedTileIndex = 0;
+  int get currentExpandedTileIndex => _currentExpandedTileIndex;
+
   String _visitSuccessful = "true";
   String get visitSuccessful => _visitSuccessful;
   void handleVisitSuccessfulSelection(String visitSuccessful) {
@@ -145,8 +152,6 @@ class AppStateProvider extends ChangeNotifier {
   TextEditingController get externalSystemIdentity => _externalSystemIdentity;
   final _correlationId = TextEditingController();
   TextEditingController get correlationId => _correlationId;
-  final _sapphireWorkId = TextEditingController();
-  TextEditingController get sapphireWorkId => _sapphireWorkId;
 
   final _meterLinkCode = TextEditingController();
   TextEditingController get meterLinkCode => _meterLinkCode;
@@ -210,7 +215,6 @@ class AppStateProvider extends ChangeNotifier {
     _mprn.text= "";
     _externalSystemIdentity.text= "";
     _correlationId.text= "";
-    _sapphireWorkId.text= "";
     notifyListeners();
     _meterLinkCode.text= "";
     _statusCode.text= "";
@@ -253,6 +257,8 @@ class AppStateProvider extends ChangeNotifier {
     _meteringPressureForMeterSystem.text= "";
     notifyListeners();
     _formDataList.clear();
+    notifyListeners();
+    _currentExpandedTileIndex = 0;
     notifyListeners();
     initForm();
   }
@@ -319,7 +325,7 @@ class AppStateProvider extends ChangeNotifier {
   }
 
   void fieldDataCheck(BuildContext context){
-    if(_memMpId.text.isNotEmpty && _supplierMpId.text.isNotEmpty && _mprn.text.isNotEmpty && _externalSystemIdentity.text.isNotEmpty && _sapphireWorkId.text.isNotEmpty
+    if(_memMpId.text.isNotEmpty && _supplierMpId.text.isNotEmpty && _mprn.text.isNotEmpty && _externalSystemIdentity.text.isNotEmpty
         && _statusCode.text.isNotEmpty && _locationCode.text.isNotEmpty && _conversionFactor.text.isNotEmpty && _meteringPressure.text.isNotEmpty
         && _postCode.text.isNotEmpty
         && _textEditingControllerSiteVisitDate.text.isNotEmpty && _visitSuccessful!=null && _readingTaken!=null && _engineerName.text.isNotEmpty && _transactionStatusCode.text.isNotEmpty
@@ -467,7 +473,6 @@ class AppStateProvider extends ChangeNotifier {
 
   void saveSapphireGasFlow(BuildContext context) async {
     for (var formData in _formDataList) {
-
       Map<String, dynamic> assetMap = {
         'intId': 0,
         'useTemplate': formData['useTemplate'],
@@ -517,7 +522,7 @@ class AppStateProvider extends ChangeNotifier {
         "mprn": _mprn.text,
         "externalSystemIdentity": _externalSystemIdentity.text,
         "correlationId": _correlationId.text,
-        "sapphireWorkId": _sapphireWorkId.text,
+        "sapphireWorkId": "0",
         "existingMeterSystem": {
           "meterLinkCode": _meterLinkCode.text,
           "statusCode": _statusCode.text,
@@ -586,6 +591,12 @@ class AppStateProvider extends ChangeNotifier {
 
   // =======> Save Sapphire Electricity Flow Start <=======
 
+  final List<String> _itemsElectricity = ['Electricity Flow', 'Create Work', 'Complete Work', 'Meter System', 'Meters'];
+  List<String> get itemsElectricity => _itemsElectricity;
+
+  int _currentExpandedTileIndexElectricity = 0;
+  int get currentExpandedTileIndexElectricity => _currentExpandedTileIndexElectricity;
+
   final TextEditingController _memMpIdElectricity = TextEditingController();
   TextEditingController get memMpIdElectricity => _memMpIdElectricity;
   final _supplierMpIdElectricity = TextEditingController();
@@ -596,40 +607,9 @@ class AppStateProvider extends ChangeNotifier {
   TextEditingController get externalSystemIdentityElectricity => _externalSystemIdentityElectricity;
   final _correlationIdElectricity = TextEditingController();
   TextEditingController get correlationIdElectricity => _correlationIdElectricity;
-  final _sapphireWorkIdElectricity = TextEditingController();
-  TextEditingController get sapphireWorkIdElectricity => _sapphireWorkIdElectricity;
 
-  final _textEditingControllerAppointmentDateElectricity = TextEditingController();
-  TextEditingController get textEditingControllerAppointmentDateElectricity => _textEditingControllerAppointmentDateElectricity;
-  DateTime _selectedAppointmentDateElectricity;
-  DateTime get selectedAppointmentDateElectricity => _selectedAppointmentDateElectricity;
-  Future<void> selectAppointmentDateElectricity(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedAppointmentDateElectricity ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-
-    if (picked != null) {
-      _selectedAppointmentDateElectricity = picked;
-      _textEditingControllerAppointmentDateElectricity.text = formatDate(picked);
-      notifyListeners();
-    }
-  }
-
-  final TextEditingController _additionalInformationForWorkElectricity = TextEditingController();
-  TextEditingController get additionalInformationForWorkElectricity => _additionalInformationForWorkElectricity;
-  final _requestedEnergisationStatusElectricity = TextEditingController();
-  TextEditingController get requestedEnergisationStatusElectricity => _requestedEnergisationStatusElectricity;
-  final _retrievalMethodElectricity = TextEditingController();
-  TextEditingController get retrievalMethodElectricity => _retrievalMethodElectricity;
-  final _removeMeteringPointMetersElectricity = TextEditingController();
-  TextEditingController get removeMeteringPointMetersElectricity => _removeMeteringPointMetersElectricity;
-  final _standardSettlementCodeElectricity = TextEditingController();
-  TextEditingController get standardSettlementCodeElectricity => _standardSettlementCodeElectricity;
-  final _nonSettlementFunctionCodeElectricity = TextEditingController();
-  TextEditingController get nonSettlementFunctionCodeElectricity => _nonSettlementFunctionCodeElectricity;
+  final TextEditingController _requestedEnergisationStatusForWorkElectricity = TextEditingController();
+  TextEditingController get requestedEnergisationStatusForWorkElectricity => _requestedEnergisationStatusForWorkElectricity;
 
   final _textEditingControllerSiteVisitDateElectricity = TextEditingController();
   TextEditingController get textEditingControllerSiteVisitDateElectricity => _textEditingControllerSiteVisitDateElectricity;
@@ -666,16 +646,8 @@ class AppStateProvider extends ChangeNotifier {
 
   final TextEditingController _engineerNameElectricity = TextEditingController();
   TextEditingController get engineerNameElectricity => _engineerNameElectricity;
-  final _siteVisitNotesElectricity = TextEditingController();
-  TextEditingController get siteVisitNotesElectricity => _siteVisitNotesElectricity;
-  final _failureToEneOrDeElectricity = TextEditingController();
-  TextEditingController get failureToEneOrDeElectricity => _failureToEneOrDeElectricity;
   final _siteVisitCheckCodeElectricity = TextEditingController();
   TextEditingController get siteVisitCheckCodeElectricity => _siteVisitCheckCodeElectricity;
-  final _assetConditionCodeElectricity = TextEditingController();
-  TextEditingController get assetConditionCodeElectricity => _assetConditionCodeElectricity;
-  final _assetConditionAdditionalElectricity = TextEditingController();
-  TextEditingController get assetConditionAdditionalElectricity => _assetConditionAdditionalElectricity;
 
   final _energisationStatusElectricity = TextEditingController();
   TextEditingController get energisationStatusElectricity => _energisationStatusElectricity;
@@ -691,25 +663,9 @@ class AppStateProvider extends ChangeNotifier {
   TextEditingController get meterLocationCodeElectricity => _meterLocationCodeElectricity;
   final _standardSettlementCodeForMeterSystemElectricity = TextEditingController();
   TextEditingController get standardSettlementCodeForMeterSystemElectricity => _standardSettlementCodeForMeterSystemElectricity;
-  final _nonSettlementFunctionCodeForMeterSystemElectricity = TextEditingController();
-  TextEditingController get nonSettlementFunctionCodeForMeterSystemElectricity => _nonSettlementFunctionCodeForMeterSystemElectricity;
   final _retrievalMethodForMeterSystemElectricity = TextEditingController();
   TextEditingController get retrievalMethodForMeterSystemElectricity => _retrievalMethodForMeterSystemElectricity;
 
-  final _copRefElectricity = TextEditingController();
-  TextEditingController get copRefElectricity => _copRefElectricity;
-  final _copIssueNumberElectricity = TextEditingController();
-  TextEditingController get copIssueNumberElectricity => _copIssueNumberElectricity;
-
-  String _remoteEnableElectricity = "true";
-  String get remoteEnableElectricity => _remoteEnableElectricity;
-  void handleRemoteEnableSelectionElectricity(String remoteEnable) {
-    _remoteEnableElectricity = remoteEnable;
-    notifyListeners();
-  }
-
-  final _eventIndicatorElectricity = TextEditingController();
-  TextEditingController get eventIndicatorElectricity => _eventIndicatorElectricity;
 
   DateTime _selectedMeterRemovalDateForMetersElectricity;
   DateTime get selectedMeterRemovalDateElectricity => _selectedMeterRemovalDateForMetersElectricity;
@@ -744,20 +700,8 @@ class AppStateProvider extends ChangeNotifier {
       'timingSerialNumberElectricity': TextEditingController(),
       'ctRatioElectricity': TextEditingController(),
       'vtRatioElectricity': TextEditingController(),
-      'prePaymentDataUnavailableElectricity': TextEditingController(),
-      'debtRecoveryRateElectricity': TextEditingController(),
-      'hasEmergencyCredit': true,
-      'initialCreditElectricity': TextEditingController(),
-      'standingChangeElectricity': TextEditingController(),
-      'totalDebitElectricity': TextEditingController(),
-      'totalDebitOutstandingElectricity': TextEditingController(),
-      'totalCreditAcceptedElectricity': TextEditingController(),
-      'totalTokensInsertedElectricity': TextEditingController(),
-      'creditBalanceElectricity': TextEditingController(),
-      'emergencyCreditElectricity': TextEditingController(),
-      'prePaymentMeterShutdownStatusElectricity': TextEditingController(),
       'meterRemovalDateElectricity': TextEditingController(),
-      'subForms': [
+      'registers': [
         {
           'useTemplateForRegistersElectricity': true,
           'meterRegisterIdElectricity': TextEditingController(),
@@ -768,9 +712,9 @@ class AppStateProvider extends ChangeNotifier {
           'multiplierElectricity': TextEditingController(),
           'registerReadingElectricity': TextEditingController(),
           'readingTypeElectricity': TextEditingController(),
-          'readingNotValidReasonCodeElectricity': TextEditingController(),
           'prepaymentUnitRateElectricity': TextEditingController(),
-          'subSubForms': [
+          'readingNotValidReasonCodeElectricity': TextEditingController(),
+          'timePatterns': [
             {
               'timePatternRegimeElectricity': TextEditingController(),
               'settlementMapCoefficientElectricity': TextEditingController(),
@@ -794,20 +738,8 @@ class AppStateProvider extends ChangeNotifier {
       'timingSerialNumberElectricity': TextEditingController(),
       'ctRatioElectricity': TextEditingController(),
       'vtRatioElectricity': TextEditingController(),
-      'prePaymentDataUnavailableElectricity': TextEditingController(),
-      'debtRecoveryRateElectricity': TextEditingController(),
-      'hasEmergencyCredit': true,
-      'initialCreditElectricity': TextEditingController(),
-      'standingChangeElectricity': TextEditingController(),
-      'totalDebitElectricity': TextEditingController(),
-      'totalDebitOutstandingElectricity': TextEditingController(),
-      'totalCreditAcceptedElectricity': TextEditingController(),
-      'totalTokensInsertedElectricity': TextEditingController(),
-      'creditBalanceElectricity': TextEditingController(),
-      'emergencyCreditElectricity': TextEditingController(),
-      'prePaymentMeterShutdownStatusElectricity': TextEditingController(),
       'meterRemovalDateElectricity': TextEditingController(),
-      'subForms': [
+      'registers': [
         {
           'useTemplateForRegistersElectricity': true,
           'meterRegisterIdElectricity': TextEditingController(),
@@ -818,9 +750,9 @@ class AppStateProvider extends ChangeNotifier {
           'multiplierElectricity': TextEditingController(),
           'registerReadingElectricity': TextEditingController(),
           'readingTypeElectricity': TextEditingController(),
-          'readingNotValidReasonCodeElectricity': TextEditingController(),
           'prepaymentUnitRateElectricity': TextEditingController(),
-          'subSubForms': [
+          'readingNotValidReasonCodeElectricity': TextEditingController(),
+          'timePatterns': [
             {
               'timePatternRegimeElectricity': TextEditingController(),
               'settlementMapCoefficientElectricity': TextEditingController(),
@@ -838,7 +770,7 @@ class AppStateProvider extends ChangeNotifier {
   }
 
   void addSubFormElectricityMeters(int index) {
-    _formDataListElectricityMeters[index]['subForms'].add({
+    _formDataListElectricityMeters[index]['registers'].add({
       'useTemplateForRegistersElectricity': true,
       'meterRegisterIdElectricity': TextEditingController(),
       'isSettlementElectricity': true,
@@ -848,9 +780,9 @@ class AppStateProvider extends ChangeNotifier {
       'multiplierElectricity': TextEditingController(),
       'registerReadingElectricity': TextEditingController(),
       'readingTypeElectricity': TextEditingController(),
-      'readingNotValidReasonCodeElectricity': TextEditingController(),
       'prepaymentUnitRateElectricity': TextEditingController(),
-      'subSubForms': [
+      'readingNotValidReasonCodeElectricity': TextEditingController(),
+      'timePatterns': [
         {
           'timePatternRegimeElectricity': TextEditingController(),
           'settlementMapCoefficientElectricity': TextEditingController(),
@@ -861,12 +793,12 @@ class AppStateProvider extends ChangeNotifier {
   }
 
   void removeSubFormElectricityMeters(int parentIndex, int subIndex) {
-    _formDataListElectricityMeters[parentIndex]['subForms'].removeAt(subIndex);
+    _formDataListElectricityMeters[parentIndex]['registers'].removeAt(subIndex);
     notifyListeners();
   }
 
   void addSubSubFormElectricityMeters(int parentIndex, int subIndex) {
-    _formDataListElectricityMeters[parentIndex]['subForms'][subIndex]['subSubForms'].add({
+    _formDataListElectricityMeters[parentIndex]['registers'][subIndex]['timePatterns'].add({
       'timePatternRegimeElectricity': TextEditingController(),
       'settlementMapCoefficientElectricity': TextEditingController(),
     });
@@ -874,123 +806,129 @@ class AppStateProvider extends ChangeNotifier {
   }
 
   void removeSubSubFormElectricityMeters(int parentIndex, int subIndex, int subSubIndex) {
-    _formDataListElectricityMeters[parentIndex]['subForms'][subIndex]['subSubForms'].removeAt(subSubIndex);
+    _formDataListElectricityMeters[parentIndex]['registers'][subIndex]['timePatterns'].removeAt(subSubIndex);
     notifyListeners();
   }
 
-  List<Map<String, dynamic>> _formDataListElectricityOutstation = [];
-  List<Map<String, dynamic>> get formDataListElectricityOutstation => _formDataListElectricityOutstation;
+  void clearAllElectricityFormData() {
+    _memMpIdElectricity.text= "";
+    _supplierMpIdElectricity.text= "";
+    _mprnElectricity.text= "";
+    _externalSystemIdentityElectricity.text= "";
+    _correlationIdElectricity.text= "";
+    notifyListeners();
+    _requestedEnergisationStatusForWorkElectricity.text= "";
+    notifyListeners();
+    _textEditingControllerSiteVisitDateElectricity.text= "";
+    _engineerNameElectricity.text= "";
+    _siteVisitCheckCodeElectricity.text= "";
+    notifyListeners();
+    _energisationStatusElectricity.text= "";
+    _meterLocationCodeElectricity.text= "";
+    _standardSettlementCodeForMeterSystemElectricity.text= "";
+    _retrievalMethodForMeterSystemElectricity.text= "";
+    notifyListeners();
+    _formDataListElectricityMeters.clear();
+    notifyListeners();
+    _currentExpandedTileIndexElectricity = 0;
+    notifyListeners();
+    initFormElectricityMeters();
+  }
 
-  void initFormElectricityOutstation() {
-    _formDataListElectricityOutstation.add({
-      'serialNumberElectricityOutstation': TextEditingController(),
-      'outstationTypeElectricityOutstation': TextEditingController(),
-      'numberOfChannelsElectricityOutstation': TextEditingController(),
-      'numberOfDigitsElectricityOutstation': TextEditingController(),
-      'pinElectricityOutstation': TextEditingController(),
-      'multiplierElectricityOutstation': TextEditingController(),
-      'usernameLevel1ElectricityOutstation': TextEditingController(),
-      'passwordLevel1ElectricityOutstation': TextEditingController(),
-      'usernameLevel2ElectricityOutstation': TextEditingController(),
-      'passwordLevel2ElectricityOutstation': TextEditingController(),
-      'usernameLevel3ElectricityOutstation': TextEditingController(),
-      'passwordLevel3ElectricityOutstation': TextEditingController(),
-      'commsMethodElectricityOutstation': TextEditingController(),
-      'commsAddressElectricityOutstation': TextEditingController(),
-      'commsBaudRateElectricityOutstation': TextEditingController(),
-      'commsDialInOutElectricityOutstation': TextEditingController(),
-      'commsProviderElectricityOutstation': TextEditingController(),
-      'subForms1': [
-        {
-          'channelNumberElectricityOutstation': TextEditingController(),
-          'pulseMultiplierElectricityOutstation': TextEditingController(),
-          'measurementQuantityElectricityOutstation': TextEditingController(),
+  void saveSapphireElectricityFlow(BuildContext context) async {
+    for (var formData in _formDataListElectricityMeters) {
+      Map<String, dynamic> assetMap = {
+        'intId': 0,
+        'useTemplate': formData['useTemplateElectricity'],
+        'installationStatus': formData['installationStatusElectricity'] is TextEditingController ? formData['installationStatusElectricity'].text : formData['installationStatusElectricity'],
+        'serialNumber': formData['serialNumberElectricity'] is TextEditingController ? formData['serialNumberElectricity'].text : formData['serialNumberElectricity'],
+        'equipmentTypeName': formData['equipmentTypeNameElectricity'] is TextEditingController ? formData['equipmentTypeNameElectricity'].text : formData['equipmentTypeNameElectricity'],
+        'meterType': formData['meterTypeElectricity'] is TextEditingController ? formData['meterTypeElectricity'].text : formData['meterTypeElectricity'],
+        'ownerMpid': formData['ownerMpidElectricity'] is TextEditingController ? formData['ownerMpidElectricity'].text : formData['ownerMpidElectricity'],
+        'currentRating': formData['currentRatingElectricity'] is TextEditingController ? formData['currentRatingElectricity'].text : formData['currentRatingElectricity'],
+        'timingDeviceIdSerialNumber': formData['timingSerialNumberElectricity'] is TextEditingController ? formData['timingSerialNumberElectricity'].text : formData['timingSerialNumberElectricity'],
+        'ctRatio': formData['ctRatioElectricity'] is TextEditingController ? formData['ctRatioElectricity'].text : formData['ctRatioElectricity'],
+        'vtRatio': formData['vtRatioElectricity'] is TextEditingController ? formData['vtRatioElectricity'].text : formData['vtRatioElectricity'],
+        'meterRemovalDate': formData['meterRemovalDateElectricity'] is TextEditingController ? formData['meterRemovalDateElectricity'].text : formData['meterRemovalDateElectricity'],
+      };
+
+      List<Map<String, dynamic>> registersList = formData['registers'];
+      List<Map<String, dynamic>> registerList = [];
+      for (var subForm in registersList) {
+        Map<String, dynamic> subFormField = {
+          'intId': 0,
+          'useTemplate': subForm['useTemplateForRegistersElectricity'],
+          'meterRegisterId': subForm['meterRegisterIdElectricity'] is TextEditingController ? subForm['meterRegisterIdElectricity'].text : subForm['meterRegisterIdElectricity'],
+          'isSettlement': subForm['isSettlementElectricity'] is TextEditingController ? subForm['isSettlementElectricity'].text : subForm['isSettlementElectricity'],
+          'registerType': subForm['registerTypeElectricity'] is TextEditingController ? subForm['registerTypeElectricity'].text : subForm['registerTypeElectricity'],
+          'numberOfDigits': subForm['numberOfDigitsElectricity'] is TextEditingController ? subForm['numberOfDigitsElectricity'].text : subForm['numberOfDigitsElectricity'],
+          'measurementQuantity': subForm['measurementQuantityElectricity'] is TextEditingController ? subForm['measurementQuantityElectricity'].text : subForm['measurementQuantityElectricity'],
+          'multiplier': subForm['multiplierElectricity'] is TextEditingController ? subForm['multiplierElectricity'].text : subForm['multiplierElectricity'],
+          'registerReading': subForm['registerReadingElectricity'] is TextEditingController ? subForm['registerReadingElectricity'].text : subForm['registerReadingElectricity'],
+          'readingType': subForm['readingTypeElectricity'] is TextEditingController ? subForm['readingTypeElectricity'].text : subForm['readingTypeElectricity'],
+          'prepaymentUnitRate': subForm['prepaymentUnitRateElectricity'] is TextEditingController ? subForm['prepaymentUnitRateElectricity'].text : subForm['prepaymentUnitRateElectricity'],
+          'readingNotValidReasonCode': subForm['readingNotValidReasonCodeElectricity'] is TextEditingController ? subForm['readingNotValidReasonCodeElectricity'].text : subForm['readingNotValidReasonCodeElectricity'],
+        };
+
+        List<Map<String, dynamic>> timePatternsList = subForm['timePatterns'];
+        List<Map<String, dynamic>> timePatterns = [];
+        for (var timePatternData in timePatternsList) {
+          Map<String, dynamic> timePattern = {
+            'intId': 0,
+            'timePatternRegime': timePatternData['timePatternRegimeElectricity'] is TextEditingController ? timePatternData['timePatternRegimeElectricity'].text : timePatternData['timePatternRegimeElectricity'],
+            'settlementMapCoefficient': timePatternData['settlementMapCoefficientElectricity'] is TextEditingController ? timePatternData['settlementMapCoefficientElectricity'].text : timePatternData['settlementMapCoefficientElectricity'],
+          };
+          timePatterns.add(timePattern);
+        }
+
+        subFormField['timePatterns'] = timePatterns;
+        registerList.add(subFormField);
+      }
+
+      assetMap['registers'] = registerList;
+
+      Map<String, dynamic> firstJsonData = {
+        "intCustomerId": 0,
+        "intUserId": "20025",
+        "intappointmentId": 0,
+        "memMpid": _memMpIdElectricity.text,
+        "supplierMpid": _supplierMpIdElectricity.text,
+        "mpan": _mprnElectricity.text,
+        "externalSystemIdentity": _externalSystemIdentityElectricity.text,
+        "correlationId": _correlationIdElectricity.text,
+        "createWork": {
+          "requestedEnergisationStatus": _requestedEnergisationStatusForWorkElectricity.text,
         },
-      ],
-      'subForms2': [
-        {
-          'meterSerialNumberElectricityOutstation': TextEditingController(),
-          'meterRegisterIdElectricityOutstation': TextEditingController(),
-          'meterMemoryLocationTypeElectricityOutstation': TextEditingController(),
-          'meterMemoryLocationElectricityOutstation': TextEditingController(),
-          'timestampMemoryLocationElectricityOutstation': TextEditingController(),
-        },
-      ],
-    });
-    notifyListeners();
-  }
+        "completeWork": {
+          "siteVisitDate": _textEditingControllerSiteVisitDateElectricity.text,
+          "visitSuccessful": _visitSuccessfulElectricity.toString(),
+          "readingTaken": _readingTakenElectricity.toString(),
+          "engineerName": _engineerNameElectricity.text,
+          "siteVisitCheckCode": _siteVisitCheckCodeElectricity.text,
+          "meterSystem": {
+            "energisationStatus": _energisationStatusElectricity.text,
+            "isSmart": _isSmartElectricity.toString(),
+            "meterLocationCode": _meterLocationCodeElectricity.text,
+            "standardSettlementCode": _standardSettlementCodeForMeterSystemElectricity.text,
+            "retrievalMethod": _retrievalMethodForMeterSystemElectricity.text,
+            "meters": [assetMap],
+          }
+        }
+      };
 
-  void addFormElectricityOutstation() {
-    _formDataListElectricityOutstation.add({
-      'serialNumberElectricityOutstation': TextEditingController(),
-      'outstationTypeElectricityOutstation': TextEditingController(),
-      'numberOfChannelsElectricityOutstation': TextEditingController(),
-      'numberOfDigitsElectricityOutstation': TextEditingController(),
-      'pinElectricityOutstation': TextEditingController(),
-      'multiplierElectricityOutstation': TextEditingController(),
-      'usernameLevel1ElectricityOutstation': TextEditingController(),
-      'passwordLevel1ElectricityOutstation': TextEditingController(),
-      'usernameLevel2ElectricityOutstation': TextEditingController(),
-      'passwordLevel2ElectricityOutstation': TextEditingController(),
-      'usernameLevel3ElectricityOutstation': TextEditingController(),
-      'passwordLevel3ElectricityOutstation': TextEditingController(),
-      'commsMethodElectricityOutstation': TextEditingController(),
-      'commsAddressElectricityOutstation': TextEditingController(),
-      'commsBaudRateElectricityOutstation': TextEditingController(),
-      'commsDialInOutElectricityOutstation': TextEditingController(),
-      'commsProviderElectricityOutstation': TextEditingController(),
-      'subForms1': [
-        {
-          'channelNumberElectricityOutstation': TextEditingController(),
-          'pulseMultiplierElectricityOutstation': TextEditingController(),
-          'measurementQuantityElectricityOutstation': TextEditingController(),
-        },
-      ],
-      'subForms2': [
-        {
-          'meterSerialNumberElectricityOutstation': TextEditingController(),
-          'meterRegisterIdElectricityOutstation': TextEditingController(),
-          'meterMemoryLocationTypeElectricityOutstation': TextEditingController(),
-          'meterMemoryLocationElectricityOutstation': TextEditingController(),
-          'timestampMemoryLocationElectricityOutstation': TextEditingController(),
-        },
-      ],
-    });
-    notifyListeners();
-  }
-
-  void removeFormElectricityOutstation(int index) {
-    _formDataListElectricityOutstation.removeAt(index);
-    notifyListeners();
-  }
-
-  void addSubForm1ElectricityOutstation(int index) {
-    _formDataListElectricityOutstation[index]['subForms1'].add({
-      'channelNumberElectricityOutstation': TextEditingController(),
-      'pulseMultiplierElectricityOutstation': TextEditingController(),
-      'measurementQuantityElectricityOutstation': TextEditingController(),
-    });
-    notifyListeners();
-  }
-
-  void removeSubForm1ElectricityOutstation(int parentIndex, int subIndex) {
-    _formDataListElectricityOutstation[parentIndex]['subForms1'].removeAt(subIndex);
-    notifyListeners();
-  }
-
-  void addSubForm2ElectricityOutstation(int index) {
-    _formDataListElectricityOutstation[index]['subForms2'].add({
-      'meterSerialNumberElectricityOutstation': TextEditingController(),
-      'meterRegisterIdElectricityOutstation': TextEditingController(),
-      'meterMemoryLocationTypeElectricityOutstation': TextEditingController(),
-      'meterMemoryLocationElectricityOutstation': TextEditingController(),
-      'timestampMemoryLocationElectricityOutstation': TextEditingController(),
-    });
-    notifyListeners();
-  }
-
-  void removeSubForm2ElectricityOutstation(int parentIndex, int subIndex) {
-    _formDataListElectricityOutstation[parentIndex]['subForms2'].removeAt(subIndex);
-    notifyListeners();
+      try {
+        Api api = Api();
+        SaveSapphireElectricityFlow apiResponse = await api.saveSapphireElectricityFlow(context, firstJsonData);
+        if (apiResponse.status == 5 && apiResponse.isCompleted == true) {
+          clearAllElectricityFormData();
+          notifyListeners();
+          AppConstants.showSuccessToast(context, "Saved Successfully");
+        } else {
+          AppConstants.showFailToast(context, "Failed to save data");
+        }
+      } catch (e) {
+        AppConstants.showFailToast(context, e.toString());
+      }
+    }
   }
 }
