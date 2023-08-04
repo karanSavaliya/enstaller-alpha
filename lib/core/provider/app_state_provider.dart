@@ -283,31 +283,29 @@ class AppStateProvider extends ChangeNotifier {
 
   bool areAllFieldsFilled() {
     for (var data in formDataList) {
-      if (data['useTemplate'] == 'False') {
-        for (var key in data.keys) {
-          if (data[key] is TextEditingController &&
-              data[key].text.trim().isEmpty &&
-              _isRequiredField(key)) {
-            return false;
-          }
+      for (var key in data.keys) {
+        if (data[key] is TextEditingController &&
+            data[key].text.trim().isEmpty &&
+            _isRequiredField(key)) {
+          return false;
         }
-        if (data['registers'] != null &&
-            data['registers'] is List &&
-            data['registers'].isNotEmpty) {
-          for (var register in data['registers']) {
-            if (register is Map<String, dynamic>) {
-              for (var key in register.keys) {
-                if (register[key] is TextEditingController &&
-                    register[key].text.trim().isEmpty &&
-                    _isRequiredField(key)) {
-                  return false;
-                }
+      }
+      if (data['registers'] != null &&
+          data['registers'] is List &&
+          data['registers'].isNotEmpty) {
+        for (var register in data['registers']) {
+          if (register is Map<String, dynamic>) {
+            for (var key in register.keys) {
+              if (register[key] is TextEditingController &&
+                  register[key].text.trim().isEmpty &&
+                  _isRequiredField(key)) {
+                return false;
               }
             }
           }
-        } else {
-          return false;
         }
+      } else {
+        return false;
       }
     }
     return true;
@@ -833,6 +831,65 @@ class AppStateProvider extends ChangeNotifier {
     _currentExpandedTileIndexElectricity = 0;
     notifyListeners();
     initFormElectricityMeters();
+  }
+
+  bool _isCheckDataElectricity = false;
+  bool get isCheckDataElectricity => _isCheckDataElectricity;
+
+  void fieldDataCheckElectricity(BuildContext context){
+    if(_memMpIdElectricity.text.isNotEmpty && _supplierMpIdElectricity.text.isNotEmpty && _mprnElectricity.text.isNotEmpty && _externalSystemIdentityElectricity.text.isNotEmpty && _correlationIdElectricity.text.isNotEmpty &&
+        _requestedEnergisationStatusForWorkElectricity.text.isNotEmpty &&
+        _textEditingControllerSiteVisitDateElectricity.text.isNotEmpty && _engineerNameElectricity.text.isNotEmpty && _siteVisitCheckCodeElectricity.text.isNotEmpty &&
+        _energisationStatusElectricity.text.isNotEmpty && _meterLocationCodeElectricity.text.isNotEmpty && _standardSettlementCodeForMeterSystemElectricity.text.isNotEmpty && _retrievalMethodForMeterSystemElectricity.text.isNotEmpty
+        && areAllFieldsFilledElectricity()
+    ){
+      _isCheckDataElectricity = true;
+      notifyListeners();
+    }
+    else{
+      _isCheckDataElectricity = false;
+      notifyListeners();
+      AppConstants.showFailToast(context, "Required Fields Compulsory");
+    }
+  }
+
+  bool areAllFieldsFilledElectricity() {
+    for (var formData in _formDataListElectricityMeters) {
+      for (var key in formData.keys) {
+        if (formData[key] is TextEditingController &&
+            formData[key].text.trim().isEmpty) {
+          return false;
+        }
+      }
+      if (formData['registers'] != null &&
+          formData['registers'] is List &&
+          formData['registers'].isNotEmpty) {
+        for (var subForm in formData['registers']) {
+          if (subForm is Map<String, dynamic>) {
+            for (var key in subForm.keys) {
+              if (subForm[key] is TextEditingController &&
+                  subForm[key].text.trim().isEmpty) {
+                return false;
+              }
+            }
+            List<Map<String, dynamic>> timePatternsList = subForm['timePatterns'];
+            if (timePatternsList != null && timePatternsList.isNotEmpty) {
+              for (var timePatternData in timePatternsList) {
+                for (var key in timePatternData.keys) {
+                  if (timePatternData[key] is TextEditingController &&
+                      timePatternData[key].text.trim().isEmpty) {
+                    return false;
+                  }
+                }
+              }
+            }
+          }
+        }
+      } else {
+        return false;
+      }
+    }
+    return true;
   }
 
   void saveSapphireElectricityFlow(BuildContext context) async {

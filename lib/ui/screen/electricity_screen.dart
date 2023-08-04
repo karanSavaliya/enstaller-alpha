@@ -96,26 +96,34 @@ class _ElectricityState extends State<Electricity> {
                       children: [
                         ElectricityTextFieldWidget(
                           hintText: "MEM MpId",
+                          required: "required",
+                          maxLength: 4,
                           controller: appStateProvider.memMpIdElectricity,
                         ),
                         SizedBox(height: 10),
                         ElectricityTextFieldWidget(
                           hintText: "Supplier MpId",
+                          required: "required",
+                          maxLength: 4,
                           controller: appStateProvider.supplierMpIdElectricity,
                         ),
                         SizedBox(height: 10),
                         ElectricityTextFieldWidget(
                           hintText: "MPAN",
+                          required: "required",
+                          maxLength: 13,
                           controller: appStateProvider.mprnElectricity,
                         ),
                         SizedBox(height: 10),
                         ElectricityTextFieldWidget(
                           hintText: "External System Identity",
+                          required: "required",
                           controller: appStateProvider.externalSystemIdentityElectricity,
                         ),
                         SizedBox(height: 10),
                         ElectricityTextFieldWidget(
                           hintText: "Correlation Id",
+                          required: "required",
                           controller: appStateProvider.correlationIdElectricity,
                         ),
                       ],
@@ -129,6 +137,8 @@ class _ElectricityState extends State<Electricity> {
                       children: [
                         ElectricityTextFieldWidget(
                           hintText: "Requested Energisation Status",
+                          required: "required",
+                          maxLength: 1,
                           controller: appStateProvider.requestedEnergisationStatusForWorkElectricity,
                         ),
                       ],
@@ -142,6 +152,7 @@ class _ElectricityState extends State<Electricity> {
                       children: [
                         ElectricityTextFieldWidget(
                           hintText: "Site Visit Date",
+                          required: "required",
                           controller: appStateProvider.textEditingControllerSiteVisitDateElectricity,
                           onTap: () => appStateProvider.selectSiteVisitDateElectricity(context),
                         ),
@@ -187,11 +198,14 @@ class _ElectricityState extends State<Electricity> {
                         ElectricityTextFieldWidget(
                           hintText: "Engineer Name",
                           controller: appStateProvider.engineerNameElectricity,
+                          required: "required",
                         ),
                         SizedBox(height: 10),
                         ElectricityTextFieldWidget(
                           controller: appStateProvider.siteVisitCheckCodeElectricity,
                           hintText: "Site Visit Check Code",
+                          required: "required",
+                          maxLength: 2,
                         ),
                       ],
                     ),
@@ -203,7 +217,9 @@ class _ElectricityState extends State<Electricity> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         ElectricityTextFieldWidget(
+                          maxLength: 1,
                           hintText: "Energisation Status",
+                          required: "required",
                           controller: appStateProvider.energisationStatusElectricity,
                         ),
                         SizedBox(height: 10),
@@ -228,17 +244,23 @@ class _ElectricityState extends State<Electricity> {
                         SizedBox(height: 10),
                         ElectricityTextFieldWidget(
                           hintText: "Meter Location Code",
+                          required: "required",
+                          maxLength: 1,
                           controller: appStateProvider.meterLocationCodeElectricity,
                         ),
                         SizedBox(height: 10),
                         ElectricityTextFieldWidget(
                           hintText: "Standard Settlement Code",
+                          required: "required",
+                          maxLength: 4,
                           controller: appStateProvider.standardSettlementCodeForMeterSystemElectricity,
                         ),
                         SizedBox(height: 10),
                         ElectricityTextFieldWidget(
                           controller: appStateProvider.retrievalMethodForMeterSystemElectricity,
                           hintText: "Retrieval Method",
+                          required: "required",
+                          maxLength: 1,
                         ),
                       ],
                     ),
@@ -326,51 +348,69 @@ class _ElectricityState extends State<Electricity> {
                               ),
                               ElectricityTextFieldWidget(
                                 hintText: "Installation Status",
+                                required: "required",
+                                maxLength: 10,
                                 controller: appStateProvider.formDataListElectricityMeters[index]['installationStatusElectricity'],
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
                                 hintText: "Serial Number",
+                                required: "required",
+                                maxLength: 10,
                                 controller: appStateProvider.formDataListElectricityMeters[index]['serialNumberElectricity'],
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
                                 hintText: "Equipment Type Name",
+                                required: "required",
                                 controller: appStateProvider.formDataListElectricityMeters[index]['equipmentTypeNameElectricity'],
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
                                 hintText: "Meter Type",
+                                required: "required",
+                                maxLength: 5,
                                 controller: appStateProvider.formDataListElectricityMeters[index]['meterTypeElectricity'],
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
                                 hintText: "Owner Mpid",
+                                required: "required",
+                                maxLength: 4,
                                 controller: appStateProvider.formDataListElectricityMeters[index]['ownerMpidElectricity'],
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
                                 hintText: "Current Rating",
+                                required: "required",
+                                keyboardType: "number",
                                 controller: appStateProvider.formDataListElectricityMeters[index]['currentRatingElectricity'],
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
+                                required: "required",
                                 hintText: "Timing Deviceid Serial Number",
+                                maxLength: 10,
                                 controller: appStateProvider.formDataListElectricityMeters[index]['timingSerialNumberElectricity'],
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
                                 hintText: "CT Ratio",
+                                required: "required",
+                                maxLength: 6,
                                 controller: appStateProvider.formDataListElectricityMeters[index]['ctRatioElectricity'],
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
                                 hintText: "VT Ratio",
+                                maxLength: 10,
+                                required: "required",
                                 controller: appStateProvider.formDataListElectricityMeters[index]['vtRatioElectricity'],
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
                                 hintText: "Meter Removal Date",
+                                required: "required",
                                 onTap: () => appStateProvider.selectedMeterRemovalDateForMetersElectricity(context, index),
                                 controller: appStateProvider.formDataListElectricityMeters[index]['meterRemovalDateElectricity'],
                               ),
@@ -456,6 +496,8 @@ class _ElectricityState extends State<Electricity> {
                                         ),
                                         ElectricityTextFieldWidget(
                                           hintText: "Meter RegisterId",
+                                          required: "required",
+                                          maxLength: 2,
                                           controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['meterRegisterIdElectricity'],
                                         ),
                                         SizedBox(height: 10),
@@ -487,41 +529,58 @@ class _ElectricityState extends State<Electricity> {
                                         ),
                                         ElectricityTextFieldWidget(
                                           hintText: "Register Type",
+                                          required: "required",
+                                          maxLength: 1,
                                           controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['registerTypeElectricity'],
                                         ),
                                         const SizedBox(height: 10),
                                         ElectricityTextFieldWidget(
                                           hintText: "Number Of Digits",
+                                          required: "required",
+                                          maxLength: 14,
+                                          keyboardType: "number",
                                           controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['numberOfDigitsElectricity'],
                                         ),
                                         const SizedBox(height: 10),
                                         ElectricityTextFieldWidget(
                                           hintText: "Measurement Quantity",
+                                          required: "required",
+                                          maxLength: 2,
                                           controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['measurementQuantityElectricity'],
                                         ),
                                         const SizedBox(height: 10),
                                         ElectricityTextFieldWidget(
                                           hintText: "Multiplier",
+                                          required: "required",
+                                          keyboardType: "number",
                                           controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['multiplierElectricity'],
                                         ),
                                         const SizedBox(height: 10),
                                         ElectricityTextFieldWidget(
                                           hintText: "Register Reading",
+                                          required: "required",
+                                          keyboardType: "number",
                                           controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['registerReadingElectricity'],
                                         ),
                                         const SizedBox(height: 10),
                                         ElectricityTextFieldWidget(
                                           hintText: "Reading Type",
+                                          required: "required",
+                                          maxLength: 1,
                                           controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['readingTypeElectricity'],
                                         ),
                                         const SizedBox(height: 10),
                                         ElectricityTextFieldWidget(
                                           hintText: "Prepayment Unit Rate",
+                                          required: "required",
+                                          keyboardType: "number",
                                           controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['prepaymentUnitRateElectricity'],
                                         ),
                                         const SizedBox(height: 10),
                                         ElectricityTextFieldWidget(
                                           hintText: "Reading NotValid Reason Code",
+                                          required: "required",
+                                          maxLength: 2,
                                           controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['readingNotValidReasonCodeElectricity'],
                                         ),
                                         const SizedBox(height: 10),
@@ -580,11 +639,15 @@ class _ElectricityState extends State<Electricity> {
                                                   const SizedBox(height: 10),
                                                   ElectricityTextFieldWidget(
                                                     hintText: "Time Pattern Regime",
+                                                    required: "required",
+                                                    maxLength: 5,
                                                     controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['timePatterns'][subSubIndex]['timePatternRegimeElectricity'],
                                                   ),
                                                   const SizedBox(height: 10),
                                                   ElectricityTextFieldWidget(
                                                     hintText: "Settlement Map Coefficient",
+                                                    required: "required",
+                                                    keyboardType: "number",
                                                     controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['timePatterns'][subSubIndex]['settlementMapCoefficientElectricity'],
                                                   ),
                                                 ],
@@ -608,7 +671,10 @@ class _ElectricityState extends State<Electricity> {
                     padding: const EdgeInsets.all(15),
                     child: InkWell(
                       onTap: (){
-                        appStateProvider.saveSapphireElectricityFlow(context);
+                        appStateProvider.fieldDataCheckElectricity(context);
+                        if(appStateProvider.isCheckDataElectricity == true){
+                          appStateProvider.saveSapphireElectricityFlow(context);
+                        }
                       },
                       child: Container(
                         decoration: BoxDecoration(

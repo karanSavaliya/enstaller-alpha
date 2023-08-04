@@ -1009,7 +1009,6 @@ class SurveyScreenViewModel extends BaseModel {
             AppConstants.showFailToast(context, "hello error");
           }
           else{
-
             if (response.statusCode == 1) {
               GlobalVar.isloadAppointmentDetail = true;
               GlobalVar.isloadDashboard = true;
