@@ -17,6 +17,7 @@ import 'package:enstaller/core/viewmodel/survey_screen_viewmodel.dart';
 import 'package:enstaller/ui/screen/both_close_job.dart';
 import 'package:enstaller/ui/screen/elec_close_job.dart';
 import 'package:enstaller/ui/screen/gas_close_job.dart';
+import 'package:enstaller/ui/screen/gas_screen.dart';
 import 'package:enstaller/ui/screen/signature.dart';
 import 'package:enstaller/ui/screen/widget/survey/custom_drop_down.dart';
 import 'package:enstaller/ui/screen/widget/survey/error_widget.dart';
@@ -32,13 +33,19 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
+import 'electricity_screen.dart';
+import 'gas_electricity_screen.dart';
 
 class SurveyArguments {
+  String correlationId;
+  String jobType;
   String customerID;
   String appointmentID;
   bool edit;
   DetailsScreenViewModel dsmodel;
   SurveyArguments({
+    this.correlationId,
+    this.jobType,
     this.customerID,
     this.appointmentID,
     this.edit,
@@ -405,7 +412,18 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
                                   if (response == "Sign Off") {
                                     progressDialog.hide();
-                                    Navigator.pop(mainContext);
+                                    if(widget.arguments.jobType == "Gas SMETS2 Meter Exchange"){
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Gas(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
+                                    }
+                                    else if(widget.arguments.jobType == "Electric SMETS2 Meter Exchange"){
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Electricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
+                                    }
+                                    else if(widget.arguments.jobType == "Dual SMETS2 Meter Exchange"){
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GasElectricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
+                                    }
+                                    else{
+                                      Navigator.pop(mainContext);
+                                    }
                                   } else if (response == "submitted") {
                                     progressDialog.hide();
                                     Navigator.pop(mainContext);

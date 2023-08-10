@@ -7,11 +7,12 @@ class ElectricityTextFieldWidget extends StatefulWidget {
   final int maxLine;
   final int maxLength;
   final String keyboardType;
+  final bool readOnly;
   final VoidCallback onTap;
   final TextEditingController controller;
   final String required;
 
-  ElectricityTextFieldWidget({this.hintText,this.maxLine,this.onTap,this.controller,this.keyboardType,this.maxLength,this.required});
+  ElectricityTextFieldWidget({this.readOnly,this.hintText,this.maxLine,this.onTap,this.controller,this.keyboardType,this.maxLength,this.required});
 
   @override
   State<ElectricityTextFieldWidget> createState() => _ElectricityTextFieldWidgetState();
@@ -47,6 +48,7 @@ class _ElectricityTextFieldWidgetState extends State<ElectricityTextFieldWidget>
               });
             }
           },
+          readOnly: widget.readOnly == null ? false : widget.readOnly,
           keyboardType: widget.keyboardType == null ? TextInputType.text : TextInputType.number,
           maxLength: widget.maxLength == null ? 500 : widget.maxLength,
           controller: widget.controller == null ? nullController : widget.controller,

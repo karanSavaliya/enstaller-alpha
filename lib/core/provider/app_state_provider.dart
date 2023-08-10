@@ -1,12 +1,15 @@
 //@dart=2.9
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../../ui/screen/home_screen.dart';
 import '../constant/api_urls.dart';
 import '../constant/appconstant.dart';
 import '../model/engineer_document_model.dart';
 import '../model/save_sapphire_electricity_flow_model.dart';
 import '../model/save_sapphire_gas_flow_model.dart';
+import '../model/user_model.dart';
 import '../service/api.dart';
+import '../service/pref_service.dart';
 
 class AppStateProvider extends ChangeNotifier {
   AppStateProvider();
@@ -429,7 +432,6 @@ class AppStateProvider extends ChangeNotifier {
         },
       ],
     });
-    notifyListeners();
   }
 
   DateTime _selectedOAMIDate;
@@ -469,7 +471,10 @@ class AppStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void saveSapphireGasFlow(BuildContext context) async {
+  void saveSapphireGasFlow(BuildContext context,String customerID,String appointmentId, String type) async {
+
+    UserModel user = await Prefs.getUser();
+
     for (var formData in _formDataList) {
       Map<String, dynamic> assetMap = {
         'intId': 0,
@@ -512,9 +517,9 @@ class AppStateProvider extends ChangeNotifier {
       assetMap['registers'] = registerList;
 
       Map<String, dynamic> firstJsonData = {
-        "intCustomerId": 0,
-        "intUserId": "20025",
-        "intappointmentId": 0,
+        "intCustomerId": int.parse(customerID),
+        "intUserId": user.id.toString(),
+        "intappointmentId": int.parse(appointmentId),
         "memMpid": _memMpId.text,
         "supplierMpid": _supplierMpId.text,
         "mprn": _mprn.text,
@@ -577,7 +582,13 @@ class AppStateProvider extends ChangeNotifier {
         if (apiResponse.status == 5 && apiResponse.isCompleted == true) {
           clearAllGasFormData();
           notifyListeners();
-          AppConstants.showSuccessToast(context, "Saved Successfully");
+          AppConstants.showSuccessToast(context, "Gas Flow Saved Successfully");
+          if(type != "BOTH"){
+            Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => HomeScreen()));
+          }
+          else{
+            saveSapphireElectricityFlow(context,customerID,appointmentId);
+          }
         } else {
           AppConstants.showFailToast(context, "Failed to save data");
         }
@@ -759,7 +770,6 @@ class AppStateProvider extends ChangeNotifier {
         },
       ],
     });
-    notifyListeners();
   }
 
   void removeFormElectricityMeters(int index) {
@@ -892,7 +902,10 @@ class AppStateProvider extends ChangeNotifier {
     return true;
   }
 
-  void saveSapphireElectricityFlow(BuildContext context) async {
+  void saveSapphireElectricityFlow(BuildContext context,String customerID,String appointmentId) async {
+
+    UserModel user = await Prefs.getUser();
+
     for (var formData in _formDataListElectricityMeters) {
       Map<String, dynamic> assetMap = {
         'intId': 0,
@@ -945,9 +958,9 @@ class AppStateProvider extends ChangeNotifier {
       assetMap['registers'] = registerList;
 
       Map<String, dynamic> firstJsonData = {
-        "intCustomerId": 0,
-        "intUserId": "20025",
-        "intappointmentId": 0,
+        "intCustomerId": int.parse(customerID),
+        "intUserId": user.id.toString(),
+        "intappointmentId": int.parse(appointmentId),
         "memMpid": _memMpIdElectricity.text,
         "supplierMpid": _supplierMpIdElectricity.text,
         "mpan": _mprnElectricity.text,
@@ -979,7 +992,8 @@ class AppStateProvider extends ChangeNotifier {
         if (apiResponse.status == 5 && apiResponse.isCompleted == true) {
           clearAllElectricityFormData();
           notifyListeners();
-          AppConstants.showSuccessToast(context, "Saved Successfully");
+          AppConstants.showSuccessToast(context, "Electricity Flow Saved Successfully");
+          Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => HomeScreen()));
         } else {
           AppConstants.showFailToast(context, "Failed to save data");
         }

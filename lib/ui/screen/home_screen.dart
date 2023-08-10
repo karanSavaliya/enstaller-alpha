@@ -1,6 +1,7 @@
 // @dart=2.9
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
@@ -97,7 +98,6 @@ class _HomeScreenState extends State<HomeScreen> {
         GlobalVar.offilineSSubmittionStarted = false;
         print("Update Global Flag for offline process end with error.");
       }
-
     }
 
     if (status == "NONE") {
@@ -147,177 +147,180 @@ class _HomeScreenState extends State<HomeScreen> {
           _listofappointment = model.masterAppointmentList;
           model.masterAppointmentList.removeWhere((element) => element.appointmentEventType == "Cancelled" || element.appointmentEventType == "Aborted"  || element.appointmentEventType == "Completed");
           _listofappointment = model.masterAppointmentList;
-          return Scaffold(
-            backgroundColor: AppColors.scafoldColor,
-            key: _scaffoldKey,
-            drawer: Drawer(
-              child: GlobalVar.roleId == 5
-                  ? WareHouseDrawerWidget()
-                  : AppDrawerWidget(),
-            ),
-            appBar: AppBar(
-              brightness: Brightness.dark,
-              backgroundColor: AppColors.appThemeColor,
-              leading: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: InkWell(
-                    onTap: () {
-                      _scaffoldKey.currentState.openDrawer();
-                    },
-                    child: Image.asset(
-                      ImageFile.menuIcon,
-                    )),
+          return WillPopScope(
+            onWillPop: (){
+              exit(0);
+            },
+            child: Scaffold(
+              backgroundColor: AppColors.scafoldColor,
+              key: _scaffoldKey,
+              drawer: Drawer(
+                child: GlobalVar.roleId == 5
+                    ? WareHouseDrawerWidget()
+                    : AppDrawerWidget(),
               ),
-              title: Text(
-                AppStrings.dashboard,
-                style: TextStyle(
-                    color: AppColors.whiteColor, fontWeight: FontWeight.w500),
-              ),
-              centerTitle: true,
-              actions: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.04,
+              appBar: AppBar(
+                brightness: Brightness.dark,
+                backgroundColor: AppColors.appThemeColor,
+                leading: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: InkWell(
+                      onTap: () {
+                        _scaffoldKey.currentState.openDrawer();
+                      },
+                      child: Image.asset(
+                        ImageFile.menuIcon,
+                      )),
                 ),
-              ],
-            ),
-            body: model.state == ViewState.Busy
-                ? AppConstants.circulerProgressIndicator()
-                : Padding(
-                    padding: SizeConfig.padding,
-                    child: model.dateSelected
-                        ? RefreshIndicator(
+                title: Text(
+                  AppStrings.dashboard,
+                  style: TextStyle(
+                      color: AppColors.whiteColor, fontWeight: FontWeight.w500),
+                ),
+                centerTitle: true,
+                actions: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.04,
+                  ),
+                ],
+              ),
+              body: model.state == ViewState.Busy
+                  ? AppConstants.circulerProgressIndicator()
+                  : Padding(
+                      padding: SizeConfig.padding,
+                      child: model.dateSelected
+                          ? RefreshIndicator(
 
-                            onRefresh: () => Future.delayed(Duration.zero)
-                                .whenComplete(() { model.getAppointmentList();  print("first"); }),
-                            child: SingleChildScrollView(
-                              physics: const ScrollPhysics(
-                                  parent: AlwaysScrollableScrollPhysics()),
-                              child: ViewSingleDateWidget(
-                                date: model.uniqueDates[model.selectedIndex],
-                                appointmentList: model.masterAppointmentList,
-                                dateString: selectedDate.year.toString() +
-                                    "-" +
-                                    selectedDate.month.toString() +
-                                    "-" +
-                                    (selectedDate.day < 9
-                                        ? "0${selectedDate.day}"
-                                        : (selectedDate.day).toString()),
-                              ),
-                            ),
-                          )
-                        : RefreshIndicator(
-                            onRefresh: () => Future.delayed(Duration.zero)
-                                .whenComplete(() { model.getAppointmentList();}),
-                            child: ListView.builder(
+                              onRefresh: () => Future.delayed(Duration.zero)
+                                  .whenComplete(() { model.getAppointmentList();  print("first"); }),
+                              child: SingleChildScrollView(
                                 physics: const ScrollPhysics(
                                     parent: AlwaysScrollableScrollPhysics()),
-                                controller: _scrollController,
-                                itemCount: model.uniqueDates.length,
-                                itemBuilder: (context, int index) {
+                                child: ViewSingleDateWidget(
+                                  date: model.uniqueDates[model.selectedIndex],
+                                  appointmentList: model.masterAppointmentList,
+                                  dateString: selectedDate.year.toString() +
+                                      "-" +
+                                      selectedDate.month.toString() +
+                                      "-" +
+                                      (selectedDate.day < 9
+                                          ? "0${selectedDate.day}"
+                                          : (selectedDate.day).toString()),
+                                ),
+                              ),
+                            )
+                          : RefreshIndicator(
+                              onRefresh: () => Future.delayed(Duration.zero)
+                                  .whenComplete(() { model.getAppointmentList();}),
+                              child: ListView.builder(
+                                  physics: const ScrollPhysics(
+                                      parent: AlwaysScrollableScrollPhysics()),
+                                  controller: _scrollController,
+                                  itemCount: model.uniqueDates.length,
+                                  itemBuilder: (context, int index) {
 
-                                  print("herrrrrrrrrreeeeeee");
-                                  return Padding(
-                                    padding: SizeConfig.verticalC8Padding,
-                                    child: InkWell(
-                                      onTap: () {},
-                                      child: BaseView<HomeScreenViewModel>(
-                                        builder: (context, pModel, child) {
-                                          var date = model.uniqueDates[index];
-                                          String dateString = DateFormat.MMMM()
-                                                  .format(date) +
-                                              " " +
-                                              getCurrentDay(date).toString();
-                                          print("date value --- $dateString");
-                                          return HomePageExpansionWidget(
-                                            onTap: () {
-                                              model.onSelectIndex(index);
-                                            },
-                                            showSecondWidget:
-                                                index == model.selectedIndex,
-                                            firstWidget:  HomePageListWidget(
-                                              height: SizeConfig.screenHeight * .15,
-                                              dateString: dateString,
-                                              expanded: index == model.selectedIndex,
-                                            ),
-                                            secondWidget: Container(
-                                              child:
-                                                  BaseView<HomeScreenViewModel>(
-                                                onModelReady: (cModel) =>
-                                                    cModel.setTableData(
-                                                        model
-                                                            .uniqueDates[index],
-                                                        model
-                                                            .masterAppointmentList),
-                                                builder: (context, secondModel,
-                                                    child) {
-
-                                                  if (secondModel.state ==
-                                                      ViewState.Busy) {
-                                                    return AppConstants
-                                                        .circulerProgressIndicator();
-                                                  }
-                                                  return Container(
-                                                    child: ConstrainedBox(
-                                                        constraints: BoxConstraints(
-                                                            maxHeight: AppConstants
-                                                                .getExpandedListHeight(
-                                                                    secondModel
-                                                                        .tables
-                                                                        .isEmpty,
-                                                                    secondModel
-                                                                        .tables
-                                                                        .length)),
-                                                        child: (secondModel
-                                                                    .tables
-                                                                    .length >
-                                                                0)
-                                                            ? ViewAppointmentListWidget(
-                                                                tables: secondModel.tables,
-                                                                homeScreenViewModel:
-                                                                    model,
-                                                              )
-                                                            : Container(
-                                                                decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            7),
-                                                                    color: Colors
-                                                                        .white,
-                                                                    border: Border.all(
-                                                                        color: AppColors
-                                                                            .lightGrayDotColor)),
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(0),
-                                                                height: MediaQuery.of(
-                                                                            context)
-                                                                        .size
-                                                                        .height *
-                                                                    0.0,
-                                                                width: double
-                                                                    .infinity,
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                              .all(
-                                                                          8.0),
-                                                                  child: Text(
-                                                                      AppStrings
-                                                                          .noDataFound),
-                                                                ),
-                                                              )),
-                                                  );
-                                                },
+                                    print("herrrrrrrrrreeeeeee");
+                                    return Padding(
+                                      padding: SizeConfig.verticalC8Padding,
+                                      child: InkWell(
+                                        onTap: () {},
+                                        child: BaseView<HomeScreenViewModel>(
+                                          builder: (context, pModel, child) {
+                                            var date = model.uniqueDates[index];
+                                            String dateString = DateFormat.MMMM()
+                                                    .format(date) +
+                                                " " +
+                                                getCurrentDay(date).toString();
+                                            print("date value --- $dateString");
+                                            return HomePageExpansionWidget(
+                                              onTap: () {
+                                                model.onSelectIndex(index);
+                                              },
+                                              showSecondWidget: index == model.selectedIndex,
+                                              firstWidget: HomePageListWidget(
+                                                height: SizeConfig.screenHeight * .15,
+                                                dateString: dateString,
+                                                expanded: index == model.selectedIndex,
                                               ),
-                                            ),
-                                          );
-                                        },
+                                              secondWidget: Container(
+                                                child: BaseView<HomeScreenViewModel>(
+                                                  onModelReady: (cModel) =>
+                                                      cModel.setTableData(
+                                                          model
+                                                              .uniqueDates[index],
+                                                          model
+                                                              .masterAppointmentList),
+                                                  builder: (context, secondModel,
+                                                      child) {
+
+                                                    if (secondModel.state ==
+                                                        ViewState.Busy) {
+                                                      return AppConstants
+                                                          .circulerProgressIndicator();
+                                                    }
+                                                    return Container(
+                                                      child: ConstrainedBox(
+                                                          constraints: BoxConstraints(
+                                                              maxHeight: AppConstants
+                                                                  .getExpandedListHeight(
+                                                                      secondModel
+                                                                          .tables
+                                                                          .isEmpty,
+                                                                      secondModel
+                                                                          .tables
+                                                                          .length)),
+                                                          child: (secondModel
+                                                                      .tables
+                                                                      .length >
+                                                                  0)
+                                                              ? ViewAppointmentListWidget(
+                                                                  tables: secondModel.tables,
+                                                                  homeScreenViewModel:
+                                                                      model,
+                                                                )
+                                                              : Container(
+                                                                  decoration: BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              7),
+                                                                      color: Colors
+                                                                          .white,
+                                                                      border: Border.all(
+                                                                          color: AppColors
+                                                                              .lightGrayDotColor)),
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(0),
+                                                                  height: MediaQuery.of(
+                                                                              context)
+                                                                          .size
+                                                                          .height *
+                                                                      0.0,
+                                                                  width: double
+                                                                      .infinity,
+                                                                  child: Padding(
+                                                                    padding:
+                                                                        const EdgeInsets
+                                                                                .all(
+                                                                            8.0),
+                                                                    child: Text(
+                                                                        AppStrings
+                                                                            .noDataFound),
+                                                                  ),
+                                                                )),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                }),
-                          ),
-                  ),
+                                    );
+                                  }),
+                            ),
+                    ),
+            ),
           );
         },
       ),

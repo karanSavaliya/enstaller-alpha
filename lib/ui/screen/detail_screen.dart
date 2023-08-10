@@ -818,7 +818,7 @@ class _DetailScreenState extends State<DetailScreen> {
                             String _status = model.appointmentDetails.appointment.appointmentEventType ?? "";
                             if (!_isedit && _status != "OnSite") model.onUpdateStatusOnSite(context, widget.arguments.appointmentID);
 
-                            Navigator.of(context).pushNamed(SurveyScreen.routeName, arguments: SurveyArguments(customerID: widget.arguments.customerID, dsmodel: model, appointmentID: widget.arguments.appointmentID, edit: model.appointmentDetails.appointment.surveyReceived == AppStrings.yes ? true : false)).then((value) {
+                            Navigator.of(context).pushNamed(SurveyScreen.routeName, arguments: SurveyArguments(correlationId: model.appointmentDetails.appointment.strBookingReference, jobType: model.appointmentDetails.appointment.strJobType, customerID: widget.arguments.customerID, dsmodel: model, appointmentID: widget.arguments.appointmentID, edit: model.appointmentDetails.appointment.surveyReceived == AppStrings.yes ? true : false)).then((value) {
 
                               if (GlobalVar.isloadAppointmentDetail) {
                                 model.initializeData(widget.arguments.appointmentID, widget.arguments.customerID);

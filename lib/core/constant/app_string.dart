@@ -145,6 +145,9 @@ class AppStrings {
   static const enRoute = 'En Route';
   static const onSite_ = 'On Site';
   static const dashboard = 'DASHBOARD';
+  static const gasFlow = 'GAS FLOW';
+  static const electricityFlow = 'ELECTRICITY FLOW';
+  static const gasElectricityFlow = 'GAS / ELECTRICITY FLOW';
   static const time = 'Time';
   static const APPOINTMENT_COMMENTS = 'APPOINTMENT COMMENTS';
   static const SELECT = 'Select';

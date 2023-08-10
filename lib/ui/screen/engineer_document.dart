@@ -163,8 +163,8 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                   flex: 3,
                                   child: InkWell(
                                     onTap: () async {
-                                      String _url = appStateProvider.searchBoxType == false ? "${ApiUrls.engineerDocumentUrl}" + appStateProvider.engineerDocumentList[i].document + ".pdf":
-                                      "${ApiUrls.engineerDocumentUrl}" + appStateProvider.filteredEngineerDocumentList[i].document + ".pdf";
+                                      String _url = appStateProvider.searchBoxType == false ? "${ApiUrls.engineerDocumentUrl}" + appStateProvider.engineerDocumentList[i].document :
+                                      "${ApiUrls.engineerDocumentUrl}" + appStateProvider.filteredEngineerDocumentList[i].document;
                                       String extension = _url.split('.').last;
                                       if (extension.toUpperCase() == "PDF") {
                                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => DocumentView(doc: _url)));

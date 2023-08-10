@@ -931,9 +931,6 @@ class SurveyScreenViewModel extends BaseModel {
         if (status != "NONE") {
           issubmitted = true;
           ResponseModel responseModel = await _apiService.submitListSurveyAnswer(answerList,context,appointmentid,"Abort");
-          // ResponseModel responseModel =
-          // await _apiService.submitListSurveyAnswer(answerList);
-          //done
           ResponseModel abortreasonmodel = await _apiService
               .abortappointmentbyreason(AbortAppointmentReasonModel(
               intId: int.parse(appointmentid),
