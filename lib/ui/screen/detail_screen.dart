@@ -156,33 +156,12 @@ class _DetailScreenState extends State<DetailScreen> {
 
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-
-
-
-  @override
   Widget build(BuildContext context) {
-    //SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return BaseView<DetailsScreenViewModel>(
       onModelReady: (model) => model.initializeData(
           widget.arguments.appointmentID, widget.arguments.customerID),
       builder: (context, model, child) {
-
         model.checkifEnrouted();
-        ///  print(model.appointmentDetails.appointment?.dteCreatedDate);
-        //print(model.appointmentDetails.appointment.appointmentEventType.toString()+"*****");
-        /* if(model.appointmentDetails != null) {
-          if (model.appointmentDetails.appointment.appointmentEventType ==
-              "Cancelled") {
-            Navigator.pop(context);
-          }
-        }*/
-
-        // print(model.latlngmap+"******");
-
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
@@ -211,15 +190,6 @@ class _DetailScreenState extends State<DetailScreen> {
                 style: TextStyle(color: AppColors.whiteColor),
               ),
               centerTitle: true,
-              // actions: [
-              //   Padding(
-              //     padding: const EdgeInsets.all(18.0),
-              //     child: Image.asset(
-              //       ImageFile.notification,
-              //       color: AppColors.whiteColor,
-              //     ),
-              //   ),
-              // ],
             ),
             body: model.state == ViewState.Busy
                 ? AppConstants.circulerProgressIndicator()
@@ -1130,9 +1100,12 @@ class _DetailScreenState extends State<DetailScreen> {
       child: Column(
         children: [
           AppointmentDataRow(
-            firstText: AppStrings.name,
-            secondText:
-            AppStrings.mr + model.customerDetails.strContactName ?? "",
+            firstText: AppStrings.name,//KARAN
+            secondText: AppStrings.mr + model.customerDetails.strContactName ?? "",
+          ),
+          AppointmentDataRow(
+            firstText: AppStrings.contactName,
+            secondText: AppStrings.mr + model.customerDetails.strContactName ?? "",
           ),
           AppointmentDataRow(
             firstText: AppStrings.contactNumber,
@@ -1140,9 +1113,7 @@ class _DetailScreenState extends State<DetailScreen> {
           ),
           AppointmentDataRow(
             firstText: AppStrings.email,
-            secondText: model.customerDetails.strEmail != null
-                ? model.customerDetails.strEmail
-                : '',
+            secondText: model.customerDetails.strEmail != null ? model.customerDetails.strEmail : '',
           ),
           AppointmentDataRow(
             firstText: AppStrings.address,

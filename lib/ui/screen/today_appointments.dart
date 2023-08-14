@@ -189,26 +189,6 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                             )
                           : Center(child: Text(AppStrings.noDataFound))),
                 ),
-          /*floatingActionButton: FloatingActionButton.extended(
-             onPressed: () {
-
-
-               Navigator.of(context).push(new MaterialPageRoute(
-                   builder: (context) => TodayAppointmentPlanningScreen()));
-
-              if (model.appointmentList.isNotEmpty != true) {
-
-               *//*  Navigator.of(context).push(new MaterialPageRoute(
-                     builder: (context) => TodayAppointmentPlanningScreen()));*//*
-               } else {
-                //  Show dialog.
-               }
-             },
-             backgroundColor: Colors.green,
-             label: const Text('Get Route'),
-             icon: const Icon(Icons.navigation_sharp),
-           ),*/
-
 
             floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
              floatingActionButton: Padding(

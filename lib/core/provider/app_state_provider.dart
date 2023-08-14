@@ -81,7 +81,7 @@ class AppStateProvider extends ChangeNotifier {
 
   // =======> Save Sapphire Gas Flow Start <=======
 
-  final List<String> _items = ['Gas Flow', 'Existing Meter System', 'Site Address', 'Create Work', 'Complete Work', 'Meter System', 'Assets'];
+  final List<String> _items = ['Gas Flow', 'Existing Meter System', 'Site Address', 'Create Work', 'Complete Work', 'Assets'];
   List<String> get items => _items;
 
   int _currentExpandedTileIndex = 0;
@@ -173,22 +173,10 @@ class AppStateProvider extends ChangeNotifier {
 
   final _postCode = TextEditingController();
   TextEditingController get postCode => _postCode;
-  final _subBuildingName = TextEditingController();
-  TextEditingController get subBuildingName => _subBuildingName;
   final _buildingName = TextEditingController();
   TextEditingController get buildingName => _buildingName;
-  final _dependentThroughFare = TextEditingController();
-  TextEditingController get dependentThroughFare => _dependentThroughFare;
-  final _throughFare = TextEditingController();
-  TextEditingController get throughFare => _throughFare;
-  final _doubleDependentLocality = TextEditingController();
-  TextEditingController get doubleDependentLocality => _doubleDependentLocality;
-  final _dependentLocality = TextEditingController();
-  TextEditingController get dependentLocality => _dependentLocality;
   final _postTown = TextEditingController();
   TextEditingController get postTown => _postTown;
-  final _county = TextEditingController();
-  TextEditingController get county => _county;
 
   final _additionalInformationForWork = TextEditingController();
   TextEditingController get additionalInformationForWork => _additionalInformationForWork;
@@ -196,8 +184,6 @@ class AppStateProvider extends ChangeNotifier {
   TextEditingController get transactionReference => _transactionReference;
   final _transactionTypeCode = TextEditingController();
   TextEditingController get transactionTypeCode => _transactionTypeCode;
-  final _transactionTypeReasonCode = TextEditingController();
-  TextEditingController get transactionTypeReasonCode => _transactionTypeReasonCode;
 
   final _engineerName = TextEditingController();
   TextEditingController get engineerName => _engineerName;
@@ -207,10 +193,6 @@ class AppStateProvider extends ChangeNotifier {
   TextEditingController get transactionStatusChange => _transactionStatusChange;
   final _siteVisitNote = TextEditingController();
   TextEditingController get siteVisitNote => _siteVisitNote;
-  final _transactionTypeCodeForCompleteWork = TextEditingController();
-  TextEditingController get transactionTypeCodeForCompleteWork => _transactionTypeCodeForCompleteWork;
-  final _transactionTypeReasonCodeForCompleteWork = TextEditingController();
-  TextEditingController get transactionTypeReasonCodeForCompleteWork => _transactionTypeReasonCodeForCompleteWork;
 
   void clearAllGasFormData(){
     _memMpId.text= "";
@@ -228,36 +210,19 @@ class AppStateProvider extends ChangeNotifier {
     _meteringPressure.text= "";
     notifyListeners();
     _postCode.text= "";
-    _subBuildingName.text= "";
     _buildingName.text= "";
-    _dependentThroughFare.text= "";
-    _throughFare.text= "";
-    _doubleDependentLocality.text= "";
-    _dependentLocality.text= "";
     _postTown.text= "";
-    _county.text= "";
     notifyListeners();
     _textEditingControllerAppointmentDate.text= "";
     _additionalInformationForWork.text= "";
     _transactionReference.text= "";
     _transactionTypeCode.text= "";
-    _transactionTypeReasonCode.text= "";
     notifyListeners();
     _textEditingControllerSiteVisitDate.text= "";
     _engineerName.text= "";
     _transactionStatusCode.text= "";
     _transactionStatusChange.text= "";
     _siteVisitNote.text= "";
-    _transactionTypeCodeForCompleteWork.text= "";
-    _transactionTypeReasonCodeForCompleteWork.text= "";
-    notifyListeners();
-    _meterLinkCodeForMeterSystem.text= "";
-    _statusCodeForMeterSystem.text= "";
-    _locationCodeForMeterSystem.text= "";
-    _locationNotesForMeterSystem.text= "";
-    _accessInstructionsForMeterSystem.text= "";
-    _conversionFactorForMeterSystem.text= "";
-    _meteringPressureForMeterSystem.text= "";
     notifyListeners();
     _formDataList.clear();
     notifyListeners();
@@ -265,21 +230,6 @@ class AppStateProvider extends ChangeNotifier {
     notifyListeners();
     initForm();
   }
-
-  final _meterLinkCodeForMeterSystem = TextEditingController();
-  TextEditingController get meterLinkCodeForMeterSystem => _meterLinkCodeForMeterSystem;
-  final _statusCodeForMeterSystem = TextEditingController();
-  TextEditingController get statusCodeForMeterSystem => _statusCodeForMeterSystem;
-  final _locationCodeForMeterSystem = TextEditingController();
-  TextEditingController get locationCodeForMeterSystem => _locationCodeForMeterSystem;
-  final _locationNotesForMeterSystem = TextEditingController();
-  TextEditingController get locationNotesForMeterSystem => _locationNotesForMeterSystem;
-  final _accessInstructionsForMeterSystem = TextEditingController();
-  TextEditingController get accessInstructionsForMeterSystem => _accessInstructionsForMeterSystem;
-  final _conversionFactorForMeterSystem = TextEditingController();
-  TextEditingController get conversionFactorForMeterSystem => _conversionFactorForMeterSystem;
-  final _meteringPressureForMeterSystem = TextEditingController();
-  TextEditingController get meteringPressureForMeterSystem => _meteringPressureForMeterSystem;
 
   bool _isCheckData = false;
   bool get isCheckData => _isCheckData;
@@ -359,20 +309,15 @@ class AppStateProvider extends ChangeNotifier {
       'locationCode': TextEditingController(),
       'locationNotes': TextEditingController(),
       'assetStatusCode': TextEditingController(),
-      'meterType': TextEditingController(),
       'mechanismCode': TextEditingController(),
-      'measuringCapacity': TextEditingController(),
       'meterUsageCode': TextEditingController(),
       'collarStatusCode': TextEditingController(),
       'oamiInspectionDate': TextEditingController(),
-      'pulseValue': TextEditingController(),
       'gasActOwnerRole': TextEditingController(),
       'assetRemovalDate': TextEditingController(),
       'registers': [
         {
           'numberOfDigits': TextEditingController(),
-          'unitsOfMeasure': TextEditingController(),
-          'multiplicationFactor': TextEditingController(),
           'readingIndex': TextEditingController(),
         },
       ],
@@ -388,8 +333,6 @@ class AppStateProvider extends ChangeNotifier {
   void addSubForm(int index) {
     _formDataList[index]['registers'].add({
       'numberOfDigits': TextEditingController(),
-      'unitsOfMeasure': TextEditingController(),
-      'multiplicationFactor': TextEditingController(),
       'readingIndex': TextEditingController(),
     });
     notifyListeners();
@@ -414,20 +357,15 @@ class AppStateProvider extends ChangeNotifier {
       'locationCode': TextEditingController(),
       'locationNotes': TextEditingController(),
       'assetStatusCode': TextEditingController(),
-      'meterType': TextEditingController(),
       'mechanismCode': TextEditingController(),
-      'measuringCapacity': TextEditingController(),
       'meterUsageCode': TextEditingController(),
       'collarStatusCode': TextEditingController(),
       'oamiInspectionDate': TextEditingController(),
-      'pulseValue': TextEditingController(),
       'gasActOwnerRole': TextEditingController(),
       'assetRemovalDate': TextEditingController(),
       'registers': [
         {
           'numberOfDigits': TextEditingController(),
-          'unitsOfMeasure': TextEditingController(),
-          'multiplicationFactor': TextEditingController(),
           'readingIndex': TextEditingController(),
         },
       ],
@@ -490,13 +428,10 @@ class AppStateProvider extends ChangeNotifier {
         'locationCode': formData['locationCode'] is TextEditingController ? formData['locationCode'].text : formData['locationCode'],
         'locationNotes': formData['locationNotes'] is TextEditingController ? formData['locationNotes'].text : formData['locationNotes'],
         'assetStatusCode': formData['assetStatusCode'] is TextEditingController ? formData['assetStatusCode'].text : formData['assetStatusCode'],
-        'meterType': formData['meterType'] is TextEditingController ? formData['meterType'].text : formData['meterType'],
         'mechanismCode': formData['mechanismCode'] is TextEditingController ? formData['mechanismCode'].text : formData['mechanismCode'],
-        'measuringCapacity': formData['measuringCapacity'] is TextEditingController ? formData['measuringCapacity'].text : formData['measuringCapacity'],
         'meterUsageCode': formData['meterUsageCode'] is TextEditingController ? formData['meterUsageCode'].text : formData['meterUsageCode'],
         'collarStatusCode': formData['collarStatusCode'] is TextEditingController ? formData['collarStatusCode'].text : formData['collarStatusCode'],
         'oamiInspectionDate': formData['oamiInspectionDate'] is TextEditingController ? formData['oamiInspectionDate'].text : formData['oamiInspectionDate'],
-        'pulseValue': formData['pulseValue'] is TextEditingController ? formData['pulseValue'].text : formData['pulseValue'],
         'gasActOwnerRole': formData['gasActOwnerRole'] is TextEditingController ? formData['gasActOwnerRole'].text : formData['gasActOwnerRole'],
         'assetRemovalDate': formData['assetRemovalDate'] is TextEditingController ? formData['assetRemovalDate'].text : formData['assetRemovalDate'],
       };
@@ -507,8 +442,6 @@ class AppStateProvider extends ChangeNotifier {
         Map<String, dynamic> subFormField = {
           'intId': 0,
           'numberOfDigits': subForm['numberOfDigits'] is TextEditingController ? subForm['numberOfDigits'].text : subForm['numberOfDigits'],
-          'unitsOfMeasure': subForm['unitsOfMeasure'] is TextEditingController ? subForm['unitsOfMeasure'].text : subForm['unitsOfMeasure'],
-          'multiplicationFactor': subForm['multiplicationFactor'] is TextEditingController ? subForm['multiplicationFactor'].text : subForm['multiplicationFactor'],
           'readingIndex': subForm['readingIndex'] is TextEditingController ? subForm['readingIndex'].text : subForm['readingIndex'],
         };
         registerList.add(subFormField);
@@ -525,7 +458,6 @@ class AppStateProvider extends ChangeNotifier {
         "mprn": _mprn.text,
         "externalSystemIdentity": _externalSystemIdentity.text,
         "correlationId": _correlationId.text,
-        "sapphireWorkId": "0",
         "existingMeterSystem": {
           "meterLinkCode": _meterLinkCode.text,
           "statusCode": _statusCode.text,
@@ -536,14 +468,8 @@ class AppStateProvider extends ChangeNotifier {
           "meteringPressure": _meteringPressure.text,
           "siteAddress": {
             "postcode": _postCode.text,
-            "subBuildingName": _subBuildingName.text,
             "buildingName": _buildingName.text,
-            "dependentThoroughfare": _dependentThroughFare.text,
-            "thoroughfare": _throughFare.text,
-            "doubleDependentLocality": _doubleDependentLocality.text,
-            "dependentLocality": _dependentLocality.text,
             "postTown": _postTown.text,
-            "county": _county.text,
           }
         },
         "createWork": {
@@ -551,7 +477,6 @@ class AppStateProvider extends ChangeNotifier {
           "additionalInformationForWork": _additionalInformationForWork.text,
           "transactionReference": _transactionReference.text,
           "transactionTypeCode": _transactionTypeCode.text,
-          "transactionTypeReasonCode": _transactionTypeReasonCode.text,
         },
         "completeWork": {
           "siteVisitDate": _textEditingControllerSiteVisitDate.text,
@@ -561,16 +486,7 @@ class AppStateProvider extends ChangeNotifier {
           "transactionStatusCode": _transactionStatusCode.text,
           "transactionStatusChangeReasonCode": _transactionStatusChange.text,
           "siteVisitNotes": _siteVisitNote.text,
-          "transactionTypeCode": _transactionTypeCodeForCompleteWork.text,
-          "transactionTypeReasonCode": _transactionTypeReasonCodeForCompleteWork.text,
           "meterSystem": {
-            "meterLinkCode": _meterLinkCodeForMeterSystem.text,
-            "statusCode": _statusCodeForMeterSystem.text,
-            "locationCode": _locationCodeForMeterSystem.text,
-            "locationNotes": _locationNotesForMeterSystem.text,
-            "accessInstructions": _accessInstructionsForMeterSystem.text,
-            "conversionFactor": _conversionFactorForMeterSystem.text,
-            "meteringPressure": _meteringPressureForMeterSystem.text,
             "assets": [assetMap],
           }
         }

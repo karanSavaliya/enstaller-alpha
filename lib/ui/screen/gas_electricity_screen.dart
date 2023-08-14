@@ -217,43 +217,13 @@ class GasElectricityState extends State<GasElectricity> with TickerProviderState
                                 ),
                                 SizedBox(height: 10),
                                 ElectricityTextFieldWidget(
-                                  hintText: "SubBuilding Name",
-                                  controller: appStateProvider.subBuildingName,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
                                   hintText: "Building Name",
                                   controller: appStateProvider.buildingName,
                                 ),
                                 SizedBox(height: 10),
                                 ElectricityTextFieldWidget(
-                                  hintText: "Dependent Through Fare",
-                                  controller: appStateProvider.dependentThroughFare,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Through Fare",
-                                  controller: appStateProvider.throughFare,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Double Dependent Locality",
-                                  controller: appStateProvider.doubleDependentLocality,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Dependent Locality",
-                                  controller: appStateProvider.dependentLocality,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
                                   hintText: "PostTown",
                                   controller: appStateProvider.postTown,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "County",
-                                  controller: appStateProvider.county,
                                 ),
                               ],
                             ),
@@ -286,12 +256,6 @@ class GasElectricityState extends State<GasElectricity> with TickerProviderState
                                 ElectricityTextFieldWidget(
                                   hintText: "Transaction Type Code",
                                   controller: appStateProvider.transactionTypeCode,
-                                  maxLength: 5,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Transaction Type Reason Code",
-                                  controller: appStateProvider.transactionTypeReasonCode,
                                   maxLength: 5,
                                 ),
                               ],
@@ -372,68 +336,6 @@ class GasElectricityState extends State<GasElectricity> with TickerProviderState
                                   hintText: "Site Visit Note",
                                   controller: appStateProvider.siteVisitNote,
                                   maxLine: 3,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Transaction Type Code",
-                                  maxLength: 5,
-                                  controller: appStateProvider.transactionTypeCodeForCompleteWork,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Transaction Type Reason Code",
-                                  maxLength: 5,
-                                  controller: appStateProvider.transactionTypeReasonCodeForCompleteWork,
-                                ),
-                              ],
-                            ),
-                          ) : index == 5 ?
-                          Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                ElectricityTextFieldWidget(
-                                  hintText: "Meter Link Code",
-                                  maxLength: 1,
-                                  controller: appStateProvider.meterLinkCodeForMeterSystem,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Status Code",
-                                  maxLength: 2,
-                                  controller: appStateProvider.statusCodeForMeterSystem,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Location Code",
-                                  maxLength: 2,
-                                  controller: appStateProvider.locationCodeForMeterSystem,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Location Note",
-                                  maxLine: 3,
-                                  controller: appStateProvider.locationNotesForMeterSystem,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Access Instructions",
-                                  controller: appStateProvider.accessInstructionsForMeterSystem,
-                                  maxLine: 3,
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Conversion Factor",
-                                  controller: appStateProvider.conversionFactorForMeterSystem,
-                                  keyboardType: "number",
-                                ),
-                                SizedBox(height: 10),
-                                ElectricityTextFieldWidget(
-                                  hintText: "Metering Pressure",
-                                  keyboardType: "number",
-                                  controller: appStateProvider.meteringPressureForMeterSystem,
                                 ),
                               ],
                             ),
@@ -592,24 +494,10 @@ class GasElectricityState extends State<GasElectricity> with TickerProviderState
                                     ),
                                     const SizedBox(height: 10),
                                     ElectricityTextFieldWidget(
-                                      hintText: "Meter Type",
-                                      maxLength: 5,
-                                      required: "required",
-                                      controller: appStateProvider.formDataList[index]['meterType'],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    ElectricityTextFieldWidget(
                                       hintText: "Mechanism Code",
                                       maxLength: 5,
                                       required: "required",
                                       controller: appStateProvider.formDataList[index]['mechanismCode'],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    ElectricityTextFieldWidget(
-                                      hintText: "Measuring Capacity",
-                                      keyboardType: "number",
-                                      required: "required",
-                                      controller: appStateProvider.formDataList[index]['measuringCapacity'],
                                     ),
                                     const SizedBox(height: 10),
                                     ElectricityTextFieldWidget(
@@ -629,13 +517,6 @@ class GasElectricityState extends State<GasElectricity> with TickerProviderState
                                       controller: appStateProvider.formDataList[index]['oamiInspectionDate'],
                                       onTap: () => appStateProvider.selectOAMIDate(context, index),
                                       maxLength: 10,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    ElectricityTextFieldWidget(
-                                      hintText: "Pulse Value",
-                                      required: "required",
-                                      keyboardType: "number",
-                                      controller: appStateProvider.formDataList[index]['pulseValue'],
                                     ),
                                     const SizedBox(height: 10),
                                     ElectricityTextFieldWidget(
@@ -707,20 +588,6 @@ class GasElectricityState extends State<GasElectricity> with TickerProviderState
                                               keyboardType: "number",
                                               required: "required",
                                               controller: appStateProvider.formDataList[index]['registers'][subIndex]['numberOfDigits'],
-                                            ),
-                                            SizedBox(height: 10),
-                                            ElectricityTextFieldWidget(
-                                              hintText: "Units Of Measure",
-                                              maxLength: 5,
-                                              required: "required",
-                                              controller: appStateProvider.formDataList[index]['registers'][subIndex]['unitsOfMeasure'],
-                                            ),
-                                            SizedBox(height: 10),
-                                            ElectricityTextFieldWidget(
-                                              hintText: "Multiplication Factor",
-                                              keyboardType: "number",
-                                              required: "required",
-                                              controller: appStateProvider.formDataList[index]['registers'][subIndex]['multiplicationFactor'],
                                             ),
                                             SizedBox(height: 10),
                                             ElectricityTextFieldWidget(

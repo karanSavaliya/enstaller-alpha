@@ -51,7 +51,8 @@ class AppStrings {
   static const bookOn = 'Booked On';
   static const bookBy = 'Booked By';
   static const date = 'Date';
-  static const name = 'Name';
+  static const name = 'Customer Name';
+  static const contactName = 'Contact Name';
   static const contactNumber = 'Contact Number';
   static const email = 'Email';
   static const address = 'Address';

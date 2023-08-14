@@ -10,6 +10,8 @@ import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/get_user_details_viewmodel.dart';
 import 'package:enstaller/ui/screen/appointments.dart';
 import 'package:enstaller/ui/screen/check_request_screen.dart';
+import 'package:enstaller/ui/screen/electricity_screen.dart';
+import 'package:enstaller/ui/screen/gas_screen.dart';
 import 'package:enstaller/ui/screen/order_screen.dart';
 import 'package:enstaller/ui/screen/document.dart';
 import 'package:enstaller/ui/screen/home_screen.dart';
