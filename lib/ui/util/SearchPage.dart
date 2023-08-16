@@ -41,22 +41,21 @@ class _SearchPageState extends State<SearchPage> {
   // This function is called whenever the text field changes
   void _runFilter(String enteredKeyword) {
     List<Map<String, dynamic>> results = [];
-    if (enteredKeyword.isEmpty) {
+
+    if (enteredKeyword.trim().isEmpty) {
       // if the search field is empty or only contains white-space, we'll display all users
       results = _allUsers;
     } else {
-      results = _allUsers.where((user) => user["label"].toLowerCase().contains(enteredKeyword.toLowerCase())).toList();
-      results = _allUsers.where((user) => user["label"].contains(enteredKeyword)).toList();
-
-      // we use the toLowerCase() method to make it case-insensitive
+      String lowercaseKeyword = enteredKeyword.trimLeft().toLowerCase();
+      results = _allUsers.where((user) => user["label"].toLowerCase().contains(lowercaseKeyword)).toList();
     }
 
     // Refresh the UI
     setState(() {
       _foundUsers = results;
     });
-
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +110,7 @@ class _SearchPageState extends State<SearchPage> {
                 );
                                               } )
                   :  Center(child:Text(
-                'No results found',
+                'No items found',
                 style: TextStyle(fontSize: 24),
               )),
             ),

@@ -5,6 +5,7 @@ import '../../ui/screen/home_screen.dart';
 import '../constant/api_urls.dart';
 import '../constant/appconstant.dart';
 import '../model/engineer_document_model.dart';
+import '../model/engineer_qualification_model.dart';
 import '../model/save_sapphire_electricity_flow_model.dart';
 import '../model/save_sapphire_gas_flow_model.dart';
 import '../model/user_model.dart';
@@ -24,6 +25,7 @@ class AppStateProvider extends ChangeNotifier {
 
   Future<void> getEngineerDocument() async {
     _loading = true;
+    _searchBoxType = false;
     notifyListeners();
     try {
       engineerDocumentDoneObj = await Api().fetchEngineerDocuments(ApiUrls.engineerDocumentList);
@@ -46,6 +48,7 @@ class AppStateProvider extends ChangeNotifier {
   void onClickSearch() {
     if (_searchBool) {
       _searchBool = false;
+      _searchBoxType = false;
       notifyListeners();
     } else {
       _searchBool = true;
@@ -917,5 +920,72 @@ class AppStateProvider extends ChangeNotifier {
         AppConstants.showFailToast(context, e.toString());
       }
     }
+  }
+
+  // =======> Engineer Qualification Start <=======
+
+  List<EngineerQualificationModel> engineerQualificationDoneObj;
+  final List<EngineerQualificationModel> _engineerQualificationList = [];
+  List<EngineerQualificationModel> get engineerQualificationList => _engineerQualificationList;
+  bool _loadingQualification = false;
+  bool get loadingQualification => _loadingQualification;
+
+  Future<void> getEngineerQualification() async {
+    _loadingQualification = true;
+    _searchBoxTypeQualification = false;
+    notifyListeners();
+    try {
+      engineerQualificationDoneObj = await Api().fetchEngineerQualification(ApiUrls.engineerQualificationList);
+      _engineerQualificationList.clear();
+      for (var element in engineerQualificationDoneObj) {
+        _engineerQualificationList.add(element);
+      }
+      _loadingQualification = false;
+    } on SocketException {
+      _loadingQualification = false;
+    } catch (e) {
+      _loadingQualification = false;
+    }
+    notifyListeners();
+  }
+
+  bool _searchBoolQualification = false;
+  bool get searchBoolQualification => _searchBoolQualification;
+
+  void onClickSearchQualification() {
+    if (_searchBoolQualification) {
+      _searchBoolQualification = false;
+      _searchBoxTypeQualification = false;
+      notifyListeners();
+    } else {
+      _searchBoolQualification = true;
+      notifyListeners();
+    }
+  }
+
+  final List<EngineerQualificationModel> _filteredEngineerQualificationList = [];
+  List<EngineerQualificationModel> get filteredEngineerQualificationList => _filteredEngineerQualificationList;
+
+  bool _searchBoxTypeQualification = false;
+  bool get searchBoxTypeQualification => _searchBoxTypeQualification;
+
+  void performSearchQualification(String query) {
+    query = query.toLowerCase();
+    _filteredEngineerQualificationList.clear();
+    if (query.isNotEmpty) {
+      _searchBoxTypeQualification = true;
+      notifyListeners();
+      for (var document in _engineerQualificationList) {
+        if (document.documentType.toLowerCase().contains(query) ||
+            document.document.toLowerCase().contains(query)) {
+          _filteredEngineerQualificationList.add(document);
+        }
+      }
+    } else {
+      _filteredEngineerQualificationList.addAll(_engineerQualificationList);
+      _searchBoxTypeQualification = false;
+      notifyListeners();
+    }
+    notifyListeners();
   }
 }

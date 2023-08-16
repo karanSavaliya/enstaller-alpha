@@ -130,48 +130,12 @@ class _OrderItemState extends State<OrderItem> {
 
 
                   ),)
-                /*child: SelectFormField(
-
-                  initialValue: widget.saveOrderLine.intItemId.toString() ?? '',
-                  enabled: widget.itemList.isNotEmpty,
-                  labelText: 'Items',
-                  dialogTitle: 'Items',
-                  items: widget.itemList,
-                  enableSearch: true,
-                  autovalidate: true,
-                  onSaved: (val) {
-                    print('intItemId value is $val');
-                    widget.saveOrderLine.intItemId = int.parse(val);
-                  },
-                  onChanged: (val) {
-                    setState(() {
-                      id = int.parse(val);
-                      print("cValue ---======> 11111  "+val);
-                      var value = '';
-                      widget.itemList.forEach((element) {
-                        if (element['value'] == val) {
-                          value = element['intContractId'].toString();
-                        }
-                      });
-                      print("cValue ---======> 2222 --> $value");
-                      cValue = value;
-                      widget.saveOrderLine.intItemId = int.parse(val);
-                    });
-                  },
-                  validator: (val) {
-                    if (val == AppStrings.SELECT)
-                      return 'Please choose an option.';
-                    return null;
-                  },
-                ),*/
               ),
               SizeConfig.verticalSpaceMedium(),
               Padding(
                   padding: SizeConfig.sidepadding,
                   child: DropdownButtonFormField<String>(
-                    onChanged: (value) {
-                      widget.saveOrderLine.intContractId = int.parse(value);
-                    },
+                    onChanged: null,
                     decoration: InputDecoration(
                       hintText: cValue ?? 'Select',
                       labelText: 'Contract',

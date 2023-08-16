@@ -1100,12 +1100,12 @@ class _DetailScreenState extends State<DetailScreen> {
       child: Column(
         children: [
           AppointmentDataRow(
-            firstText: AppStrings.name,//KARAN
-            secondText: AppStrings.mr + model.customerDetails.strContactName ?? "",
+            firstText: AppStrings.name,
+            secondText: "${model.customerDetails.customerName ?? ""}",
           ),
           AppointmentDataRow(
             firstText: AppStrings.contactName,
-            secondText: AppStrings.mr + model.customerDetails.strContactName ?? "",
+            secondText: "${model.customerDetails.strContactName ?? ""}",
           ),
           AppointmentDataRow(
             firstText: AppStrings.contactNumber,

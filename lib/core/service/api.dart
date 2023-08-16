@@ -5,6 +5,7 @@ import 'package:enstaller/core/service/pref_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import '../model/engineer_document_model.dart';
+import '../model/engineer_qualification_model.dart';
 import '../model/save_sapphire_electricity_flow_model.dart';
 import '../model/save_sapphire_gas_flow_model.dart';
 import '../model/user_model.dart';
@@ -70,6 +71,31 @@ class Api {
       return apiResponse;
     } else {
       throw Exception('Failed to insert data');
+    }
+  }
+
+  Future<List<EngineerQualificationModel>> fetchEngineerQualification(String apiUrl) async {
+    UserModel user = await Prefs.getUser();
+    Uri uri = Uri.parse(apiUrl);
+    Map<String, dynamic> requestData = {
+      'EngineerId': user.intEngineerId.toString(),
+      'RowsPerPage': 10,
+      'PageNumber': 1,
+      'strsearchtxt': "",
+    };
+    final response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(requestData),
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.map((json) => EngineerQualificationModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch data');
     }
   }
 }

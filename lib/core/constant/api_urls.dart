@@ -79,4 +79,6 @@ class ApiUrls {
   static String saveSapphireElectricityFlow = baseUrl + "SapphireElecFlow/SaveSapphireElecFlow";
   static String engineerProfilePhotoUrl = "https://enstall.boshposh.com/Upload/EngineerPhoto";
   static String engineerDocumentUrl = "https://enstall.boshposh.com/Upload/EngineerDocument/";
+  static String engineerQualificationUrl = "https://enstall.boshposh.com/Upload/EngineerDocument/";
+  static String engineerQualificationList = baseUrl + "Engineer/GetEngineerCertificate";
 }

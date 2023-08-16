@@ -10,8 +10,6 @@ import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/get_user_details_viewmodel.dart';
 import 'package:enstaller/ui/screen/appointments.dart';
 import 'package:enstaller/ui/screen/check_request_screen.dart';
-import 'package:enstaller/ui/screen/electricity_screen.dart';
-import 'package:enstaller/ui/screen/gas_screen.dart';
 import 'package:enstaller/ui/screen/order_screen.dart';
 import 'package:enstaller/ui/screen/document.dart';
 import 'package:enstaller/ui/screen/home_screen.dart';
@@ -21,6 +19,7 @@ import 'package:enstaller/ui/screen/today_appointments.dart';
 import 'package:enstaller/ui/screen/widget/drawer_row_widget.dart';
 import 'package:flutter/material.dart';
 import '../screen/engineer_document.dart';
+import '../screen/engineer_qualification.dart';
 
 class AppDrawerWidget extends StatelessWidget {
   @override
@@ -135,11 +134,22 @@ class AppDrawerWidget extends StatelessWidget {
                       },
                     ),
                     DrawerRowWidget(
+                      title: 'Engineer Qualification',
+                      assetPath: ImageFile.document,
+                      onTap: () {
+                        Navigator.of(context).push(new MaterialPageRoute(
+                            builder: (context) => EngineerQualificationScreen()));
+                      },
+                    ),
+                    DrawerRowWidget(
                       title: 'Orders',
                       assetPath: ImageFile.order,
                       onTap: () {
-                        Navigator.of(context).push(new MaterialPageRoute(
-                            builder: (context) => OrderScreen()));
+                        Navigator.of(context).push(
+                          new MaterialPageRoute(
+                            builder: (context) => OrderScreen(),
+                          ),
+                        );
                       },
                     ),
                     DrawerRowWidget(

@@ -145,7 +145,8 @@ class _OrderScreenState extends State<OrderScreen> {
                     color: AppColors.appThemeColor,
                     textStyle: TextStyle(
                         color: AppColors.whiteColor,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,
+                    ),
                     onTap: () {
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (context) => OrderDetailScreen(
@@ -158,7 +159,7 @@ class _OrderScreenState extends State<OrderScreen> {
                 Expanded(
                   child: AppButton(
                     buttonText: AppStrings.edit,
-                    color: orderModel?.strStatus?.trim() == "Closed"
+                    color: orderModel.strStatus?.trim() == "Closed"
                         ? Colors.grey
                         : AppColors.appThemeColor,
                     textStyle: TextStyle(
