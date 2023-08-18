@@ -62,15 +62,28 @@ class AppStateProvider extends ChangeNotifier {
   bool _searchBoxType = false;
   bool get searchBoxType => _searchBoxType;
 
+  List<bool> _isReadEngineerDocumentMain = [];
+  List<bool> get isReadEngineerDocumentMain => _isReadEngineerDocumentMain;
+
+  List<bool> _isReadEngineerDocumentFilter = [];
+  List<bool> get isReadEngineerDocumentFilter => _isReadEngineerDocumentFilter;
+
+  List<bool> _isReadEngineerDocumentSearch = [];
+  List<bool> get isReadEngineerDocumentSearch => _isReadEngineerDocumentSearch;
+
   void performSearch(String query) {
     query = query.toLowerCase();
     _filteredEngineerDocumentList.clear();
+    _isReadEngineerDocumentFilter.clear();
+    _isReadEngineerDocumentFilter.addAll(_isReadEngineerDocumentMain);
     if (query.isNotEmpty) {
+      _isReadEngineerDocumentSearch.clear();
       _searchBoxType = true;
       notifyListeners();
       for (var document in _engineerDocumentList) {
         if (document.documentType.toLowerCase().contains(query) ||
             document.document.toLowerCase().contains(query)) {
+          _isReadEngineerDocumentSearch.add(_isReadEngineerDocumentFilter.elementAt(_engineerDocumentList.indexOf(document)));
           _filteredEngineerDocumentList.add(document);
         }
       }
@@ -969,15 +982,28 @@ class AppStateProvider extends ChangeNotifier {
   bool _searchBoxTypeQualification = false;
   bool get searchBoxTypeQualification => _searchBoxTypeQualification;
 
+  List<bool> _isReadEngineerQualificationMain = [];
+  List<bool> get isReadEngineerQualificationMain => _isReadEngineerQualificationMain;
+
+  List<bool> _isReadEngineerQualificationFilter = [];
+  List<bool> get isReadEngineerQualificationFilter => _isReadEngineerQualificationFilter;
+
+  List<bool> _isReadEngineerQualificationSearch = [];
+  List<bool> get isReadEngineerQualificationSearch => _isReadEngineerQualificationSearch;
+
   void performSearchQualification(String query) {
     query = query.toLowerCase();
     _filteredEngineerQualificationList.clear();
+    _isReadEngineerQualificationFilter.clear();
+    _isReadEngineerQualificationFilter.addAll(_isReadEngineerQualificationMain);
     if (query.isNotEmpty) {
+      _isReadEngineerQualificationSearch.clear();
       _searchBoxTypeQualification = true;
       notifyListeners();
       for (var document in _engineerQualificationList) {
         if (document.documentType.toLowerCase().contains(query) ||
             document.document.toLowerCase().contains(query)) {
+          _isReadEngineerQualificationSearch.add(_isReadEngineerQualificationFilter.elementAt(_engineerQualificationList.indexOf(document)));
           _filteredEngineerQualificationList.add(document);
         }
       }

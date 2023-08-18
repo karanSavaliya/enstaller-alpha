@@ -29,6 +29,9 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
   void initState() {
     super.initState();
     AppStateProvider appStateProvider = Provider.of<AppStateProvider>(context,listen: false);
+    appStateProvider.isReadEngineerDocumentMain.clear();
+    appStateProvider.isReadEngineerDocumentSearch.clear();
+    appStateProvider.isReadEngineerDocumentFilter.clear();
     appStateProvider.getEngineerDocument();
   }
 
@@ -94,6 +97,9 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
       ),
       body: appStateProvider.loading == true ? AppConstants.circulerProgressIndicator() : RefreshIndicator(
         onRefresh: () {
+          appStateProvider.isReadEngineerDocumentMain.clear();
+          appStateProvider.isReadEngineerDocumentSearch.clear();
+          appStateProvider.isReadEngineerDocumentFilter.clear();
           return Future.delayed(Duration.zero).whenComplete(() => appStateProvider.getEngineerDocument());
         },
         child: appStateProvider.engineerDocumentList.isNotEmpty ? ConstrainedBox(
@@ -105,6 +111,9 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
               parent: AlwaysScrollableScrollPhysics()),
               itemCount: appStateProvider.searchBoxType == false ? appStateProvider.engineerDocumentList.length : appStateProvider.filteredEngineerDocumentList.length,
               itemBuilder: (context, i) {
+                if(appStateProvider.searchBoxType == false){
+                  appStateProvider.isReadEngineerDocumentMain.add(false);
+                }
                 return Padding(
                   padding: SizeConfig.verticalC13Padding,
                   child: Container(
@@ -117,7 +126,7 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                         Container(
                           decoration: BoxDecoration(
                             border: Border(bottom: BorderSide(color: AppColors.lightGrayDotColor)),
-                            color: AppColors.darkBlue,
+                            color: appStateProvider.searchBoxType == false ? appStateProvider.isReadEngineerDocumentMain[i] == false ? AppColors.darkBlue : AppColors.whiteColor : appStateProvider.isReadEngineerDocumentSearch[i] == false ? AppColors.darkBlue : AppColors.whiteColor,
                           ),
                           child: Padding(
                             padding: SizeConfig.padding,
@@ -128,7 +137,7 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                   child: Text(
                                     AppStrings.documentType,
                                     textAlign: TextAlign.end,
-                                    style: TextStyle(color: AppColors.whiteColor),
+                                    style: TextStyle(color: appStateProvider.searchBoxType == false ? appStateProvider.isReadEngineerDocumentMain[i] == false ? AppColors.whiteColor : AppColors.black : appStateProvider.isReadEngineerDocumentSearch[i] == false ? AppColors.whiteColor : AppColors.black,fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 SizeConfig.horizontalSpaceMedium(),
@@ -137,7 +146,7 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                   child: Text(
                                     appStateProvider.searchBoxType == false ? appStateProvider.engineerDocumentList[i].documentType : appStateProvider.filteredEngineerDocumentList[i].documentType ?? "",
                                     textAlign: TextAlign.start,
-                                    style: TextStyle(color: AppColors.whiteColor),
+                                    style: TextStyle(color: appStateProvider.searchBoxType == false ? appStateProvider.isReadEngineerDocumentMain[i] == false ? AppColors.whiteColor : AppColors.darkGrayColor : appStateProvider.isReadEngineerDocumentSearch[i] == false ? AppColors.whiteColor : AppColors.darkGrayColor),
                                   ),
                                 ),
                               ],
@@ -163,6 +172,17 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                   flex: 3,
                                   child: InkWell(
                                     onTap: () async {
+                                      if(appStateProvider.searchBoxType == false){
+                                        setState(() {
+                                          appStateProvider.isReadEngineerDocumentMain[i] = true;
+                                        });
+                                      }
+                                      else{
+                                        setState(() {
+                                          appStateProvider.isReadEngineerDocumentMain[i] = true;
+                                          appStateProvider.isReadEngineerDocumentSearch[i] = true;
+                                        });
+                                      }
                                       String _url = appStateProvider.searchBoxType == false ? "${ApiUrls.engineerDocumentUrl}" + appStateProvider.engineerDocumentList[i].document :
                                       "${ApiUrls.engineerDocumentUrl}" + appStateProvider.filteredEngineerDocumentList[i].document;
                                       String extension = _url.split('.').last;
@@ -184,7 +204,7 @@ class _EngineerDocumentScreenState extends State<EngineerDocumentScreen> {
                                     child: Text(
                                       appStateProvider.searchBoxType == false ? appStateProvider.engineerDocumentList[i].document : appStateProvider.filteredEngineerDocumentList[i].document ?? "",
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(color: AppColors.darkGrayColor,fontWeight: FontWeight.normal),
+                                      style: TextStyle(color: AppColors.darkGrayColor,fontWeight: appStateProvider.searchBoxType == false ? appStateProvider.isReadEngineerDocumentMain[i] == false ? FontWeight.bold : FontWeight.normal : appStateProvider.isReadEngineerDocumentSearch[i] == false ? FontWeight.bold : FontWeight.normal),
                                     ),
                                   ),
                                 ),

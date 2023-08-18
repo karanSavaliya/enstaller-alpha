@@ -29,6 +29,9 @@ class _EngineerQualificationScreenState extends State<EngineerQualificationScree
   void initState() {
     super.initState();
     AppStateProvider appStateProvider = Provider.of<AppStateProvider>(context,listen: false);
+    appStateProvider.isReadEngineerQualificationMain.clear();
+    appStateProvider.isReadEngineerQualificationSearch.clear();
+    appStateProvider.isReadEngineerQualificationFilter.clear();
     appStateProvider.getEngineerQualification();
   }
 
@@ -94,6 +97,9 @@ class _EngineerQualificationScreenState extends State<EngineerQualificationScree
       ),
       body: appStateProvider.loadingQualification == true ? AppConstants.circulerProgressIndicator() : RefreshIndicator(
         onRefresh: () {
+          appStateProvider.isReadEngineerQualificationSearch.clear();
+          appStateProvider.isReadEngineerQualificationFilter.clear();
+          appStateProvider.isReadEngineerQualificationMain.clear();
           return Future.delayed(Duration.zero).whenComplete(() => appStateProvider.getEngineerQualification());
         },
         child: appStateProvider.engineerQualificationList.isNotEmpty ? ConstrainedBox(
@@ -101,10 +107,12 @@ class _EngineerQualificationScreenState extends State<EngineerQualificationScree
           child: Padding(
             padding: SizeConfig.padding,
             child: ListView.builder(
-              physics: const ScrollPhysics(
-                  parent: AlwaysScrollableScrollPhysics()),
+              physics: const ScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               itemCount: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.engineerQualificationList.length : appStateProvider.filteredEngineerQualificationList.length,
               itemBuilder: (context, i) {
+                if(appStateProvider.searchBoxTypeQualification == false){
+                  appStateProvider.isReadEngineerQualificationMain.add(false);
+                }
                 return Padding(
                   padding: SizeConfig.verticalC13Padding,
                   child: Container(
@@ -117,7 +125,7 @@ class _EngineerQualificationScreenState extends State<EngineerQualificationScree
                         Container(
                           decoration: BoxDecoration(
                             border: Border(bottom: BorderSide(color: AppColors.lightGrayDotColor)),
-                            color: AppColors.darkBlue,
+                            color: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? AppColors.darkBlue : AppColors.whiteColor : appStateProvider.isReadEngineerQualificationSearch[i] == false ? AppColors.darkBlue : AppColors.whiteColor,
                           ),
                           child: Padding(
                             padding: SizeConfig.padding,
@@ -128,7 +136,7 @@ class _EngineerQualificationScreenState extends State<EngineerQualificationScree
                                   child: Text(
                                     AppStrings.documentType,
                                     textAlign: TextAlign.end,
-                                    style: TextStyle(color: AppColors.whiteColor),
+                                    style: TextStyle(color: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? AppColors.whiteColor : AppColors.black : appStateProvider.isReadEngineerQualificationSearch[i] == false ? AppColors.whiteColor : AppColors.black,fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 SizeConfig.horizontalSpaceMedium(),
@@ -137,7 +145,7 @@ class _EngineerQualificationScreenState extends State<EngineerQualificationScree
                                   child: Text(
                                     appStateProvider.searchBoxTypeQualification == false ? appStateProvider.engineerQualificationList[i].documentType : appStateProvider.filteredEngineerQualificationList[i].documentType ?? "",
                                     textAlign: TextAlign.start,
-                                    style: TextStyle(color: AppColors.whiteColor),
+                                    style: TextStyle(color: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? AppColors.whiteColor : AppColors.darkGrayColor : appStateProvider.isReadEngineerQualificationSearch[i] == false ? AppColors.whiteColor : AppColors.darkGrayColor),
                                   ),
                                 ),
                               ],
@@ -163,6 +171,17 @@ class _EngineerQualificationScreenState extends State<EngineerQualificationScree
                                   flex: 3,
                                   child: InkWell(
                                     onTap: () async {
+                                      if(appStateProvider.searchBoxTypeQualification == false){
+                                        setState(() {
+                                          appStateProvider.isReadEngineerQualificationMain[i] = true;
+                                        });
+                                      }
+                                      else{
+                                        setState(() {
+                                          appStateProvider.isReadEngineerQualificationMain[i] = true;
+                                          appStateProvider.isReadEngineerQualificationSearch[i] = true;
+                                        });
+                                      }
                                       String _url = appStateProvider.searchBoxTypeQualification == false ? "${ApiUrls.engineerQualificationUrl}" + appStateProvider.engineerQualificationList[i].document :
                                       "${ApiUrls.engineerQualificationUrl}" + appStateProvider.filteredEngineerQualificationList[i].document;
                                       String extension = _url.split('.').last;
@@ -184,7 +203,7 @@ class _EngineerQualificationScreenState extends State<EngineerQualificationScree
                                     child: Text(
                                       appStateProvider.searchBoxTypeQualification == false ? appStateProvider.engineerQualificationList[i].document : appStateProvider.filteredEngineerQualificationList[i].document ?? "",
                                       textAlign: TextAlign.start,
-                                      style: TextStyle(color: AppColors.darkGrayColor,fontWeight: FontWeight.normal),
+                                      style: TextStyle(color: AppColors.darkGrayColor,fontWeight: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? FontWeight.bold : FontWeight.normal : appStateProvider.isReadEngineerQualificationSearch[i] == false ? FontWeight.bold : FontWeight.normal),
                                     ),
                                   ),
                                 ),
