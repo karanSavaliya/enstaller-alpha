@@ -124,7 +124,8 @@ class _EngineerQualificationScreenState extends State<EngineerQualificationScree
                       }
                       else{
                         setState(() {
-                          appStateProvider.isReadEngineerQualificationMain[i] = true;
+                          int filteredList = appStateProvider.engineerQualificationList.indexOf(appStateProvider.filteredEngineerQualificationList[i]);
+                          appStateProvider.isReadEngineerQualificationMain[filteredList] = true;
                           appStateProvider.isReadEngineerQualificationSearch[i] = true;
                         });
                       }
