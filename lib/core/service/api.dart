@@ -76,20 +76,16 @@ class Api {
 
   Future<List<EngineerQualificationModel>> fetchEngineerQualification(String apiUrl) async {
     UserModel user = await Prefs.getUser();
-    Uri uri = Uri.parse(apiUrl);
-    Map<String, dynamic> requestData = {
-      'EngineerId': user.intEngineerId.toString(),
-      'RowsPerPage': 10,
-      'PageNumber': 1,
-      'strsearchtxt': "",
+    Map<String, dynamic> queryParams = {
+      'intEngineerId': user.intEngineerId.toString(),
     };
-    final response = await http.post(
+    Uri uri = Uri.parse(apiUrl).replace(queryParameters: queryParams);
+    final response = await http.get(
       uri,
       headers: {
         'Authorization': 'Bearer ${user.accessToken}',
         'Content-Type': 'application/json',
       },
-      body: jsonEncode(requestData),
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);

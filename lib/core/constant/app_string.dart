@@ -32,6 +32,8 @@ class AppStrings {
   static const supplier = 'Supplier';
   static const bookingReference = 'Booking Reference';
   static const documentType = 'Document Type';
+  static const productType = 'Product Type';
+  static const qualificationType = 'Qualification Type';
   static const file = 'File';
   static const timeSlot = 'Time Slot';
   static const ELECTRICITY = 'ELECTRICITY';

@@ -1,7 +1,4 @@
 // @dart=2.9
-
-
-
 import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/EngineerBaseLocation.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
@@ -10,11 +7,7 @@ import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
-import 'package:flutter/cupertino.dart';
-
 import '../../ui/util/common_utils.dart';
-
-
 
 class RoutePlanningArguments {
 
@@ -25,6 +18,7 @@ class RoutePlanningArguments {
   String intUpdateId ;
   String pincode;
   String status;
+  String appointmentTime;
   RoutePlanningArguments({
     this.appointmentID,
     this.strBookingReference,
@@ -32,7 +26,8 @@ class RoutePlanningArguments {
     this.route_plan_id,
     this.intUpdateId,
     this.pincode,
-    this.status
+    this.status,
+    this.appointmentTime,
   });
 
 }
@@ -93,12 +88,6 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
 
    }
 
-
-
-
-
-
-
   List<RoutePlanningArguments> list_route_plan = [];
   List<Appointment> appointmentList_ = [];
   List<Table1> site_address_ = [];
@@ -108,7 +97,6 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
     setState(ViewState.Busy);
 
     UserModel user = await Prefs.getUser();
-
 
     site_address_ = await _apiService.getRoutePlanDetailEngineerWise( user.intEngineerId.toString() , CommonUtils().currDate());
     site_address_.forEach((element) {
@@ -134,7 +122,6 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
 
           print(list_route_plan.any((element) => element.strBookingReference ==
               rpa.strBookingReference));
-
         }
 
     });
@@ -149,12 +136,13 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
           String appointment = element.intId.toString();
           String book_refrence = element.strBookingReference;
           String site_address = element.strSiteAddress;
-
+          String appointmentTime = element.strBookedTime;
 
           RoutePlanningArguments rpa = new RoutePlanningArguments(
               appointmentID: appointment,
               strBookingReference: book_refrence,
               site_address: site_address,
+              appointmentTime: appointmentTime,
               route_plan_id: "0",
               intUpdateId: "0",
               pincode: element.strPostCode,
@@ -190,9 +178,6 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
 
   }
 
-
-
-
   void setToFirstIndex(List<dynamic> list, dynamic value) {
     int index = list.indexOf(value);
     if (index != -1 && index != 0) {
@@ -201,10 +186,6 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
       list[index] = temp;
     }
   }
-
-
-
-
 
   Future<void> getEngineerBaseLocation() async {
 
@@ -217,8 +198,6 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
     setState(ViewState.Idle);
 
   }
-
-
 
   String sortorder = "false";
   Future<String> saveSortorderofLocation(Map map) async {
@@ -233,13 +212,7 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
 
   }
 
-
-
-
-
   int getCurrentDay(DateTime date) {
     return date.day;
   }
-
-
 }

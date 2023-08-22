@@ -85,7 +85,7 @@ dev_dependencies:
   file_picker: ^1.4.3+2
   flutter_share:
   focus_detector: ^2.0.1
-  geolocator: ^5.3.2+2
+  geolocator: ^10.0.0
   flutter_map: ^0.14.0
   flutter_map_marker_cluster: ^0.4.0
   latlong2: any

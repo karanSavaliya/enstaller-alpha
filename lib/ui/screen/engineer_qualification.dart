@@ -115,103 +115,130 @@ class _EngineerQualificationScreenState extends State<EngineerQualificationScree
                 }
                 return Padding(
                   padding: SizeConfig.verticalC13Padding,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.appointmentBackGroundColor,
-                      borderRadius:BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border(bottom: BorderSide(color: AppColors.lightGrayDotColor)),
-                            color: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? AppColors.darkBlue : AppColors.whiteColor : appStateProvider.isReadEngineerQualificationSearch[i] == false ? AppColors.darkBlue : AppColors.whiteColor,
-                          ),
-                          child: Padding(
-                            padding: SizeConfig.padding,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    AppStrings.documentType,
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(color: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? AppColors.whiteColor : AppColors.black : appStateProvider.isReadEngineerQualificationSearch[i] == false ? AppColors.whiteColor : AppColors.black,fontWeight: FontWeight.bold),
+                  child: InkWell(
+                    onTap: () async {
+                      if(appStateProvider.searchBoxTypeQualification == false){
+                        setState(() {
+                          appStateProvider.isReadEngineerQualificationMain[i] = true;
+                        });
+                      }
+                      else{
+                        setState(() {
+                          appStateProvider.isReadEngineerQualificationMain[i] = true;
+                          appStateProvider.isReadEngineerQualificationSearch[i] = true;
+                        });
+                      }
+                      String _url = appStateProvider.searchBoxTypeQualification == false ? "${ApiUrls.engineerQualificationUrl}" + appStateProvider.engineerQualificationList[i].strEngQualificationDoc :
+                      "${ApiUrls.engineerQualificationUrl}" + appStateProvider.filteredEngineerQualificationList[i].strEngQualificationDoc;
+                      String extension = _url.split('.').last;
+                      if (extension.toUpperCase() == "PDF") {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DocumentView(doc: _url)));
+                      } else {
+                        try {
+                          var response = await http.get(Uri.parse(_url));
+                          var dir = await getTemporaryDirectory();
+                          File file = new File(appStateProvider.searchBoxTypeQualification == false ? dir.path + appStateProvider.engineerQualificationList[i].strEngQualificationDoc : dir.path + appStateProvider.filteredEngineerQualificationList[i].strEngQualificationDoc);
+                          file.writeAsBytesSync(response.bodyBytes, flush: true);
+                          share(file.path);
+                        } catch (e) {
+                          print("error..........................");
+                          print(e);
+                        }
+                      }
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.appointmentBackGroundColor,
+                        borderRadius:BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(bottom: BorderSide(color: AppColors.lightGrayDotColor)),
+                              color: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? AppColors.darkBlue : AppColors.whiteColor : appStateProvider.isReadEngineerQualificationSearch[i] == false ? AppColors.darkBlue : AppColors.whiteColor,
+                            ),
+                            child: Padding(
+                              padding: SizeConfig.padding,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      AppStrings.productType,
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(color: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? AppColors.whiteColor : AppColors.black : appStateProvider.isReadEngineerQualificationSearch[i] == false ? AppColors.whiteColor : AppColors.black,fontWeight: FontWeight.bold),
+                                    ),
                                   ),
-                                ),
-                                SizeConfig.horizontalSpaceMedium(),
-                                Expanded(
-                                  flex: 3,
-                                  child: Text(
-                                    appStateProvider.searchBoxTypeQualification == false ? appStateProvider.engineerQualificationList[i].documentType : appStateProvider.filteredEngineerQualificationList[i].documentType ?? "",
-                                    textAlign: TextAlign.start,
-                                    style: TextStyle(color: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? AppColors.whiteColor : AppColors.darkGrayColor : appStateProvider.isReadEngineerQualificationSearch[i] == false ? AppColors.whiteColor : AppColors.darkGrayColor),
+                                  SizeConfig.horizontalSpaceMedium(),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      appStateProvider.searchBoxTypeQualification == false ? appStateProvider.engineerQualificationList[i].strProductTypeName : appStateProvider.filteredEngineerQualificationList[i].strProductTypeName ?? "",
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(color: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? AppColors.whiteColor : AppColors.darkGrayColor : appStateProvider.isReadEngineerQualificationSearch[i] == false ? AppColors.whiteColor : AppColors.darkGrayColor),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.lightGrayDotColor))),
-                          child: Padding(
-                            padding: SizeConfig.padding,
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  flex: 2,
-                                  child: Text(
-                                    AppStrings.file,
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                                SizeConfig.horizontalSpaceMedium(),
-                                Expanded(
-                                  flex: 3,
-                                  child: InkWell(
-                                    onTap: () async {
-                                      if(appStateProvider.searchBoxTypeQualification == false){
-                                        setState(() {
-                                          appStateProvider.isReadEngineerQualificationMain[i] = true;
-                                        });
-                                      }
-                                      else{
-                                        setState(() {
-                                          appStateProvider.isReadEngineerQualificationMain[i] = true;
-                                          appStateProvider.isReadEngineerQualificationSearch[i] = true;
-                                        });
-                                      }
-                                      String _url = appStateProvider.searchBoxTypeQualification == false ? "${ApiUrls.engineerQualificationUrl}" + appStateProvider.engineerQualificationList[i].document :
-                                      "${ApiUrls.engineerQualificationUrl}" + appStateProvider.filteredEngineerQualificationList[i].document;
-                                      String extension = _url.split('.').last;
-                                      if (extension.toUpperCase() == "PDF") {
-                                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DocumentView(doc: _url)));
-                                      } else {
-                                        try {
-                                          var response = await http.get(Uri.parse(_url));
-                                          var dir = await getTemporaryDirectory();
-                                          File file = new File(appStateProvider.searchBoxTypeQualification == false ? dir.path + appStateProvider.engineerQualificationList[i].document : dir.path + appStateProvider.filteredEngineerQualificationList[i].document);
-                                          file.writeAsBytesSync(response.bodyBytes, flush: true);
-                                          share(file.path);
-                                        } catch (e) {
-                                          print("error..........................");
-                                          print(e);
-                                        }
-                                      }
-                                    },
+                          Container(
+                            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.lightGrayDotColor))),
+                            child: Padding(
+                              padding: SizeConfig.padding,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
                                     child: Text(
-                                      appStateProvider.searchBoxTypeQualification == false ? appStateProvider.engineerQualificationList[i].document : appStateProvider.filteredEngineerQualificationList[i].document ?? "",
+                                      AppStrings.qualificationType,
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  SizeConfig.horizontalSpaceMedium(),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      appStateProvider.searchBoxTypeQualification == false ? appStateProvider.engineerQualificationList[i].strQualificationName : appStateProvider.filteredEngineerQualificationList[i].strQualificationName ?? "",
                                       textAlign: TextAlign.start,
                                       style: TextStyle(color: AppColors.darkGrayColor,fontWeight: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? FontWeight.bold : FontWeight.normal : appStateProvider.isReadEngineerQualificationSearch[i] == false ? FontWeight.bold : FontWeight.normal),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          Container(
+                            decoration: BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.lightGrayDotColor))),
+                            child: Padding(
+                              padding: SizeConfig.padding,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Text(
+                                      AppStrings.file,
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  SizeConfig.horizontalSpaceMedium(),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Text(
+                                      appStateProvider.searchBoxTypeQualification == false ? appStateProvider.engineerQualificationList[i].strEngQualificationDoc : appStateProvider.filteredEngineerQualificationList[i].strEngQualificationDoc ?? "",
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(color: AppColors.darkGrayColor,fontWeight: appStateProvider.searchBoxTypeQualification == false ? appStateProvider.isReadEngineerQualificationMain[i] == false ? FontWeight.bold : FontWeight.normal : appStateProvider.isReadEngineerQualificationSearch[i] == false ? FontWeight.bold : FontWeight.normal),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

@@ -1001,8 +1001,9 @@ class AppStateProvider extends ChangeNotifier {
       _searchBoxTypeQualification = true;
       notifyListeners();
       for (var document in _engineerQualificationList) {
-        if (document.documentType.toLowerCase().contains(query) ||
-            document.document.toLowerCase().contains(query)) {
+        if (document.strProductTypeName.toLowerCase().contains(query) ||
+            document.strEngQualificationDoc.toLowerCase().contains(query) ||
+            document.strQualificationName.toLowerCase().contains(query)) {
           _isReadEngineerQualificationSearch.add(_isReadEngineerQualificationFilter.elementAt(_engineerQualificationList.indexOf(document)));
           _filteredEngineerQualificationList.add(document);
         }

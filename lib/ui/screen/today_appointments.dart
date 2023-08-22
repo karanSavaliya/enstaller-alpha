@@ -213,7 +213,6 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
 
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (context) => TodayAppointmentPlanningScreen()));
-
                     },
                     backgroundColor: Colors.green,
                     label: const Text('Get Route'),

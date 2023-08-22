@@ -21,7 +21,7 @@ class GeoLocationService{
 
   static Future getLatLng() async {
 
-   final val = await Geolocator().getCurrentPosition();
+   final val = await Geolocator.getCurrentPosition();
 
    return val.latitude.toString()+","+val.longitude.toString();
   }

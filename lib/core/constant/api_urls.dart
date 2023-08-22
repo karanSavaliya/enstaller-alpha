@@ -58,7 +58,7 @@ class ApiUrls {
   static String getStockCheckRequestList = 'StockCheckRequest/GetEngineerWiseStockRquestList';
   static String validateSerialsForReply = 'StockCheckRequest/ValidateSerials';
   static String saveEngineerReply = 'StockCheckRequest/SaveEngineerReply';
-  static String getSerialsByRequestId = 'StockCheckRequest/GetSerialsByRequestId';
+  static String getSerialsByRequestId = 'St ockCheckRequest/GetSerialsByRequestId';
   static String getStockOrderLineItemsByOrderId = 'Order/GetStockOrderLineItemsByOrderId';
   static String getSerialListByEmployeeId = 'stkEngineerWiseStock/GetSerialListByEmployeeId';
   static String saveCloseJobElectricity = 'jmbCloseJob/SaveCloseJobElectricity';
@@ -75,10 +75,10 @@ class ApiUrls {
   static String isEnrouted_url = "appointments/GetCheckInRouteAppointment";
 
   static String engineerDocumentList = baseUrl + "Engineer/GetEngineerCertificate";
+  static String engineerQualificationList = baseUrl + "Engineer/GetEnginnerQualificationDocumentList";
   static String saveSapphireGasFlow = baseUrl + "SapphireGasFlow/SaveSapphireGasFlow";
   static String saveSapphireElectricityFlow = baseUrl + "SapphireElecFlow/SaveSapphireElecFlow";
   static String engineerProfilePhotoUrl = "https://enstall.boshposh.com/Upload/EngineerPhoto";
   static String engineerDocumentUrl = "https://enstall.boshposh.com/Upload/EngineerDocument/";
-  static String engineerQualificationUrl = "https://enstall.boshposh.com/Upload/EngineerDocument/";
-  static String engineerQualificationList = baseUrl + "Engineer/GetEngineerCertificate";
+  static String engineerQualificationUrl = "https://enstall.boshposh.com/Upload/EngineerQualification/";
 }

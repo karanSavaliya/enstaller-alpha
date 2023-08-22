@@ -30,8 +30,6 @@ import 'maps_route_planner_plotmarker.dart';
 import 'package:select_form_field/select_form_field.dart';
 
 
-
-
 class TodayAppointmentPlanningScreen extends StatefulWidget {
 
   @override
@@ -277,8 +275,6 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
                         blurRadius: 5) //blur radius of shadow
                   ]
               ),
-
-
               child:Container(
                   margin: EdgeInsets.symmetric(horizontal: 20.0),
                   padding: EdgeInsets.symmetric(horizontal: 20.0) , child:CustomDropdownButton(
@@ -358,16 +354,6 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
 
               },
             ),),
-
-
-
-
-
-
-
-
-
-
             ),),
 
             Container( margin: EdgeInsets.only(top: 15) , height: MediaQuery.of(context).size.height*0.75 , child:ReorderableListView(
@@ -393,7 +379,13 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
                               style: new TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
-                                  fontSize: 14))
+                                  fontSize: 14)),
+                          new TextSpan(
+                              text: "\n Appoint Time : ${item.appointmentTime}",
+                              style: new TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                  fontSize: 12))
                         ],
                       )),
                   trailing: Icon(Icons.menu),
