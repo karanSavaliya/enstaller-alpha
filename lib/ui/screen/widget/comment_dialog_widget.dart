@@ -1,4 +1,4 @@
-// @dart=2.9
+//@dart=2.9
 import 'dart:typed_data';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
@@ -14,7 +14,6 @@ import 'package:enstaller/core/viewmodel/comment_dialog_viewmodel.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:enstaller/ui/util/AppBuilder.dart';
 import 'package:enstaller/ui/util/DeletableTag.dart';
-import 'package:enstaller/ui/util/common_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -514,4 +513,4 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
     File file = File(filePath);
     return await file.exists();
   }
-}
+} //KARAN (ADD THIS ON LIVE)

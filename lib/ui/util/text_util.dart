@@ -14,7 +14,6 @@ Widget commonTextFormField(
     bool autoFoucs) {
   return TextFormField(
     autofocus: autoFoucs,
-//    autovalidate: autovalidation,
       onChanged: (text) {
         print('First text field: $text');
       },
@@ -50,4 +49,4 @@ Widget commonTextFormField(
           return null;
         }
       });
-}
+} //KARAN (ADD THIS ON LIVE)

@@ -6,6 +6,7 @@ import '../constant/api_urls.dart';
 import '../constant/appconstant.dart';
 import '../model/engineer_document_model.dart';
 import '../model/engineer_qualification_model.dart';
+import '../model/last_appointment_status_model.dart';
 import '../model/save_sapphire_electricity_flow_model.dart';
 import '../model/save_sapphire_gas_flow_model.dart';
 import '../model/user_model.dart';
@@ -1012,6 +1013,32 @@ class AppStateProvider extends ChangeNotifier {
       _filteredEngineerQualificationList.addAll(_engineerQualificationList);
       _searchBoxTypeQualification = false;
       notifyListeners();
+    }
+    notifyListeners();
+  }
+
+  // =======> Get Last Appointment Status Start <=======
+
+  List<LastAppointmentStatus> lastAppointmentStatusDoneObj;
+  String _lastAppointmentStatus = '';
+  String get lastAppointmentStatus => _lastAppointmentStatus;
+  bool _loadingLastAppointmentStatus = false;
+  bool get loadingLastAppointmentStatus => _loadingLastAppointmentStatus;
+
+  Future<void> getLastAppointmentStatusList(String appointmentId) async {
+    _loadingLastAppointmentStatus = true;
+    notifyListeners();
+    try {
+      lastAppointmentStatusDoneObj = await Api().fetchLastAppointmentStatus(ApiUrls.lastAppointmentStatus,appointmentId);
+      for (var element in lastAppointmentStatusDoneObj) {
+        _lastAppointmentStatus = element.appointmentEventType;
+        notifyListeners();
+      }
+      _loadingLastAppointmentStatus = false;
+    } on SocketException {
+      _loadingLastAppointmentStatus = false;
+    } catch (e) {
+      _loadingLastAppointmentStatus = false;
     }
     notifyListeners();
   }

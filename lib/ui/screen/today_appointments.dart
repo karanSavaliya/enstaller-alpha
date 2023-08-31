@@ -1,4 +1,4 @@
-// @dart=2.9
+//@dart=2.9
 
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
@@ -191,7 +191,7 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                 ),
 
             floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-             floatingActionButton: Padding(
+             floatingActionButton: model.appointmentList.isNotEmpty == true ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -210,7 +210,6 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                   ) : Container(),
                   FloatingActionButton.extended(
                     onPressed: () {
-
                       Navigator.of(context).push(new MaterialPageRoute(
                           builder: (context) => TodayAppointmentPlanningScreen()));
                     },
@@ -220,7 +219,7 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                   )
                 ],
               ),
-            )
+            ) : Container(),
 
 
         );
@@ -809,4 +808,4 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
       ],
     );
   }
-}
+} //KARAN (ADD THIS ON LIVE)

@@ -294,7 +294,7 @@ class ApiService extends BaseApi {
         (response) {
       return  cm.commentModel.fromJson(json.decode(response.body));
     } , 'intappintmentid=$appointmentID');
-  }
+  } //KARAN (ADD THIS ON LIVE)
 
   Future<dynamic> getAbortAppointmentCode(
       AppointmentStatusUpdateCredentials credentials) {

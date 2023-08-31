@@ -51,15 +51,6 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
                 style: TextStyle(color: AppColors.whiteColor),
               ),
               centerTitle: true,
-              // actions: [
-              //   Padding(
-              //     padding: const EdgeInsets.all(18.0),
-              //     child: Image.asset(
-              //       ImageFile.notification,
-              //       color: AppColors.whiteColor,
-              //     ),
-              //   ),
-              // ],
             ),
             body: model.state == ViewState.Busy
                 ? AppConstants.circulerProgressIndicator()

@@ -58,7 +58,7 @@ class ApiUrls {
   static String getStockCheckRequestList = 'StockCheckRequest/GetEngineerWiseStockRquestList';
   static String validateSerialsForReply = 'StockCheckRequest/ValidateSerials';
   static String saveEngineerReply = 'StockCheckRequest/SaveEngineerReply';
-  static String getSerialsByRequestId = 'St ockCheckRequest/GetSerialsByRequestId';
+  static String getSerialsByRequestId = 'StockCheckRequest/GetSerialsByRequestId';
   static String getStockOrderLineItemsByOrderId = 'Order/GetStockOrderLineItemsByOrderId';
   static String getSerialListByEmployeeId = 'stkEngineerWiseStock/GetSerialListByEmployeeId';
   static String saveCloseJobElectricity = 'jmbCloseJob/SaveCloseJobElectricity';
@@ -81,4 +81,5 @@ class ApiUrls {
   static String engineerProfilePhotoUrl = "https://enstall.boshposh.com/Upload/EngineerPhoto";
   static String engineerDocumentUrl = "https://enstall.boshposh.com/Upload/EngineerDocument/";
   static String engineerQualificationUrl = "https://enstall.boshposh.com/Upload/EngineerQualification/";
+  static String lastAppointmentStatus = baseUrl + "appointments/GetAppointmentLatestStatus";
 }

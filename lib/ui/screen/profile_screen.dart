@@ -43,7 +43,9 @@ class MapScreenState extends State<ProfilePage>
   @override
   void initState() {
     super.initState();
-    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
+    progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal,
+        isDismissible: true,
+        showLogs: true);
     progressDialog.style(message: 'Please Wait');
     getProfileData();
   }
@@ -87,7 +89,7 @@ class MapScreenState extends State<ProfilePage>
                         Padding(
                           padding: EdgeInsets.only(top: 20.0),
                           child:
-                              new Stack(fit: StackFit.loose, children: <Widget>[
+                          new Stack(fit: StackFit.loose, children: <Widget>[
                             new Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -102,49 +104,52 @@ class MapScreenState extends State<ProfilePage>
                                             color: AppColors.lightGreyColor,
                                             width: 1.0),
                                         image: new DecorationImage(
-                                          image: NetworkImage('${ApiUrls.engineerProfilePhotoUrl}/$base64ProfilePhoto'),
+                                          image: NetworkImage('${ApiUrls
+                                              .engineerProfilePhotoUrl}/$base64ProfilePhoto'),
                                           fit: BoxFit.cover,
                                         )))
                                     : new Container(
-                                        width: 140.0,
-                                        height: 140.0,
-                                        decoration: new BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                color: AppColors.lightGreyColor,
-                                                width: 1.0),
-                                            image: (profilePhotoPath != '')
-                                                ? new DecorationImage(
-                                                    image: profilePhoto != null ? FileImage(profilePhoto) : ExactAssetImage(
-                                                        profilePhotoPath),
-                                                    fit: BoxFit.cover,
-                                                  )
-                                                : new DecorationImage(
-                                                    image: new ExactAssetImage(
-                                                        'assets/icon/profile.png'),
-                                                    fit: BoxFit.cover,
-                                                  )))),
+                                    width: 140.0,
+                                    height: 140.0,
+                                    decoration: new BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: AppColors.lightGreyColor,
+                                            width: 1.0),
+                                        image: (profilePhotoPath != '')
+                                            ? new DecorationImage(
+                                          image: profilePhoto != null
+                                              ? FileImage(profilePhoto)
+                                              : ExactAssetImage(
+                                              profilePhotoPath),
+                                          fit: BoxFit.cover,
+                                        )
+                                            : new DecorationImage(
+                                          image: new ExactAssetImage(
+                                              'assets/icon/profile.png'),
+                                          fit: BoxFit.cover,
+                                        )))),
                               ],
                             ),
                             Padding(
                                 padding:
-                                    EdgeInsets.only(top: 90.0, right: 100.0),
+                                EdgeInsets.only(top: 90.0, right: 100.0),
                                 child: new Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
                                       !_status
                                           ? InkWell(
-                                              onTap: () {
-                                                _showMyDialog();
-                                              },
-                                              child: new CircleAvatar(
-                                                backgroundColor: Colors.red,
-                                                radius: 25.0,
-                                                child: new Icon(
-                                                  Icons.camera_alt,
-                                                  color: Colors.white,
-                                                ),
-                                              ))
+                                          onTap: () {
+                                            _showMyDialog();
+                                          },
+                                          child: new CircleAvatar(
+                                            backgroundColor: Colors.red,
+                                            radius: 25.0,
+                                            child: new Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.white,
+                                            ),
+                                          ))
                                           : new Container()
                                     ])),
                           ]),
@@ -165,7 +170,7 @@ class MapScreenState extends State<ProfilePage>
                                   left: 25.0, right: 25.0, top: 25.0),
                               child: new Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
                                   new Column(
@@ -302,7 +307,8 @@ class MapScreenState extends State<ProfilePage>
           if (_isChangeImage) {
             _uploadImage();
           } else {
-            AppConstants.showFailToast(context, "Please change image before updating profile photo.");
+            AppConstants.showFailToast(
+                context, "Please change image before updating profile photo.");
           }
         });
       },
@@ -314,7 +320,8 @@ class MapScreenState extends State<ProfilePage>
     setState(() {
       user;
     });
-    ProfileDetails details = await _apiService.getProfileInformation(user.intEngineerId);
+    ProfileDetails details = await _apiService.getProfileInformation(
+        user.intEngineerId);
     //Uint8List _bytesImage = Base64Decoder().convert(details.strEngineerPhoto.replaceAll(AppConstants.base64Prefix, ''));
     final dir = await path_provider.getTemporaryDirectory();
     File file = createFile("${dir.absolute.path}/profile-photo/test.png");
@@ -335,7 +342,8 @@ class MapScreenState extends State<ProfilePage>
 
     UserModel user = await Prefs.getUser();
 
-    var request = http.MultipartRequest('POST', Uri.parse(ApiUrls.baseUrl + ApiUrls.updateProfilePhoto));
+    var request = http.MultipartRequest(
+        'POST', Uri.parse(ApiUrls.baseUrl + ApiUrls.updateProfilePhoto));
     request.headers['Authorization'] = 'Bearer ${user.accessToken}';
     request.fields['intUserId'] = user.id;
     request.fields['intEngineerId'] = user.intEngineerId;
@@ -345,12 +353,14 @@ class MapScreenState extends State<ProfilePage>
     var response = await request.send();
 
     if (response.statusCode == 200) {
-      AppConstants.showSuccessToast(context, "Profile photo updated successfully.");
+      AppConstants.showSuccessToast(
+          context, "Profile photo updated successfully.");
       setState(() {
         _isChangeImage = false;
       });
     } else {
-      AppConstants.showFailToast(context, "Error Occupied while update profile photo.");
+      AppConstants.showFailToast(
+          context, "Error Occupied while update profile photo.");
     }
 
     setState(() {
@@ -374,7 +384,9 @@ class MapScreenState extends State<ProfilePage>
               children: <Widget>[
                 GestureDetector(
                     onTap: () {
-                      _chooseFile(mImage: image, context: context, imageSource: ImageSource.gallery);
+                      _chooseFile(mImage: image,
+                          context: context,
+                          imageSource: ImageSource.gallery);
                     },
                     child: new CircleAvatar(
                       radius: 30.0,
@@ -401,7 +413,9 @@ class MapScreenState extends State<ProfilePage>
               children: <Widget>[
                 GestureDetector(
                     onTap: () {
-                      _chooseFile(mImage: image, context: context, imageSource: ImageSource.camera);
+                      _chooseFile(mImage: image,
+                          context: context,
+                          imageSource: ImageSource.camera);
                     },
                     child: new CircleAvatar(
                       radius: 30.0,
@@ -436,8 +450,9 @@ class MapScreenState extends State<ProfilePage>
     return file;
   }
 
-  Future<void> _chooseFile({File mImage, BuildContext context, ImageSource imageSource}) async {
-    image = await ImagePicker.pickImage(source: imageSource);
+  Future<void> _chooseFile(
+      {File mImage, BuildContext context, ImageSource imageSource}) async {
+    image = await ImagePicker().pickImage(source: imageSource);
     setState(() {});
     if (image != null) {
       var compressedFile = await FlutterImageCompress.compressWithFile(

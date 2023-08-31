@@ -118,7 +118,4 @@ class CommentDialogViewModel extends BaseModel {
       showErrorMessage = true;
     }
   }
-
-
-
-}
+} //KARAN (ADD THIS ON LIVE)

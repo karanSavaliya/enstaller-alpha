@@ -33,6 +33,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:provider/provider.dart';
+import '../../core/provider/app_state_provider.dart';
 import 'electricity_screen.dart';
 import 'gas_electricity_screen.dart';
 
@@ -78,6 +79,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AppStateProvider appStateProvider = Provider.of<AppStateProvider>(context);
     mainContext = context;
     progressDialog = ProgressDialog(context, type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
     progressDialog.style(message: 'Please Wait');
@@ -191,7 +193,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                                       .length &&
                                               model.selected == index
                                           ? _getChildrenWidget(model.selected,
-                                              model, _headertext)
+                                              model, _headertext,appStateProvider)
                                           : Container()
                                     ],
                                   ),
@@ -228,7 +230,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
 
   //get widgets data  as per text
   Widget _getChildrenWidget(
-      int index, SurveyScreenViewModel model, String _headerText) {
+      int index, SurveyScreenViewModel model, String _headerText, AppStateProvider appStateProvider) {
     print('object');
     int i = 0;
     for (int j = 0; j < model.sectionQuestions.keys.length; j++) {
@@ -238,7 +240,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
             model.sectionQuestions[model.sectionQuestions.keys.toList()[index]],
             model,
             model.sectionAnswers[model.sectionAnswers.keys.toList()[index]],
-            _headerText);
+            _headerText,appStateProvider);
       }
 
       i++;
@@ -259,7 +261,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
       List<SurveyResponseModel> questions,
       SurveyScreenViewModel model,
       List<QuestionAnswer> answers,
-      String _headertext) {
+      String _headertext,AppStateProvider appStateProvider) {
     if (!widget.arguments.edit) {
       print('line 270' + questions.length.toString());
       return questions.length == 0
@@ -290,158 +292,166 @@ class _SurveyScreenState extends State<SurveyScreen> {
                               ? AppStrings.next
                               : AppStrings.submit,
                           onTap: () async {
-                            if (!model.issubmitted) {
-                              if (!widget.arguments.edit) {
-                                print(model.selected.toString() + 'line 314');
-                                int validateconter = 0;
-                                // model.clearAnswer();
-                                model.onValidation();
-                                for (int i = 0; i < questions.length; i++) {
-                                  print(questions[i].validate);
-                                  if (questions[i].validate != null ||
-                                      questions[i].intQuestionNo == 7 ||
-                                      questions[i].intQuestionNo == 8 ||
-                                      model.sectionDisableQuestions[
-                                              questions[i].intSectionId]
-                                          .contains(questions[i]
-                                              .intQuestionNo
-                                              .toString()) ||
-                                      questions[i].isMandatoryOptional == "O") {
-                                    validateconter++;
-                                    String reqexp =
-                                        questions[i].requireExplainationstr;
-                                    if (reqexp == null) reqexp = "";
-                                    int index = -1;
-                                    print(
-                                        "length of anserlist is ....................${model.answerList.length} ");
-                                    index = model.answerList.indexWhere(
-                                        (element) =>
-                                            element.intsurveyquetionid.trim() ==
-                                            questions[i]
-                                                .intQuestionNo
-                                                .toString()
-                                                .trim());
-                                    if (index == -1) {
-                                      if (questions[i].validate != null &&
-                                          questions[i].validate != "NotNull" &&
-                                          questions[i].intQuestionNo != null &&
-                                          widget.arguments.appointmentID !=
-                                              null &&
-                                          (model.selected + 1).toString() !=
-                                              null &&
-                                          model.user.intEngineerId != null &&
-                                          !model.sectionDisableQuestions[
-                                                  questions[i].intSectionId]
-                                              .contains(questions[i]
+                            await appStateProvider.getLastAppointmentStatusList(widget.arguments.appointmentID);
+                            if(appStateProvider.lastAppointmentStatus == "Cancelled"){
+                              AppConstants.showFailToast(context,
+                                  "Appointment status has just been Cancelled by someone, you cannot process further, sorry");
+                            }
+                            else{
+                              if (!model.issubmitted) {
+                                if (!widget.arguments.edit) {
+                                  print(model.selected.toString() + 'line 314');
+                                  int validateconter = 0;
+                                  // model.clearAnswer();
+                                  model.onValidation();
+                                  for (int i = 0; i < questions.length; i++) {
+                                    print(questions[i].validate);
+                                    if (questions[i].validate != null ||
+                                        questions[i].intQuestionNo == 7 ||
+                                        questions[i].intQuestionNo == 8 ||
+                                        model.sectionDisableQuestions[
+                                        questions[i].intSectionId]
+                                            .contains(questions[i]
+                                            .intQuestionNo
+                                            .toString()) ||
+                                        questions[i].isMandatoryOptional == "O") {
+                                      validateconter++;
+                                      String reqexp =
+                                          questions[i].requireExplainationstr;
+                                      if (reqexp == null) reqexp = "";
+                                      int index = -1;
+                                      print(
+                                          "length of anserlist is ....................${model.answerList.length} ");
+                                      index = model.answerList.indexWhere(
+                                              (element) =>
+                                          element.intsurveyquetionid.trim() ==
+                                              questions[i]
                                                   .intQuestionNo
-                                                  .toString())) {
-                                        model.onAddAnswer(AnswerCredential(
-                                            intsurveyquetionid: questions[i]
+                                                  .toString()
+                                                  .trim());
+                                      if (index == -1) {
+                                        if (questions[i].validate != null &&
+                                            questions[i].validate != "NotNull" &&
+                                            questions[i].intQuestionNo != null &&
+                                            widget.arguments.appointmentID !=
+                                                null &&
+                                            (model.selected + 1).toString() !=
+                                                null &&
+                                            model.user.intEngineerId != null &&
+                                            !model.sectionDisableQuestions[
+                                            questions[i].intSectionId]
+                                                .contains(questions[i]
                                                 .intQuestionNo
-                                                .toString(),
-                                            intappointmentid:
-                                                widget.arguments.appointmentID,
-                                            intsurveyid: questions[i]
-                                                .intSectionId
-                                                .toString(),
-                                            stranswer: questions[i].validate,
-                                            intcreatedby:
-                                                model.user.intEngineerId,
-                                            bisalive: questions[i].bisAlive,
-                                            strfilename: "",
-                                            strRequireExplaination: reqexp));
-                                      }
-                                    } else {
-                                      model.onAddAnsweratindex(
-                                          AnswerCredential(
+                                                .toString())) {
+                                          model.onAddAnswer(AnswerCredential(
                                               intsurveyquetionid: questions[i]
                                                   .intQuestionNo
                                                   .toString(),
-                                              intappointmentid: widget
-                                                  .arguments.appointmentID,
-                                              intsurveyid: (model.selected + 1)
+                                              intappointmentid:
+                                              widget.arguments.appointmentID,
+                                              intsurveyid: questions[i]
+                                                  .intSectionId
                                                   .toString(),
                                               stranswer: questions[i].validate,
                                               intcreatedby:
-                                                  model.user.intEngineerId,
+                                              model.user.intEngineerId,
                                               bisalive: questions[i].bisAlive,
                                               strfilename: "",
-                                              strRequireExplaination: reqexp),
-                                          index);
+                                              strRequireExplaination: reqexp));
+                                        }
+                                      } else {
+                                        model.onAddAnsweratindex(
+                                            AnswerCredential(
+                                                intsurveyquetionid: questions[i]
+                                                    .intQuestionNo
+                                                    .toString(),
+                                                intappointmentid: widget
+                                                    .arguments.appointmentID,
+                                                intsurveyid: (model.selected + 1)
+                                                    .toString(),
+                                                stranswer: questions[i].validate,
+                                                intcreatedby:
+                                                model.user.intEngineerId,
+                                                bisalive: questions[i].bisAlive,
+                                                strfilename: "",
+                                                strRequireExplaination: reqexp),
+                                            index);
+                                      }
+                                    } else {
+                                      print(
+                                          validateconter.toString() + 'line 327');
+                                      print(questions.length);
+                                      print("oooooooooooooooooooo");
+                                    }
+                                  }
+                                  print("llllllllllllllllllll");
+                                  print(validateconter);
+                                  print(questions.length);
+                                  print(model.sectionDisableQuestions);
+                                  print("8888888888888888888");
+                                  print(model.sectionEnableQuestions);
+
+                                  print(model
+                                      .sectionDisableQuestions[
+                                  questions[0].intSectionId]
+                                      .length);
+                                  if (validateconter == questions.length) {
+                                    model.incrementCounter(
+                                        widget.arguments.edit,
+                                        widget.arguments.appointmentID,
+                                        questions[0].intSectionId);
+                                    if (questions[0].strSectionName !=
+                                        "Sign Off" &&
+                                        questions[0].strSectionName != "Abort")
+                                      scrollup();
+                                    else {
+                                      progressDialog.show();
+                                    }
+                                    print("iiiiiiiiiiiiiiiiiiiiiiiiii");
+                                    print(model.issubmitted);
+                                    print("iiiiiiiiiiiiiiiiiiiiiiiiii");
+                                    String response;
+                                    response = await model.onSubmit(
+                                        model.selected,
+                                        widget.arguments.appointmentID,
+                                        context,
+                                        widget.arguments.dsmodel,
+                                        questions[0].strSectionName);
+
+                                    if (response == "Sign Off") {
+                                      progressDialog.hide();
+                                      //Navigator.pop(mainContext); //KARAN (REMOVE THIS ON LIVE)
+                                      if(widget.arguments.jobType == "Gas SMETS2 Meter Exchange"){
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Gas(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
+                                      }
+                                      else if(widget.arguments.jobType == "Electric SMETS2 Meter Exchange"){
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Electricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
+                                      }
+                                      else if(widget.arguments.jobType == "Dual SMETS2 Meter Exchange"){
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GasElectricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
+                                      }
+                                      else{
+                                        Navigator.pop(mainContext);
+                                      } //KARAN (ADD THIS ON LIVE)
+                                    } else if (response == "submitted") {
+                                      progressDialog.hide();
+                                      Navigator.pop(mainContext);
+                                    } else {
+                                      progressDialog.hide();
                                     }
                                   } else {
-                                    print(
-                                        validateconter.toString() + 'line 327');
+                                    print("-------------");
+                                    print(validateconter);
                                     print(questions.length);
-                                    print("oooooooooooooooooooo");
+                                    print("-------------");
                                   }
-                                }
-                                print("llllllllllllllllllll");
-                                print(validateconter);
-                                print(questions.length);
-                                print(model.sectionDisableQuestions);
-                                print("8888888888888888888");
-                                print(model.sectionEnableQuestions);
-
-                                print(model
-                                    .sectionDisableQuestions[
-                                        questions[0].intSectionId]
-                                    .length);
-                                if (validateconter == questions.length) {
+                                } else {
+                                  print(questions[0].intSectionId);
                                   model.incrementCounter(
                                       widget.arguments.edit,
                                       widget.arguments.appointmentID,
                                       questions[0].intSectionId);
-                                  if (questions[0].strSectionName !=
-                                          "Sign Off" &&
-                                      questions[0].strSectionName != "Abort")
-                                    scrollup();
-                                  else {
-                                    progressDialog.show();
-                                  }
-                                  print("iiiiiiiiiiiiiiiiiiiiiiiiii");
-                                  print(model.issubmitted);
-                                  print("iiiiiiiiiiiiiiiiiiiiiiiiii");
-                                  String response;
-                                  response = await model.onSubmit(
-                                      model.selected,
-                                      widget.arguments.appointmentID,
-                                      context,
-                                      widget.arguments.dsmodel,
-                                      questions[0].strSectionName);
-
-                                  if (response == "Sign Off") {
-                                    progressDialog.hide();
-                                    if(widget.arguments.jobType == "Gas SMETS2 Meter Exchange"){
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Gas(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
-                                    }
-                                    else if(widget.arguments.jobType == "Electric SMETS2 Meter Exchange"){
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Electricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
-                                    }
-                                    else if(widget.arguments.jobType == "Dual SMETS2 Meter Exchange"){
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GasElectricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
-                                    }
-                                    else{
-                                      Navigator.pop(mainContext);
-                                    }
-                                  } else if (response == "submitted") {
-                                    progressDialog.hide();
-                                    Navigator.pop(mainContext);
-                                  } else {
-                                    progressDialog.hide();
-                                  }
-                                } else {
-                                  print("-------------");
-                                  print(validateconter);
-                                  print(questions.length);
-                                  print("-------------");
                                 }
-                              } else {
-                                print(questions[0].intSectionId);
-                                model.incrementCounter(
-                                    widget.arguments.edit,
-                                    widget.arguments.appointmentID,
-                                    questions[0].intSectionId);
                               }
                             }
                           },
@@ -1629,7 +1639,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
       File mImage,
       BuildContext context,
       ImageSource imageSource}) async {
-    var image = await ImagePicker.pickImage(source: imageSource);
+    var image = await ImagePicker().pickImage(source: imageSource);
     if (image != null) {
       var compressedFile = await FlutterImageCompress.compressWithFile(
         image?.path,

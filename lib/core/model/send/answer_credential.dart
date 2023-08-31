@@ -47,16 +47,6 @@ class AnswerCredential {
 
     return data;
   }
-//  Map<String, dynamic> toJson() => <String, dynamic>{
-//    'intappointmentid': intappointmentid,
-//    'intsurveyid': intsurveyid,
-//    'intsurveyquetionid': intsurveyquetionid,
-//    'stranswer': stranswer,
-//    'intcreatedby': intcreatedby,
-//    'bisalive': bisalive,
-//    'strfilename': strfilename,
-//
-//  };
 }
 
 class AbortAppointmentReasonModel {

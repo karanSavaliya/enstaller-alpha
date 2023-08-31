@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import '../model/engineer_document_model.dart';
 import '../model/engineer_qualification_model.dart';
+import '../model/last_appointment_status_model.dart';
 import '../model/save_sapphire_electricity_flow_model.dart';
 import '../model/save_sapphire_gas_flow_model.dart';
 import '../model/user_model.dart';
@@ -90,6 +91,27 @@ class Api {
     if (response.statusCode == 200) {
       List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.map((json) => EngineerQualificationModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch data');
+    }
+  }
+
+  Future<List<LastAppointmentStatus>> fetchLastAppointmentStatus(String apiUrl,String appointmentId) async {
+    UserModel user = await Prefs.getUser();
+    Map<String, dynamic> queryParams = {
+      'intAppointmentId': appointmentId.toString(),
+    };
+    Uri uri = Uri.parse(apiUrl).replace(queryParameters: queryParams);
+    final response = await http.get(
+      uri,
+      headers: {
+        'Authorization': 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.map((json) => LastAppointmentStatus.fromJson(json)).toList();
     } else {
       throw Exception('Failed to fetch data');
     }
