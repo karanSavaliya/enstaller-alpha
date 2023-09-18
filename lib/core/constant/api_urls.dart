@@ -82,4 +82,7 @@ class ApiUrls {
   static String engineerDocumentUrl = "https://enstall.boshposh.com/Upload/EngineerDocument/";
   static String engineerQualificationUrl = "https://enstall.boshposh.com/Upload/EngineerQualification/";
   static String lastAppointmentStatus = baseUrl + "appointments/GetAppointmentLatestStatus";
+  static String updateSurveyBackOfficeStatus = baseUrl + "appointments/updateSurveyFlgBackOffice";
+  static String insertVehicleCheckLog = baseUrl + "Customer/VehicelchecklogInsert";
+  static String getVehicleLog = baseUrl + "Customer/VehicleCheckLogSelectbyEngineerDate";
 }

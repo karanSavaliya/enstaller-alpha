@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/enums/view_state.dart';
@@ -28,6 +27,7 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
   bool isSelectedValidCSV = false;
 
   final TextEditingController commentController = TextEditingController();
+
   @override
   void initState() {
     selectedradio = 0;

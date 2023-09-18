@@ -320,12 +320,8 @@ class MapScreenState extends State<ProfilePage>
     setState(() {
       user;
     });
-    ProfileDetails details = await _apiService.getProfileInformation(
-        user.intEngineerId);
-    //Uint8List _bytesImage = Base64Decoder().convert(details.strEngineerPhoto.replaceAll(AppConstants.base64Prefix, ''));
+    ProfileDetails details = await _apiService.getProfileInformation(user.intEngineerId);
     final dir = await path_provider.getTemporaryDirectory();
-    File file = createFile("${dir.absolute.path}/profile-photo/test.png");
-    //file.writeAsBytesSync(_bytesImage);
     setState(() {
       profilePhotoPath = '';
       base64ProfilePhoto = details.strEngineerPhoto;
@@ -342,8 +338,7 @@ class MapScreenState extends State<ProfilePage>
 
     UserModel user = await Prefs.getUser();
 
-    var request = http.MultipartRequest(
-        'POST', Uri.parse(ApiUrls.baseUrl + ApiUrls.updateProfilePhoto));
+    var request = http.MultipartRequest('POST', Uri.parse(ApiUrls.baseUrl + ApiUrls.updateProfilePhoto));
     request.headers['Authorization'] = 'Bearer ${user.accessToken}';
     request.fields['intUserId'] = user.id;
     request.fields['intEngineerId'] = user.intEngineerId;

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../ui/screen/home_screen.dart';
 import '../constant/api_urls.dart';
+import '../constant/app_colors.dart';
 import '../constant/appconstant.dart';
 import '../model/engineer_document_model.dart';
 import '../model/engineer_qualification_model.dart';
@@ -10,6 +11,7 @@ import '../model/last_appointment_status_model.dart';
 import '../model/save_sapphire_electricity_flow_model.dart';
 import '../model/save_sapphire_gas_flow_model.dart';
 import '../model/user_model.dart';
+import 'package:toast/toast.dart';
 import '../service/api.dart';
 import '../service/pref_service.dart';
 
@@ -1042,4 +1044,70 @@ class AppStateProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  // =======> Move To Back Office Status Update Start <=======
+
+  bool _loadingUpdateBackOfficeStatus = false;
+  bool get loadingUpdateBackOfficeStatus => _loadingUpdateBackOfficeStatus;
+  bool _success;
+  bool get success  => _success;
+
+  Future<bool> updateBackOfficeStatus(String intAppointmentId) async {
+    _loadingUpdateBackOfficeStatus = true;
+    notifyListeners();
+    try {
+      _success = await Api().moveToBackOfficeStatusUpdate(ApiUrls.updateSurveyBackOfficeStatus, intAppointmentId);
+      _loadingUpdateBackOfficeStatus = false;
+    } on SocketException {
+      _loadingUpdateBackOfficeStatus = false;
+    } catch (e) {
+      _loadingUpdateBackOfficeStatus = false;
+    }
+    notifyListeners();
+    return _success;
+  } //KARAN (ADD THIS ON LIVE)
+
+  // =======> Vehicle Check Log Insert Start <=======
+
+  bool _loadingVehicleCheckLogInsert = false;
+  bool get loadingVehicleCheckLogInsert => _loadingVehicleCheckLogInsert;
+  bool _vehicleInsertSuccess;
+  bool get vehicleInsertSuccess  => _vehicleInsertSuccess;
+
+  Future<bool> insertVehicleCheckLog() async {
+    _loadingVehicleCheckLogInsert = true;
+    notifyListeners();
+    try {
+      _vehicleInsertSuccess = await Api().vehicleCheckLogInsert(ApiUrls.insertVehicleCheckLog);
+      _loadingVehicleCheckLogInsert = false;
+    } on SocketException {
+      _loadingVehicleCheckLogInsert = false;
+    } catch (e) {
+      _loadingVehicleCheckLogInsert = false;
+    }
+    notifyListeners();
+    return _vehicleInsertSuccess;
+  } //KARAN (ADD THIS ON LIVE)
+
+  // =======> Get Vehicle Log Start <=======
+
+  bool _loadingGetVehicleLog = false;
+  bool get loadingGetVehicleLog => _loadingGetVehicleLog;
+  bool _getVehicleSuccess;
+  bool get getVehicleSuccess  => _getVehicleSuccess;
+
+  Future<bool> getVehicleLog() async {
+    _loadingGetVehicleLog = true;
+    notifyListeners();
+    try {
+      _getVehicleSuccess = await Api().vehicleLogGet(ApiUrls.getVehicleLog);
+      _loadingGetVehicleLog = false;
+    } on SocketException {
+      _loadingGetVehicleLog = false;
+    } catch (e) {
+      _loadingGetVehicleLog = false;
+    }
+    notifyListeners();
+    return _getVehicleSuccess;
+  } //KARAN (ADD THIS ON LIVE)
 }

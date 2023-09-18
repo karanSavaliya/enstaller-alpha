@@ -20,8 +20,6 @@ GetIt getIt = GetIt.instance;
 abstract class BaseApi {
   
   final client = http.Client();
-  // HttpClient client1 = HttpClient()
-  //   ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
 
   @protected
   static Future<Map<String, String>> getHeader(

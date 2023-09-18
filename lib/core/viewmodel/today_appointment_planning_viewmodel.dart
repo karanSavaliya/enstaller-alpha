@@ -19,6 +19,7 @@ class RoutePlanningArguments {
   String pincode;
   String status;
   String appointmentTime;
+  int intPriority;
   RoutePlanningArguments({
     this.appointmentID,
     this.strBookingReference,
@@ -28,6 +29,7 @@ class RoutePlanningArguments {
     this.pincode,
     this.status,
     this.appointmentTime,
+    this.intPriority,
   });
 
 }
@@ -91,6 +93,7 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
   List<RoutePlanningArguments> list_route_plan = [];
   List<Appointment> appointmentList_ = [];
   List<Table1> site_address_ = [];
+  int siteAddressLength;
 
   Future<void> makeMultipleRequests() async {
 
@@ -98,10 +101,9 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
 
     UserModel user = await Prefs.getUser();
 
-    site_address_ = await _apiService.getRoutePlanDetailEngineerWise( user.intEngineerId.toString() , CommonUtils().currDate());
+    site_address_ = await _apiService.getRoutePlanDetailEngineerWise(user.intEngineerId.toString() , CommonUtils().currDate());
+    siteAddressLength = site_address_.length;
     site_address_.forEach((element) {
-
-
         RoutePlanningArguments rpa = new RoutePlanningArguments(
             appointmentID: element.intAppointmentId.toString(),
             strBookingReference: element.strBookingReference,
@@ -109,7 +111,9 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
             route_plan_id: element.intRoutePlanId.toString(),
             intUpdateId: element.intId.toString(),
             pincode: element.strPostCode.toString(),
-            status: element.appointmentEventType);
+            status: element.appointmentEventType,
+            appointmentTime: element.strBookedTime,
+            intPriority: element.intPriority,);
 
         if (list_route_plan.length == 0) {
           list_route_plan.add(rpa);
@@ -120,19 +124,38 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
             list_route_plan.add(rpa);
           }
 
-          print(list_route_plan.any((element) => element.strBookingReference ==
-              rpa.strBookingReference));
+          print(list_route_plan.any((element) => element.strBookingReference == rpa.strBookingReference));
         }
 
     });
 
+    int finalListLength = siteAddressLength - list_route_plan.length;
+    for(int count=siteAddressLength-1; count>=finalListLength; count--){
+      if(siteAddressLength-1 == count){
+        list_route_plan.clear();
+      }
+      RoutePlanningArguments rpa = new RoutePlanningArguments(
+        appointmentID: site_address_.elementAt(count).intAppointmentId.toString(),
+        strBookingReference: site_address_.elementAt(count).strBookingReference,
+        site_address: site_address_.elementAt(count).strSiteAddress,
+        route_plan_id: site_address_.elementAt(count).intRoutePlanId.toString(),
+        intUpdateId: site_address_.elementAt(count).intId.toString(),
+        pincode: site_address_.elementAt(count).strPostCode.toString(),
+        status: site_address_.elementAt(count).appointmentEventType,
+        appointmentTime: site_address_.elementAt(count).strBookedTime,
+        intPriority: site_address_.elementAt(count).intPriority,);
 
-    appointmentList_ = await _apiService.getTodaysAppointments( user.intEngineerId.toString() , CommonUtils().currDate() , user.intCompanyId);
+      list_route_plan.add(rpa);
+    }
+
+    list_route_plan.sort((a, b) => a.intPriority.compareTo(b.intPriority));
+
+    appointmentList_ = await _apiService.getTodaysAppointments(user.intEngineerId.toString() , CommonUtils().currDate() , user.intCompanyId);
     appointmentList_.forEach((element) {
-
       print(element.strStatus.toString()+"---------------------");
 
         if (element.intRoutePlanId == null) {
+          print("KARAN2");
           String appointment = element.intId.toString();
           String book_refrence = element.strBookingReference;
           String site_address = element.strSiteAddress;
@@ -146,29 +169,27 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
               route_plan_id: "0",
               intUpdateId: "0",
               pincode: element.strPostCode,
-              status: element.appointmentEventType);
+              status: element.appointmentEventType,
+              intPriority: element.intPriority,);
 
           if (list_route_plan.length == 0) {
             list_route_plan.add(rpa);
           } else {
-            bool exists = list_route_plan.any((element) =>
-            element.strBookingReference == rpa.strBookingReference);
+            bool exists = list_route_plan.any((element) => element.strBookingReference == rpa.strBookingReference);
 
             if (!exists) {
               list_route_plan.add(rpa);
             }
-            print(
-                list_route_plan.any((element) => element.strBookingReference ==
-                    rpa.strBookingReference));
+            print(list_route_plan.any((element) => element.strBookingReference == rpa.strBookingReference));
           }
         }
-
 
         list_route_plan.removeWhere((element) => element.status == "Cancelled" || element.status == "Completed" ||
         element.status == "Aborted"   || element.status == "OnSite");
 
+        list_route_plan.sort((a, b) => a.intPriority.compareTo(b.intPriority));
 
-        if( list_route_plan.where((element) => element.status == "InRoute").toList().length > 0) {
+        if(list_route_plan.where((element) => element.status == "InRoute").toList().length > 0) {
           setToFirstIndex(list_route_plan, list_route_plan.where((element) => element.status == "InRoute").toList()[0]);
         }
 

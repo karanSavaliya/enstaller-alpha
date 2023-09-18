@@ -95,9 +95,9 @@ class AppStrings {
   static const surveys = 'Surveys';
   static const selectStatus = 'Select Status';
   static const SURVEY = 'SURVEY';
-  static const MOVE = 'MOVE';
+  static const TRANSFER = 'TRANSFER';
   static const appointmentSurvey = 'Appointment Survey';
-  static const moveToBackOfficeSurvey = 'Move To Back Office';
+  static const transferToBackOfficeSurvey = 'Transfer To Back Office';
   static const assignedEngineer = 'Assigned Engineer';
   static const appointmentStatus = 'Appointment Status';
   static const addComment = 'Add Comment';

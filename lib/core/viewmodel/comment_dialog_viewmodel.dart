@@ -1,7 +1,5 @@
 // @dart=2.9
-
 import 'dart:io';
-
 import 'package:enstaller/core/constant/api_urls.dart';
 import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/commentModel.dart';
@@ -14,7 +12,6 @@ import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:flutter/cupertino.dart';
 import '../constant/appconstant.dart';
-
 
 class CommentDialogViewModel extends BaseModel {
   ApiService _apiService = ApiService();
@@ -94,7 +91,7 @@ class CommentDialogViewModel extends BaseModel {
 
           });
       if (responseModel != null) {
-        var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.insertAttachment;
+        var url = ApiUrls.baseUrl + ApiUrls.insertAttachment;
         var map = {
           'intDetailsId': responseModel,
           'intAppointmentId': appointmentID,

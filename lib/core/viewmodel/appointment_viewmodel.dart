@@ -7,14 +7,11 @@ import 'package:enstaller/core/service/pref_service.dart';
 
 class AppointmentViewModel extends BaseModel{
 
-
   ApiService _apiService = ApiService();
   List<Appointment>appointmentList = [];
   List<Appointment>_appointmentList = [];
 
   bool searchBool=false;
-
-
 
   void getAppointmentList() async{
 

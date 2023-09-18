@@ -1,7 +1,6 @@
 import 'package:enstaller/ui/util/MessagingService/random_string.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-
 class FirebaseMessagingService {
   final FlutterLocalNotificationsPlugin flutterlocalnotificationplugin =
       new FlutterLocalNotificationsPlugin();

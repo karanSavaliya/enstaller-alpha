@@ -9,13 +9,11 @@ import 'package:enstaller/core/model/send/answer_credential.dart';
 import 'package:enstaller/core/provider/base_model.dart';
 import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
-import 'package:enstaller/ui/login_screen.dart';
 import 'package:enstaller/ui/screen/Reset_Password.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../constant/api_urls.dart';
 import '../model/reset_password_model.dart';
 import '../model/user_model.dart';
@@ -23,23 +21,13 @@ import '../model/user_model.dart';
 class LogInViewModel extends BaseModel {
   ApiService _apiService = ApiService();
 
-  bool rememberMe = false;
-
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
-
   TextEditingController emailController = TextEditingController();
-
   TextEditingController EmailidController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController otpController = TextEditingController();
-
-  void onChangeRememberMe() {
-    rememberMe = !rememberMe;
-    setState(ViewState.Idle);
-  }
 
   void logInWithUserNameAndPassword(BuildContext context) async {
     setState(ViewState.Busy);
@@ -150,7 +138,7 @@ class LogInViewModel extends BaseModel {
   Future<reset_password_model?> resetPassword(Map data, BuildContext context) async {
 
     UserModel user = await Prefs.getUser();
-    var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.resetEmail;
+    var url = ApiUrls.baseUrl + ApiUrls.resetEmail;
     final response = await http.post(Uri.parse(url) , body: jsonEncode(data) ,  headers: {
       'Authorization': 'Bearer ${user.accessToken}' , "Content-Type": "application/json"
     });

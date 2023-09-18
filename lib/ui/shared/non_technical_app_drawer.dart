@@ -1,6 +1,4 @@
 // @dart=2.9
-
-
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/constant/image_file.dart';

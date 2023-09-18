@@ -1,9 +1,11 @@
 // @dart=2.9
+import 'dart:async';
 import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:encrypt/encrypt.dart' as AESencrypt;
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:provider/provider.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
 import 'package:enstaller/core/constant/image_file.dart';
@@ -17,20 +19,18 @@ import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/geo_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
-import 'package:enstaller/flutter_google_map/flutter_google_maps.dart';
-import 'package:enstaller/flutter_google_map/src/core/google_map.dart';
-import 'package:enstaller/flutter_google_map/src/core/map_items.dart';
 import 'package:enstaller/ui/screen/survey.dart';
 import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
 import 'package:enstaller/ui/screen/widget/appointment_details/appointment_details_row_widget.dart';
 import 'package:enstaller/ui/screen/widget/comment_dialog_widget.dart';
-import 'package:enstaller/ui/shared/app_drawer_widget.dart';
+import 'package:custom_map_markers/custom_map_markers.dart';
 import 'package:enstaller/ui/shared/appbuttonwidget.dart';
-import 'package:enstaller/ui/shared/warehouse_app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/provider/app_state_provider.dart';
+import '../shared/app_drawer_widget.dart';
+import '../shared/warehouse_app_drawer.dart';
 
 class DetailScreenArguments {
   String appointmentID;
@@ -93,27 +93,7 @@ class _DetailScreenState extends State<DetailScreen> {
     "Dual SMETS2 Meter Exchange": 2,
     "Gas SMETS2 Meter Exchange": 1,
     "Emergency Exchange Electric": 0,
-    "Emergency Exchange Gas": 1
-  };
-
-  Map<String, Map<String, int>> _appointmentandjobtype = {
-    "Meter removal, Scheduled Exchange, Emergency Exchange, New Connection": {
-      // "SMETS2 1ph Elec": 0,
-      // "SMETS2 Gas": 1,
-      // "SMETS2 Dual": 2,
-      // "SMETS2 3ph Elec": 3,
-      // "Electric SMETS2 Meter Exchange" : 0,
-      // "Dual SMETS2 Meter Exchange" : 2,
-      // "Gas SMETS2 Meter Exchange" : 1,
-      // "Emergency Exchange Electric" : 0,
-      // "Emergency Exchange Gas" : 1
-    },
-    // "New Connection": {
-    //   "SMETS2 1ph Elec": 4,
-    //   "SMETS2 Gas": 5,
-    //   "SMETS2 Dual": 6,
-    //   "SMETS2 3ph Elec": 7
-    // }
+    "Emergency Exchange Gas": 1,
   };
 
   ApiService _apiService = ApiService();
@@ -144,12 +124,12 @@ class _DetailScreenState extends State<DetailScreen> {
         .replaceAll('+', 'PLS');
   }
 
-  launchurl(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not open the map.';
-    }
+  final List<MarkerData> _customMarkers = [];
+
+  GoogleMapController mapController;
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
   }
 
   @override
@@ -159,7 +139,7 @@ class _DetailScreenState extends State<DetailScreen> {
       onModelReady: (model) => model.initializeData(
           widget.arguments.appointmentID, widget.arguments.customerID),
       builder: (context, model, child) {
-        model.checkifEnrouted();
+        model.checkifEnrouted(); //KARAN (ADD THIS ON LIVE)
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
@@ -201,7 +181,11 @@ class _DetailScreenState extends State<DetailScreen> {
                       child: Column(
                         children: [
                           _engineerInfo(model),
-                          _surveyInfo(model, appStateProvider),
+                          _surveyInfo(
+                              model,
+                              appStateProvider,
+                              widget.arguments.appointmentID,
+                              widget.arguments.customerID),
                           Padding(
                             padding: SizeConfig.padding,
                             child: ListView.builder(
@@ -441,66 +425,61 @@ class _DetailScreenState extends State<DetailScreen> {
                           SizedBox(
                             height: 20,
                           ),
-                          Padding(
-                            padding: SizeConfig.sidepadding,
-                            child: Container(
-                              height: 300,
-                              child: GoogleMap(
-                                markers: {
-                                  Marker(
-                                      GeoCoord(
-                                          double.parse(
-                                              model.latlngmap.split(",")[0]),
-                                          double.parse(
-                                              model.latlngmap.split(",")[1])),
-                                      info: "",
-                                      label: "",
-                                      icon: "",
-                                      infoSnippet: "",
-                                      onInfoWindowTap: () {}),
-                                },
-                                initialZoom: 12,
-                                initialPosition: GeoCoord(
-                                    double.parse(model.latlngmap.split(",")[0]),
-                                    double.parse(
-                                        model.latlngmap.split(",")[1])),
-                                // Los Angeles, CA
-                                mapType: MapType.roadmap,
-                                interactive: true,
-                                mobilePreferences: const MobileMapPreferences(
-                                  trafficEnabled: true,
-                                  zoomControlsEnabled: false,
-                                ),
-                              ),
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: SizeConfig.sidepadding,
+                          //   child: Container(
+                          //     height: 300,
+                          //     child: CustomGoogleMapMarkerBuilder(
+                          //       customMarkers: _customMarkers,
+                          //       builder: (BuildContext context, Set<Marker> markers) {
+                          //         return GoogleMap(
+                          //           padding: EdgeInsets.only(
+                          //             right: 20,
+                          //             top: 55,
+                          //           ),
+                          //           onMapCreated: _onMapCreated,
+                          //           initialCameraPosition: CameraPosition(
+                          //             target: LatLng(double.parse(model.latlngmap.split(",")[0]), double.parse(model.latlngmap.split(",")[1])),
+                          //             zoom: 11,
+                          //           ),
+                          //           myLocationEnabled: true,
+                          //           myLocationButtonEnabled: false,
+                          //           markers: markers ?? {},
+                          //           zoomControlsEnabled: false,
+                          //         );
+                          //       },
+                          //     ),
+                          //   ),
+                          // ),
                           SizeConfig.verticalSpaceSmall(),
                           Padding(
                             padding: SizeConfig.sidepadding,
                             child: InkWell(
                               onTap: () async {
-                                final location = await GeoLocationService
-                                    .getAddressFromPinCode(
-                                        model.customerDetails.strPostCode);
-
-                                // final url = Uri.encodeFull(
-                                // 'https://www.google.com/maps/dir/current+location/${model.customerDetails.strPostCode}');
-
-                                String url =
-                                    "http://maps.google.com/maps?q=loc:" +
-                                        location.coordinates.latitude
-                                            .toString() +
-                                        "," +
-                                        location.coordinates.longitude
-                                            .toString() +
-                                        " (" +
-                                        model.customerDetails.strPostCode +
-                                        ")";
-
-                                if (await canLaunch(url)) {
-                                  await launch(url);
+                                if (model.latlngmap.split(",")[0] == "0.0") {
+                                  AppConstants.showFailToast(context,
+                                      "Google Maps can't find ${model.postCode}");
                                 } else {
-                                  throw 'Could not open the map.';
+                                  final location = await GeoLocationService
+                                      .getAddressFromPinCode(
+                                          model.customerDetails.strPostCode);
+                                  String url =
+                                      "http://maps.google.com/maps?q=loc:" +
+                                          location
+                                              .coordinates.latitude
+                                              .toString() +
+                                          "," +
+                                          location.coordinates.longitude
+                                              .toString() +
+                                          " (" +
+                                          model.customerDetails.strPostCode +
+                                          ")";
+
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  } else {
+                                    throw 'Could not open the map.';
+                                  }
                                 }
                               },
                               child: Container(
@@ -554,16 +533,6 @@ class _DetailScreenState extends State<DetailScreen> {
     id = _appointmenttype[
         model.appointmentDetails.appointment.strJobType.trim()];
 
-    // _appointmentandjobtype.forEach((key, value) {
-
-    //   if (key
-    //       .contains(model.appointmentDetails.appointment.strAppointmentType.trim())) {
-
-    //     id = value[model.appointmentDetails.appointment.strJobType.trim()];
-
-    //           }
-    // });
-
     return id;
   }
 
@@ -610,6 +579,54 @@ class _DetailScreenState extends State<DetailScreen> {
                             : () {},
                       ),
                     ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          "SMETS2 XCHUB ACTION",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        id == 0
+                            ? Padding(
+                                padding: SizeConfig.sidepadding,
+                                child: AppButton(
+                                  height: 40,
+                                  color: AppColors.darkBlue,
+                                  buttonText: "Raise EXCHUB",
+                                  radius: 15,
+                                  textStyle:
+                                      TextStyle(color: AppColors.whiteColor),
+                                  onTap: () {
+                                    model.onRaiseButtonPressed(
+                                        widget.arguments.customerID, "3");
+                                  },
+                                ),
+                              )
+                            : id == 1
+                                ? Padding(
+                                    padding: SizeConfig.sidepadding,
+                                    child: AppButton(
+                                      height: 40,
+                                      color: AppColors.darkBlue,
+                                      buttonText: "Raise GXCHUB",
+                                      radius: 15,
+                                      textStyle: TextStyle(
+                                          color: AppColors.whiteColor),
+                                      onTap: () {
+                                        model.onRaiseButtonPressed(
+                                            widget.arguments.customerID, "91");
+                                      },
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
+                      ],
+                    ), //KARAN (ADD THIS ON LIVE)
                   ],
                 )
               : Column(
@@ -689,6 +706,52 @@ class _DetailScreenState extends State<DetailScreen> {
                             : () {},
                       ),
                     ),
+                    Column(
+                      children: [
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Text(
+                          "SMETS2 XCHUB ACTION",
+                          textAlign: TextAlign.start,
+                          style: TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Padding(
+                          padding: SizeConfig.sidepadding,
+                          child: AppButton(
+                            height: 40,
+                            color: AppColors.darkBlue,
+                            buttonText: "Raise EXCHUB",
+                            radius: 15,
+                            textStyle: TextStyle(color: AppColors.whiteColor),
+                            onTap: () {
+                              model.onRaiseButtonPressed(
+                                  widget.arguments.customerID, "3");
+                            },
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Padding(
+                          padding: SizeConfig.sidepadding,
+                          child: AppButton(
+                            height: 40,
+                            color: AppColors.darkBlue,
+                            buttonText: "Raise GXCHUB",
+                            radius: 15,
+                            textStyle: TextStyle(color: AppColors.whiteColor),
+                            onTap: () {
+                              model.onRaiseButtonPressed(
+                                  widget.arguments.customerID, "91");
+                            },
+                          ),
+                        ),
+                      ],
+                    ), //KARAN (ADD THIS ON LIVE)
                   ],
                 )
         ],
@@ -754,7 +817,10 @@ class _DetailScreenState extends State<DetailScreen> {
 
   //survey info
   Widget _surveyInfo(
-      DetailsScreenViewModel model, AppStateProvider appStateProvider) {
+      DetailsScreenViewModel model,
+      AppStateProvider appStateProvider,
+      String intAppointmentId,
+      String customerID) {
     return Padding(
       padding: SizeConfig.padding,
       child: Container(
@@ -771,12 +837,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     model.appointmentDetails.appointment.strCompanyName,
                     textAlign: TextAlign.right,
                     style: getTextStyle(color: AppColors.black, isBold: true),
-                  )
-                  /*ViewAppImage(
-                    imageUrl: model.appointmentDetails.appointment.strLogoPath,
-                    height: 20,
-                    width: 50,
-                  ),*/
+                  ),
                 ],
               ),
             ),
@@ -814,70 +875,76 @@ class _DetailScreenState extends State<DetailScreen> {
                         if (appStateProvider.lastAppointmentStatus ==
                             "Cancelled") {
                           AppConstants.showFailToast(context,
-                              "Appointment status has just been Cancelled by someone, you cannot process further, sorry");
+                              "Appointment has been cancelled so cannot proceed further!");
                         } else {
-                          if (model.appointmentDetails.appointment
-                                      .bisAbortRequested ==
-                                  true &&
-                              model.appointmentDetails.appointment
-                                      .bisAbortRequestApproved ==
-                                  false) {
-                            AppConstants.showFailToast(context,
-                                "You can not start survey as abort survey is requested");
-                          } else if (model.appointmentDetails.appointment
-                                      .bisAbortRequested ==
-                                  true &&
-                              model.appointmentDetails.appointment
-                                      .bisAbortRequestApproved ==
-                                  true) {
-                            AppConstants.showFailToast(context,
-                                "You can not start survey as this survey is aborted");
+                          if (model.customerDetails.bisSurveyBackoffice ==
+                              true) {
+                            AppConstants.showFailToast(
+                                context, "Survey Transfer To Back Office");
                           } else {
-                            if (model.isSurveyEnable() &&
+                            if (model.appointmentDetails.appointment
+                                        .bisAbortRequested ==
+                                    true &&
                                 model.appointmentDetails.appointment
-                                        .appointmentEventType !=
-                                    "Rescheduled") {
-                              bool _isedit = model.appointmentDetails
-                                          .appointment.surveyReceived ==
-                                      AppStrings.yes
-                                  ? true
-                                  : false;
-                              String _status = model.appointmentDetails
-                                      .appointment.appointmentEventType ??
-                                  "";
-                              if (!_isedit && _status != "OnSite")
-                                model.onUpdateStatusOnSite(
-                                    context, widget.arguments.appointmentID);
+                                        .bisAbortRequestApproved ==
+                                    false) {
+                              AppConstants.showFailToast(context,
+                                  "You can not start survey as abort survey is requested");
+                            } else if (model.appointmentDetails.appointment
+                                        .bisAbortRequested ==
+                                    true &&
+                                model.appointmentDetails.appointment
+                                        .bisAbortRequestApproved ==
+                                    true) {
+                              AppConstants.showFailToast(context,
+                                  "You can not start survey as this survey is aborted");
+                            } else {
+                              if (model.isSurveyEnable() &&
+                                  model.appointmentDetails.appointment
+                                          .appointmentEventType !=
+                                      "Rescheduled") {
+                                bool _isedit = model.appointmentDetails
+                                            .appointment.surveyReceived ==
+                                        AppStrings.yes
+                                    ? true
+                                    : false;
+                                String _status = model.appointmentDetails
+                                        .appointment.appointmentEventType ??
+                                    "";
+                                if (!_isedit && _status != "OnSite")
+                                  model.onUpdateStatusOnSite(
+                                      context, widget.arguments.appointmentID);
 
-                              Navigator.of(context)
-                                  .pushNamed(SurveyScreen.routeName,
-                                      arguments: SurveyArguments(
-                                          correlationId: model
-                                              .appointmentDetails
-                                              .appointment
-                                              .strBookingReference,
-                                          jobType: model.appointmentDetails
-                                              .appointment.strJobType,
-                                          customerID:
-                                              widget.arguments.customerID,
-                                          dsmodel: model,
-                                          appointmentID:
-                                              widget.arguments.appointmentID,
-                                          edit: model
-                                                      .appointmentDetails
-                                                      .appointment
-                                                      .surveyReceived ==
-                                                  AppStrings.yes
-                                              ? true
-                                              : false))
-                                  .then((value) {
-                                if (GlobalVar.isloadAppointmentDetail) {
-                                  model.initializeData(
-                                      widget.arguments.appointmentID,
-                                      widget.arguments.customerID);
-                                  GlobalVar.isloadAppointmentDetail = false;
-                                }
-                              });
+                                Navigator.of(context)
+                                    .pushNamed(SurveyScreen.routeName,
+                                        arguments: SurveyArguments(
+                                            correlationId: model
+                                                .appointmentDetails
+                                                .appointment
+                                                .strBookingReference,
+                                            jobType: model.appointmentDetails
+                                                .appointment.strJobType,
+                                            customerID:
+                                                widget.arguments.customerID,
+                                            dsmodel: model,
+                                            appointmentID:
+                                                widget.arguments.appointmentID,
+                                            edit: model
+                                                        .appointmentDetails
+                                                        .appointment
+                                                        .surveyReceived ==
+                                                    AppStrings.yes
+                                                ? true
+                                                : false))
+                                    .then((value) {
+                                  if (GlobalVar.isloadAppointmentDetail) {
+                                    model.initializeData(
+                                        widget.arguments.appointmentID,
+                                        widget.arguments.customerID);
+                                    GlobalVar.isloadAppointmentDetail = false;
+                                  }
+                                });
+                              }
                             }
                           }
                         }
@@ -889,21 +956,37 @@ class _DetailScreenState extends State<DetailScreen> {
             model.appointmentDetails.appointment.appointmentEventType ==
                     "OnSite"
                 ? AppointmentDetailsRowWidget(
-                    firstText: AppStrings.moveToBackOfficeSurvey,
+                    firstText: AppStrings.transferToBackOfficeSurvey,
                     secondChild: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        AppButton(
-                          color: AppColors.appThemeColor,
-                          height: 30,
-                          width: SizeConfig.screenWidth * .23,
-                          buttonText: AppStrings.MOVE,
-                          textStyle: TextStyle(color: AppColors.whiteColor),
-                          radius: 15,
-                          onTap: () {
-                            _showMyDialog();
-                          },
-                        ),
+                        model.customerDetails.bisSurveyBackoffice == false
+                            ? AppButton(
+                                color: AppColors.appThemeColor,
+                                height: 30,
+                                width: SizeConfig.screenWidth * .23,
+                                buttonText: AppStrings.TRANSFER,
+                                textStyle:
+                                    TextStyle(color: AppColors.whiteColor),
+                                radius: 15,
+                                onTap: () {
+                                  _showMyDialog(model, intAppointmentId,
+                                      appStateProvider, customerID);
+                                },
+                              )
+                            : AppButton(
+                                color: Colors.grey,
+                                height: 30,
+                                width: SizeConfig.screenWidth * .23,
+                                buttonText: AppStrings.TRANSFER,
+                                textStyle:
+                                    TextStyle(color: AppColors.whiteColor),
+                                radius: 15,
+                                onTap: () {
+                                  AppConstants.showFailToast(context,
+                                      "Already Survey Transfer To Back Office");
+                                },
+                              ),
                       ],
                     ),
                   )
@@ -918,7 +1001,11 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  Future<void> _showMyDialog() async {
+  Future<void> _showMyDialog(
+      DetailsScreenViewModel model,
+      String intAppointmentId,
+      AppStateProvider appStateProvider,
+      String customerID) async {
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -946,8 +1033,21 @@ class _DetailScreenState extends State<DetailScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              onPressed: () {
-                Navigator.of(context).pop();
+              onPressed: () async {
+                bool success = await appStateProvider
+                    .updateBackOfficeStatus(intAppointmentId);
+                if (success) {
+                  AppConstants.showSuccessToast(
+                      context, "Survey Transfer To Back Office Successfully");
+                  Navigator.of(context).pop();
+                  Future.delayed(Duration.zero).whenComplete(() =>
+                      model.initializeData(widget.arguments.appointmentID,
+                          widget.arguments.customerID));
+                } else {
+                  Navigator.of(context).pop();
+                  AppConstants.showFailToast(
+                      context, "Survey Transfer To Back Office Failed");
+                }
               },
             ),
             TextButton(
@@ -974,32 +1074,6 @@ class _DetailScreenState extends State<DetailScreen> {
         fontSize: fontSize);
   }
 
-  //get color
-  Color getColor(int index) {
-    switch (index) {
-      case 0:
-        return Colors.orange;
-        break;
-
-      case 1:
-        return Colors.blue;
-        break;
-
-      case 2:
-        return Colors.teal;
-        break;
-
-      case 3:
-        return Colors.pinkAccent;
-        break;
-
-      case 4:
-        return Colors.blueGrey;
-        break;
-    }
-  }
-
-  // get header text
   String _getHeaderText(int index) {
     switch (index) {
       case 0:
@@ -1075,30 +1149,6 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
-  //row data
-  Widget _getRowData(String text1, String text2) {
-    return Row(
-      children: [
-        Expanded(
-            flex: 1,
-            child: Text(
-              text1,
-              textAlign: TextAlign.left,
-              style: getTextStyle(color: AppColors.darkGrayColor, isBold: true),
-            )),
-        Expanded(
-            flex: 1,
-            child: Text(
-              text2,
-              style: getTextStyle(color: Colors.black, isBold: true),
-            )),
-      ],
-    );
-  }
-
-  getLocation() {}
-
-  //activity data
   Widget _activityData(DetailsScreenViewModel model) {
     return Column(
       children: [
@@ -1156,7 +1206,6 @@ class _DetailScreenState extends State<DetailScreen> {
         ),
         Container(
           color: Colors.transparent,
-//          height: 400,
           child: ListView.builder(
               shrinkWrap: true,
               itemCount: model.activityDetailsList.length,

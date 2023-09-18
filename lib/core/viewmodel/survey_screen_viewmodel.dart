@@ -20,7 +20,7 @@ import 'package:enstaller/core/service/api_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/model/survey_response_model.dart';
 import 'package:enstaller/core/viewmodel/details_screen_viewmodel.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -983,13 +983,19 @@ class SurveyScreenViewModel extends BaseModel {
         AppConstants.showFailToast(context, e.toString());
       }
       selected = -1;
-    } else if (sectionname.trim() == "Sign Off") {
+    } else {
       try {
         ConnectivityResult result = await _connectivity.checkConnectivity();
         String status = _updateConnectionStatus(result);
         if (status != "NONE") {
-          issubmitted = true;
-          ResponseModel responseModel = await _apiService.submitListSurveyAnswer(answerList,context,appointmentid,"NotAbort");
+          ResponseModel responseModel; //KARAN (ADD THIS ON LIVE)
+          if(sectionname.trim() == "Sign Off"){
+            issubmitted = true; //KARAN (ADD THIS ON LIVE)
+            responseModel = await _apiService.submitListSurveyAnswer(answerList,context,appointmentid,"NotAbort");
+          }
+          else{
+            responseModel = await _apiService.submitListSurveyAnswer(answerList,context,appointmentid,"NotAbortButNextButton");
+          } //KARAN (ADD THIS ON LIVE)
           SharedPreferences pref = await SharedPreferences.getInstance();
           ResponseModel response = await _apiService.updateAppointmentStatus(
               AppointmentStatusUpdateCredentials(
@@ -1041,16 +1047,17 @@ class SurveyScreenViewModel extends BaseModel {
               "listOfUnSubmittedForm", _setofUnSubmittedForm.toList());
           preferences.setStringList("key+$appointmentid", _list);
 
-          AppConstants.showFailToast(context, "Submitted Offline");
-
-          issubmitted = true;
+          Fluttertoast.showToast(msg: 'Submitted Offline', backgroundColor: Colors.red);
+          if(sectionname.trim() == "Sign Off"){
+            issubmitted = true;
+          } //Continue
         }
       } catch (e) {
         // print(e.toString());
         // AppConstants.showFailToast(context, e.toString());
       }
       selected = -1;
-    }
+    } //KARAN (ADD THIS ON LIVE)
 
     if (sectionname.trim() == "Sign Off") {
       return "Sign Off";
@@ -1264,7 +1271,7 @@ class SurveyScreenViewModel extends BaseModel {
       String status = _updateConnectionStatus(result);
       if (status != "NONE") {
         print(
-            "Sumitted offline survey to online for appointment id: -----> $appointmentid");
+            "Sumitted offline survey to online for appointment id: -----> $appointmentid"); //Continue
         ResponseModel responseModel =
         await _apiService.submitListSurveyAnswer(_listofanswer,context,appointmentid,"NotAbort");
         SharedPreferences pref = await SharedPreferences.getInstance();

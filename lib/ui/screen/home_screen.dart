@@ -23,6 +23,7 @@ import 'package:enstaller/ui/shared/warehouse_app_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -41,8 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _subscribeconnectivity() async {
     preferences = await SharedPreferences.getInstance();
-    _connectivitySubscription =
-        _connectivity.onConnectivityChanged.listen(_change);
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_change);
   }
 
   _submitOfflineSurveyForAppointmentId(String _id) async {
@@ -125,9 +125,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-
+    requestLocationPermission();
     _subscribeconnectivity();
-
     super.initState();
   }
 
@@ -135,6 +134,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void dispose() {
     _connectivitySubscription.cancel();
     super.dispose();
+  }
+
+  void requestLocationPermission() async {
+    final status = await Permission.location.request();
+    if (status.isGranted) {
+    } else if (status.isDenied) {
+      requestLocationPermission();
+    } else if (status.isPermanentlyDenied) {
+      requestLocationPermission();
+    }
   }
 
   @override
@@ -218,7 +227,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   controller: _scrollController,
                                   itemCount: model.uniqueDates.length,
                                   itemBuilder: (context, int index) {
-
                                     print("herrrrrrrrrreeeeeee");
                                     return Padding(
                                       padding: SizeConfig.verticalC8Padding,
@@ -285,9 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                               7),
                                                                       color: Colors
                                                                           .white,
-                                                                      border: Border.all(
-                                                                          color: AppColors
-                                                                              .lightGrayDotColor)),
+                                                                      border: Border.all(color: AppColors.lightGrayDotColor)),
                                                                   padding:
                                                                       EdgeInsets
                                                                           .all(0),
@@ -326,28 +332,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-
-  int daysInMonth(DateTime date) {
-    var firstDayThisMonth = new DateTime(date.year, date.month, date.day);
-    var firstDayNextMonth = new DateTime(firstDayThisMonth.year,
-        firstDayThisMonth.month + 1, firstDayThisMonth.day);
-
-    return firstDayNextMonth.difference(firstDayThisMonth).inDays;
-  }
-
+  
   int getCurrentDay(DateTime date) {
     return date.day;
   }
-
-  int getNextDay(DateTime date) {
-    final tomorrow = DateTime(date.year, date.month, date.day + 1);
-    return tomorrow.day;
-  }
-
-  getNextDate(DateTime date) {
-    return DateTime(date.year, date.month, date.day + 1);
-  }
-
-
 }

@@ -112,12 +112,7 @@ class StockUpdateStatusViewModel extends BaseModel {
 
     print(downLoadFormatModel.strKey);
     String url = downLoadFormatModel.strValue + "Upload/Demo/demo_stocks.csv";
-    //  if(await canLaunch(url)){
-    //    launch(url);
-    //  }
-    //  else{
-    //    throw Exception("unable to open");
-    //  }
+
     var request = await HttpClient().getUrl(Uri.parse(url));
     var response = await request.close();
     var bytes = await consolidateHttpClientResponseBytes(response);

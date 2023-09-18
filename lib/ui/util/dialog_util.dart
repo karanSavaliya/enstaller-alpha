@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,8 +7,6 @@ class DialogSnackBarUtils {
 
   static DialogSnackBarUtils get dialogSnackBarUtilsInstance =>
       _dialogSnackBarUtils;
-
-  TextEditingController _textEditingController = TextEditingController();
 
   // show snackbar
    void showSnackbar(
@@ -62,7 +59,6 @@ class DialogSnackBarUtils {
       ));
     }
 
-// show the dialog
     showDialog(
         barrierDismissible: barrierDismissible,
         context: context,

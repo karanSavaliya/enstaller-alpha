@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:enstaller/core/constant/api_urls.dart';
 import 'package:enstaller/core/constant/app_string.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:enstaller/core/model/EngineerBaseLocation.dart';
 import 'package:enstaller/core/model/abort_appointment_model.dart';
 import 'package:enstaller/core/model/activity_details_model.dart';
@@ -12,25 +12,20 @@ import 'package:enstaller/core/model/commentModel.dart' as cm;
 import 'package:enstaller/core/model/contract_order_model.dart';
 import 'package:enstaller/core/model/document_pdfopen_model.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
-import 'package:enstaller/core/model/comment_model.dart';
 import 'package:enstaller/core/model/elec_closejob_model.dart';
 import 'package:enstaller/core/model/gas_job_model.dart';
 import 'package:enstaller/core/model/item_oder_model.dart';
-import 'package:enstaller/core/model/meter_serial_number_model.dart';
-import 'package:enstaller/core/model/non_technical_user_models/agent_model.dart';
 import 'package:enstaller/core/model/non_technical_user_models/agent_response_model.dart';
 import 'package:enstaller/core/model/order_detail_model.dart';
 import 'package:enstaller/core/model/order_export_model.dart';
 import 'package:enstaller/core/model/order_line_detail_model.dart';
 import 'package:enstaller/core/model/order_model.dart';
 import 'package:enstaller/core/model/profile_details.dart';
-import 'package:enstaller/core/model/reset_password_model.dart';
 import 'package:enstaller/core/model/route_making.dart';
 import 'package:enstaller/core/model/save_order.dart';
 import 'package:enstaller/core/model/save_order_line.dart';
 import 'package:enstaller/core/model/serial_item_model.dart';
 import 'package:enstaller/core/model/serial_model.dart';
-import 'package:enstaller/core/model/sms_notification_model.dart';
 import 'package:enstaller/core/model/email_notification_model.dart';
 import 'package:enstaller/core/model/customer_details.dart';
 import 'package:enstaller/core/model/document_model.dart';
@@ -53,12 +48,10 @@ import 'package:enstaller/core/model/survey_response_model.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/ui/util/common_utils.dart';
 import 'package:flutter/material.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:io';
 import 'package:path/path.dart' as p;
-
 import '../constant/appconstant.dart';
 
 class ApiService extends BaseApi {
@@ -137,18 +130,6 @@ class ApiService extends BaseApi {
       print(response.body);
       return (json.decode(response.body) as List)
           .map((e) => EmailNotificationModel.fromJson(e))
-          .toList();
-    },
-        'intUserId=${user.id.toString()}' +
-            '&${AppStrings.intCompanyIdKey}=${user.intCompanyId}');
-  }
-
-  Future<dynamic> getSMSNotificationList(UserModel user) {
-    return getRequestWithParam(ApiUrls.getSMSClickSendNotificationUserWise,
-        (response) {
-      print(response.body);
-      return (json.decode(response.body) as List)
-          .map((e) => SMSNotificationModel.fromJson(e))
           .toList();
     },
         'intUserId=${user.id.toString()}' +
@@ -385,7 +366,6 @@ class ApiService extends BaseApi {
   }
 
   Future<dynamic> updateAppointmentStatus(AppointmentStatusUpdateCredentials credentials) {
-    print(credentials.toJson());
     return postRequestMap(ApiUrls.updateAppointmentStatusUrl, (r) {
       final response = json.decode(r.body);
       if (response) {
@@ -475,22 +455,25 @@ class ApiService extends BaseApi {
 
   Future<dynamic> submitListSurveyAnswer(List<AnswerCredential> credentials,BuildContext context,String appointmentid, String status) {
     return postRequestList(ApiUrls.addSurveyQuestionAnswerDetailUrl, (r) {
-      final response = r.statusCode.toString();
-
-      print('response-->${r.body}');
-
       if(r.statusCode == 200) {
-        if(status != "Abort"){
+
+        if(status == "NotAbort"){
           updateStatus(appointmentid);
+          Fluttertoast.showToast(msg: 'Survey Successfully submitted', backgroundColor: Colors.green);
         }
-        AppConstants.showSuccessToast(context, "Survey Successfully submitted");
+        else if(status == "NotAbortButNextButton") {
+          Fluttertoast.showToast(msg: 'This Survey Section Successfully submitted', backgroundColor: Colors.green);
+        }
+        else{
+          Fluttertoast.showToast(msg: 'Survey Successfully submitted', backgroundColor: Colors.green);
+        }
         return ResponseModel(statusCode: 1, response: 'Survey Successfully submitted');
       }else{
         AppConstants.showFailToast(context , "Failed submitting Survey");
         return ResponseModel(statusCode: 1, response: 'Failed submitting Survey');
       }
       }, json.encode(credentials));
-  }
+  } //KARAN (ADD THIS ON LIVE)
 
   Future<dynamic> getCustomerById(String customerID, String companyId) {
     return getRequestWithParam(ApiUrls.getCustomerByIdUrl, (response) {
@@ -664,7 +647,7 @@ class ApiService extends BaseApi {
 
   saveSortorderofLocation(Map data) async {
     UserModel user = await Prefs.getUser();
-    var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.getInsertUpdateRoutePlanData;
+    var url = ApiUrls.baseUrl + ApiUrls.getInsertUpdateRoutePlanData;
     final response = await http.post(Uri.parse(url) , body: jsonEncode(data) ,  headers: {
     'Authorization': 'Bearer ${user.accessToken}' , "Content-Type": "application/json"
     });
@@ -673,7 +656,7 @@ class ApiService extends BaseApi {
 
    VerifyEmail(Map data) async {
     UserModel user = await Prefs.getUser();
-    var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.verifyEmail;
+    var url = ApiUrls.baseUrl + ApiUrls.verifyEmail;
     final response = await http.post(Uri.parse(url) , body: jsonEncode(data) ,  headers: {
       'Authorization': 'Bearer ${user.accessToken}' , "Content-Type": "application/json"
     });
@@ -688,7 +671,7 @@ class ApiService extends BaseApi {
 
   Future<String> saveAppointments(Map data) async {
     UserModel user = await Prefs.getUser();
-    var url = 'https://enstallapi.boshposh.com/api/'+ApiUrls.saveAppointments;
+    var url = ApiUrls.baseUrl + ApiUrls.saveAppointments;
     final response = await http.post(Uri.parse(url) , body: jsonEncode(data) ,  headers: {
       'Authorization': 'Bearer ${user.accessToken}' , "Content-Type": "application/json"
     });

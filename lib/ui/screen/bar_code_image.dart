@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:barcode_flutter/barcode_flutter.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:flutter/material.dart';

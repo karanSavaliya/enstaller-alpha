@@ -1,34 +1,22 @@
 // @dart=2.9
-
 import 'dart:async';
-import 'dart:convert';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
-import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
-import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/model/custom_drop_down.dart';
 import 'package:enstaller/core/model/user_model.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/service/geo_service.dart';
 import 'package:enstaller/core/service/pref_service.dart';
 import 'package:enstaller/core/viewmodel/today_appointment_planning_viewmodel.dart';
-import 'package:enstaller/ui/screen/detail_screen.dart';
 import 'package:enstaller/ui/screen/maps_route_palnner.dart';
-import 'package:enstaller/ui/screen/widget/appointment/appointment_data_row.dart';
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
-import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:enstaller/ui/util/common_utils.dart';
 import 'package:enstaller/ui/util/dialog_util.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'maps_route_planner_plotmarker.dart';
-import 'package:select_form_field/select_form_field.dart';
-
 
 class TodayAppointmentPlanningScreen extends StatefulWidget {
 
@@ -73,7 +61,6 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
 
     }else {
 
-
       String latitude = "", longitude = "";
 
       if (type == "1") {
@@ -81,15 +68,6 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
             .strBaseLocationLatitude;
         longitude = model.baseLoccation.engineerRouteBaseLocation
             .strBaseLocationLongitude;
-
-          if(latitude.isEmpty || longitude.isEmpty){
-           // AppConstants.showSuccessToast(context , "Base Location Not Available");
-
-            return;
-          }else{
-           // AppConstants.showSuccessToast(context , "Base Location Set");
-          }
-
       } else if (type == "2") {
         latitude = latlng_str.split(",")[0];
         longitude = latlng_str.split(",")[1];
@@ -129,24 +107,19 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
 
 
       List<Map> listmap = [];
-      model.list_route_plan.asMap().forEach((index, element) async {
+      var intPriority = 0;
+
+      for (var routePlanningArgument in model.list_route_plan) {
+        intPriority++;
         listmap.add({
-          "intId": element.intUpdateId,
-          "intAppointmentId": element.appointmentID,
-          "intPriority": model.list_route_plan.length - index
+          "intId": routePlanningArgument.intUpdateId,
+          "intAppointmentId": routePlanningArgument.appointmentID,
+          "intPriority": intPriority,
         });
+      }
 
-        print(element.appointmentID+"-----"+element.pincode);
-
-
-      });
-
-
-
-
-
-
-
+      print("KARAN");
+      print(listmap);
 
       Future.delayed(const Duration(milliseconds: 1500) , () async {
 
@@ -176,20 +149,11 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
 
         });
 
-        /*if(res == true) {
-          Navigator.of(context).pushNamed(ClusteringPage2.route,
-              arguments: MapRoutes(pincodes: listlatng));
-        }*/
-
-
       });
 
     }
-
-
   }
 
-  
   Future<void> setorder(TodayAppointmentPlanningViewModel model) async {
 
     print(model.sortorder+"----------))))))(((((((");
@@ -205,12 +169,8 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
       Navigator.of(context).pushNamed(MapsPage.route,
           arguments: MapRoutes(pincodes: listlatng , firstloc: listlatng[0]));
     }
-
-
-
     
   }
-  
 
   List<String> location_items = ["Select Location Type" ,"Base Location" , "Current Location" , "Custom Location"];
 
@@ -250,13 +210,10 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
             ),
             actions: [
               IconButton(icon: Icon(Icons.save  , color: Colors.white), onPressed: () {
-
                 if(shouldButtonEnabled == true) {
                   _disabledButton();
                   inserUpdatePlan(model);
                 }
-
-
               }),
             ],
           ),
@@ -348,10 +305,7 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
 
                     address = address_fetch.first.addressLine;
                     postalcode = address_fetch.first.postalCode;
-
-
                 }
-
               },
             ),),
             ),),
@@ -381,7 +335,7 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
                                   color: Colors.black,
                                   fontSize: 14)),
                           new TextSpan(
-                              text: "\n Appoint Time : ${item.appointmentTime}",
+                              text: "\n Appointment Time : ${item.appointmentTime}",
                               style: new TextStyle(
                                   fontWeight: FontWeight.normal,
                                   color: Colors.black,
@@ -401,17 +355,7 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
                      if(model.list_route_plan[start].status == "InRoute") {
                        AppConstants.showFailToast(context,
                            "Sequence of "+(model.list_route_plan[start].appointmentID)+" can not be changed");
-                     }/*else if(model.list_route_plan[curent_status].status == "InRoute"){
-
-                       if(curent_status == 0 && start > current){
-                         curent_status = curent_status +1;
-                       }else{ = curent_status;
-                       }
-                         curent_status
-
-                       AppConstants.showFailToast(context,
-                           "This Sequence Number with InRoute status can not be replaced with other");
-                     }*/
+                     }
 
                     return;
                   }
@@ -430,17 +374,7 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
                     if(model.list_route_plan[curr_type].status == "InRoute") {
                       AppConstants.showFailToast(context,
                           "Sequence of "+(model.list_route_plan[curr_type].appointmentID)+" can not be changed");
-                    }/*else if(model.list_route_plan[curent_status].status == "InRoute"){
-
-                       if(curent_status == 0 && start > current){
-                         curent_status = curent_status +1;
-                       }else{
-                         curent_status = curent_status;
-                       }
-
-                       AppConstants.showFailToast(context,
-                           "This Sequence Number with InRoute status can not be replaced with other");
-                     }*/
+                    }
 
                     return;
                   }

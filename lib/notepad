@@ -42,15 +42,43 @@ base64 to name change API side
 
 ==============================================
 
+Drawer Profile Photo
+-------
+app_drawer_widget.dart
+appconstant.dart
+
+==============================================
+
 MPAAS CRs Close Down Jobs From Back Office (4214243034)
 -------
 detail_screen.dart
-
-#####################################
-
-detail_screen.dart
-api_urls.dart
 app_state_provider.dart
 api.dart
+customer_details.dart
 survey.dart
-last_appointment_status_model.dart
+api_service.dart
+survey_screen_viewmodel.dart  SEARCH THIS ==> Continue
+
+offline status pending.......... // @Bharat
+
+==============================================
+
+ME10 - Vehicle check log (3798988537)
+-------
+app_drawer_widget.dart
+app_state_provider.dart
+api.dart
+
+==============================================
+
+Change request - XCHUB (4925270128)
+-------
+details_screen_viewmodel.dart
+detail_screen.dart
+
+==============================================
+
+work
+-------
+crash app in release map key try // @Aditya Sir
+Gas Meter Removal & Elec Meter Removal testing ( add live ) ==> survey.dart // Continue // @Urvish Sir

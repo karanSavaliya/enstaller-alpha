@@ -36,6 +36,7 @@ import 'package:provider/provider.dart';
 import '../../core/provider/app_state_provider.dart';
 import 'electricity_screen.dart';
 import 'gas_electricity_screen.dart';
+import 'home_screen.dart';
 
 class SurveyArguments {
   String correlationId;
@@ -295,7 +296,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                             await appStateProvider.getLastAppointmentStatusList(widget.arguments.appointmentID);
                             if(appStateProvider.lastAppointmentStatus == "Cancelled"){
                               AppConstants.showFailToast(context,
-                                  "Appointment status has just been Cancelled by someone, you cannot process further, sorry");
+                                  "Appointment has been cancelled so cannot proceed further!");
+                              Navigator.of(context).pushReplacement(new MaterialPageRoute(builder: (context) => HomeScreen()));
                             }
                             else{
                               if (!model.issubmitted) {
@@ -396,17 +398,15 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                   questions[0].intSectionId]
                                       .length);
                                   if (validateconter == questions.length) {
-                                    model.incrementCounter(
-                                        widget.arguments.edit,
-                                        widget.arguments.appointmentID,
-                                        questions[0].intSectionId);
-                                    if (questions[0].strSectionName !=
-                                        "Sign Off" &&
-                                        questions[0].strSectionName != "Abort")
+                                    model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, questions[0].intSectionId);
+                                    if (questions[0].strSectionName != "Sign Off" && questions[0].strSectionName != "Abort"){
+                                      progressDialog.show();
                                       scrollup();
+                                      progressDialog.hide();
+                                    }
                                     else {
                                       progressDialog.show();
-                                    }
+                                    } //KARAN (ADD THIS ON LIVE)
                                     print("iiiiiiiiiiiiiiiiiiiiiiiiii");
                                     print(model.issubmitted);
                                     print("iiiiiiiiiiiiiiiiiiiiiiiiii");
@@ -421,24 +421,24 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                     if (response == "Sign Off") {
                                       progressDialog.hide();
                                       //Navigator.pop(mainContext); //KARAN (REMOVE THIS ON LIVE)
-                                      if(widget.arguments.jobType == "Gas SMETS2 Meter Exchange"){
+                                      if(widget.arguments.jobType == "Gas SMETS2 Meter Exchange"  || widget.arguments.jobType == "Gas Meter Removal"){
                                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Gas(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
                                       }
-                                      else if(widget.arguments.jobType == "Electric SMETS2 Meter Exchange"){
+                                      else if(widget.arguments.jobType == "Electric SMETS2 Meter Exchange" || widget.arguments.jobType == "Elec Meter Removal"){
                                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Electricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
                                       }
                                       else if(widget.arguments.jobType == "Dual SMETS2 Meter Exchange"){
                                         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GasElectricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
-                                      }
+                                      } //Continue
                                       else{
                                         Navigator.pop(mainContext);
                                       } //KARAN (ADD THIS ON LIVE)
                                     } else if (response == "submitted") {
                                       progressDialog.hide();
-                                      Navigator.pop(mainContext);
+                                      Navigator.pop(context);
                                     } else {
                                       progressDialog.hide();
-                                    }
+                                    } //KARAN (ADD THIS ON LIVE)
                                   } else {
                                     print("-------------");
                                     print(validateconter);
@@ -447,10 +447,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                   }
                                 } else {
                                   print(questions[0].intSectionId);
-                                  model.incrementCounter(
-                                      widget.arguments.edit,
-                                      widget.arguments.appointmentID,
-                                      questions[0].intSectionId);
+                                  model.incrementCounter(widget.arguments.edit, widget.arguments.appointmentID, questions[0].intSectionId);
                                 }
                               }
                             }

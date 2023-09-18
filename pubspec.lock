@@ -197,6 +197,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.5"
+  custom_map_markers:
+    dependency: "direct dev"
+    description:
+      name: custom_map_markers
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2+1"
   dio:
     dependency: "direct dev"
     description:
@@ -429,6 +436,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  fluttertoast:
+    dependency: "direct dev"
+    description:
+      name: fluttertoast
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "8.2.2"
   focus_detector:
     dependency: "direct dev"
     description:

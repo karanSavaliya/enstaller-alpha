@@ -1,6 +1,5 @@
 // @dart=2.9
 
-
 class route_making {
   List<Table> table;
   List<Table1> table1;
@@ -89,6 +88,7 @@ class Table1 {
   String strPostCode;
   String strcustomername;
   String appointmentEventType;
+  String strBookedTime;
 
   Table1(
       {this.intId,
@@ -99,7 +99,8 @@ class Table1 {
         this.strSiteAddress,
         this.strPostCode,
         this.strcustomername,
-         this.appointmentEventType});
+        this.appointmentEventType,
+        this.strBookedTime});
 
   Table1.fromJson(Map<String, dynamic> json) {
     intId = json['intId'];
@@ -111,6 +112,7 @@ class Table1 {
     strPostCode = json['strPostCode'];
     strcustomername = json['strcustomername'];
     appointmentEventType = json['appointmentEventType'];
+    strBookedTime = json['strBookedTime'];
   }
 
   Map<String, dynamic> toJson() {
@@ -124,6 +126,7 @@ class Table1 {
     data['strPostCode'] = this.strPostCode;
     data['strcustomername'] = this.strcustomername;
     data['appointmentEventType'] = this.appointmentEventType;
+    data['strBookedTime'] = this.strBookedTime;
     return data;
   }
 }

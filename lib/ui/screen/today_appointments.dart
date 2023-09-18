@@ -1,5 +1,4 @@
 //@dart=2.9
-
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -8,9 +7,6 @@ import 'package:enstaller/core/enums/view_state.dart';
 import 'package:enstaller/core/model/appointmentDetailsModel.dart';
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/today_appointment_viewmodel.dart';
-import 'package:enstaller/flutter_google_map/flutter_google_maps.dart';
-import 'package:enstaller/flutter_google_map/src/core/google_map.dart';
-import 'package:enstaller/flutter_google_map/src/core/map_items.dart';
 import 'package:enstaller/ui/screen/detail_screen.dart';
 import 'package:enstaller/ui/screen/maps_route_planner_plotmarker.dart';
 import 'package:enstaller/ui/screen/today_appointments_planning.dart';
@@ -20,16 +16,13 @@ import 'package:enstaller/ui/shared/appbuttonwidget.dart';
 import 'package:enstaller/ui/util/common_utils.dart';
 import 'package:enstaller/ui/util/text_util.dart';
 import 'package:flutter/material.dart';
-
-import 'package:enstaller/flutter_google_map/src/core/google_map.dart';
-import 'package:enstaller/flutter_google_map/src/core/map_items.dart';
-
-
-
 import 'package:flutter_svg/svg.dart';
-
-import '../../flutter_google_map/src/core/map_preferences.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../flutter_google_map/core/flutter_google_maps.dart';
+import '../../flutter_google_map/core/google_map.dart';
+import '../../flutter_google_map/core/map_items.dart';
+import '../../flutter_google_map/core/map_preferences.dart';
 
 
 class TodayAppointmentScreen extends StatefulWidget {

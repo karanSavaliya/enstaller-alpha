@@ -116,4 +116,76 @@ class Api {
       throw Exception('Failed to fetch data');
     }
   }
+
+  Future<bool> moveToBackOfficeStatusUpdate(String apiUrl,String intAppointmentId) async {
+    UserModel user = await Prefs.getUser();
+    final Map<String, dynamic> data = {
+      "intAppointmentId": intAppointmentId.toString(),
+      "bisSurveyBackoffice": true
+    };
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      bool status = jsonResponse["status"];
+      return status;
+    } else {
+      throw Exception('Failed to send POST request');
+    }
+  } //KARAN (ADD THIS ON LIVE)
+
+  Future<bool> vehicleCheckLogInsert(String apiUrl) async {
+    UserModel user = await Prefs.getUser();
+    final Map<String, dynamic> data = {
+      "intEngineerId":user.intEngineerId.toString(),
+      "intUserid":user.id.toString(),
+      "bisVehicleCheck":true,
+      "intCreatedby":user.id.toString(),
+      "intCompanyId":1,
+    };
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      bool status = jsonResponse["status"];
+      return status;
+    } else {
+      throw Exception('Failed to send POST request');
+    }
+  } //KARAN (ADD THIS ON LIVE)
+
+  Future<bool> vehicleLogGet(String apiUrl) async {
+    UserModel user = await Prefs.getUser();
+    final Map<String, dynamic> data = {
+      "intEngineerId":user.intEngineerId.toString(),
+      "intUserid":user.id.toString(),
+    };
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      bool status = jsonResponse["status"];
+      return status;
+    } else {
+      throw Exception('Failed to send POST request');
+    }
+  } //KARAN (ADD THIS ON LIVE)
 }

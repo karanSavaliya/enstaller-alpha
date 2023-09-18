@@ -344,17 +344,26 @@ class AppConstants {
   static String nameTitle(String value) {
     if (value != null) {
       List<String> list = value.split(' ');
-      String first = "";
-      if (list[0].isNotEmpty) {
-        first = list[0][0];
+      if(list.length != 1){
+        String first = "";
+        if (list[0].isNotEmpty) {
+          first = list[0][0];
+        }
+        String secound = "";
+        if (list[1].isNotEmpty) {
+          secound = list[1][0];
+        }
+        return first + secound;
       }
-      String secound = "";
-      if (list[1].isNotEmpty) {
-        secound = list[1][0];
+      else{
+        String first = "";
+        if (list[0].isNotEmpty) {
+          first = list[0][0];
+        }
+        return first;
       }
-      return first + secound;
     } else {
       return "";
     }
-  }
+  } //KARAN (ADD THIS ON LIVE)
 }

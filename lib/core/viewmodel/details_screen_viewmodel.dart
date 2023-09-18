@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -46,25 +45,6 @@ class DetailsScreenViewModel extends BaseModel {
     "Emergency Exchange Electric": 0,
     "Emergency Exchange Gas": 1
   };
-  Map<String, Map<String, int>> _appointmentandjobtype = {
-    "Meter removal, Scheduled Exchange, Emergency Exchange, New Connection": {
-      // "SMETS2 1ph Elec": 0,
-      // "SMETS2 Gas": 1,
-      // "SMETS2 Dual": 2,
-      // "SMETS2 3ph Elec": 3,
-      // "Electric SMETS2 Meter Exchange" : 0,
-      // "Dual SMETS2 Meter Exchange" : 2,
-      // "Gas SMETS2 Meter Exchange" : 1,
-      // "Emergency Exchange Electric" : 0,
-      // "Emergency Exchange Gas" : 1
-    },
-    // "New Connection": {
-    //   "SMETS2 1ph Elec": 4,
-    //   "SMETS2 Gas": 5,
-    //   "SMETS2 Dual": 6,
-    //   "SMETS2 3ph Elec": 7
-    // }
-  };
 
   CheckCloseJobModel checkCloseJobModel;
   String pincode;
@@ -79,6 +59,7 @@ class DetailsScreenViewModel extends BaseModel {
   Map<String, bool> isformfilled = {};
   String selectedStatus;
   String latlngmap = "";
+  String postCode = "";
   UserModel user;
   final Connectivity _connectivity = Connectivity();
   SharedPreferences preferences;
@@ -90,7 +71,7 @@ class DetailsScreenViewModel extends BaseModel {
     AppStrings.started,
     AppStrings.cancelled,
     AppStrings.aborted,
-    AppStrings.completed
+    AppStrings.completed,
   ];
 
   void onSelectStatus(String value) {
@@ -154,8 +135,14 @@ class DetailsScreenViewModel extends BaseModel {
       checkCloseJobModel =
           await _apiService.getTableById(appointmentID, user.intCompanyId);
 
-      final location = await GeoLocationService.getAddressFromPinCode(customerDetails.strPostCode);
-      latlngmap = location.coordinates.latitude.toString()+","+location.coordinates.longitude.toString();
+      try{
+        final location = await GeoLocationService.getAddressFromPinCode(customerDetails.strPostCode);
+        latlngmap = location.coordinates.latitude.toString()+","+location.coordinates.longitude.toString();
+      }
+      catch(e){
+        latlngmap = "0.0,-0.0";
+        postCode = customerDetails.strPostCode;
+      }
 
       setMeterData();
       int id = _checkbuttonindex(appointmentDetails);
@@ -200,12 +187,6 @@ class DetailsScreenViewModel extends BaseModel {
   int _checkbuttonindex(appointmentDetails) {
     int id;
     id = _appointmenttype[appointmentDetails.appointment.strJobType.trim()];
-
-    // _appointmentandjobtype.forEach((key, value) {
-    //   if (key
-    //       .contains(appointmentDetails.appointment.strAppointmentType.trim())) {
-    //   }
-    // });
     return id;
   }
 
@@ -400,15 +381,13 @@ class DetailsScreenViewModel extends BaseModel {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String ups = preferences.getString('ups');
 
-    if (processId == "79" || processId == "81") {
+    if (processId == "79" || processId == "81" || processId == "91") {
       startGasProcess(processId, userModel, ups, customerid);
     } else {
       startElecProcess(processId, userModel, ups, customerid);
     }
     setState(ViewState.Idle);
-  }
-
-
+  } //KARAN (ADD THIS ON LIVE)
 
   startElecProcess(
       String processId, UserModel userModel, String ups, String customerID) {
@@ -416,11 +395,12 @@ class DetailsScreenViewModel extends BaseModel {
       var custId = customerID;
       var DCCMAIWebUrl = 'https://mai.enpaas.com/';
 
-      ElectricAndGasMeterModel model = electricGasMeterList
-          .firstWhere((element) => element.strFuel == "ELECTRICITY");
+      ElectricAndGasMeterModel model = electricGasMeterList.firstWhere((element) => element.strFuel == "ELECTRICITY");
+
       var mpan = model.strMpan;
       var em = userModel.email.toString();
       var sessionId = userModel.id.toString();
+
       if (mpan == null || mpan == '') {
       } else {
         var strUrl = '';
@@ -443,7 +423,6 @@ class DetailsScreenViewModel extends BaseModel {
 
         strEncrypt = encryption(strPara);
         strUrl += '' + DCCMAIWebUrl + '?returnUrl=' + strEncrypt + '';
-
         launchurl(strUrl);
       }
     } catch (err) {
@@ -457,6 +436,7 @@ class DetailsScreenViewModel extends BaseModel {
     try {
       ElectricAndGasMeterModel model = electricGasMeterList
           .firstWhere((element) => element.strFuel == "GAS");
+
       var mpan = model.strMpan;
       var em = userModel.email.toString();
       var sessionId = userModel.id.toString();

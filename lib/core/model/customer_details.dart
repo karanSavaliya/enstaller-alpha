@@ -70,6 +70,7 @@ class CustomerDetails {
   String strMprn;
   String strPursuableDebt;
   String strTotalDebt;
+  bool bisSurveyBackoffice;
 
   CustomerDetails(
       {this.customerName,
@@ -140,7 +141,7 @@ class CustomerDetails {
         this.lstHRleterDetail,
         this.strMprn,
         this.strPursuableDebt,
-        this.strTotalDebt});
+        this.strTotalDebt,this.bisSurveyBackoffice,});
 
   CustomerDetails.fromJson(Map<String, dynamic> json) {
     customerName = json['customerName'];
@@ -212,6 +213,7 @@ class CustomerDetails {
     strMprn = json['strMprn'];
     strPursuableDebt = json['strPursuableDebt'];
     strTotalDebt = json['strTotalDebt'];
+    bisSurveyBackoffice = json['bisSurveyBackoffice'];
   }
 
   Map<String, dynamic> toJson() {
@@ -285,6 +287,7 @@ class CustomerDetails {
     data['strMprn'] = this.strMprn;
     data['strPursuableDebt'] = this.strPursuableDebt;
     data['strTotalDebt'] = this.strTotalDebt;
+    data['bisSurveyBackoffice'] = this.bisSurveyBackoffice;
     return data;
   }
-}
+} //KARAN (ADD THIS ON LIVE)

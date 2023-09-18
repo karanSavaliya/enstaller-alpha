@@ -9,10 +9,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 
 class AppRouter {
-
-
   static Route<dynamic> generateRoute(RouteSettings settings) {
-
     switch (settings.name) {
       case DetailScreen.routeName:
         return PageTransition(
@@ -23,7 +20,6 @@ class AppRouter {
           settings: settings,
         );
         break;
-
       case UpdateStatusScreen.routeName:
         return PageTransition(
           child: UpdateStatusScreen(),
@@ -52,8 +48,6 @@ class AppRouter {
         );
         break;
     }
-
     return null;
   }
-
 }

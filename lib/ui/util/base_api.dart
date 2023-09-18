@@ -1,8 +1,6 @@
 // @dart=2.9
-
 import 'package:dio/dio.dart';
 import 'package:enstaller/core/constant/api_urls.dart';
-
 
 class BaseApi {
 
@@ -39,21 +37,13 @@ class BaseApi {
 }
 
 class HeaderInterceptor extends Interceptor {
-
-
   @override
   onRequest(RequestOptions options , dynamic handler) async {
-
     options.headers = {
       "Content-type": "application/json",
       "accept": "application/json"
     };
-
     print("header ${options.headers.toString()}");
-
     return super.onRequest(options , null);
   }
-
-
-
 }
