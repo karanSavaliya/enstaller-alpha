@@ -367,32 +367,19 @@ class _DetailScreenState extends State<DetailScreen> {
                                 },
                               ),
                             ),
-                          if (model.showChangeAppointmentStatusButton() &&
-                              model.appointmentDetails.appointment
-                                      .bisAbortRequested ==
-                                  false &&
-                              model.appointmentDetails.appointment
-                                      .bisAbortRequestApproved ==
-                                  false)
+                          if (model.showChangeAppointmentStatusButton() && model.appointmentDetails.appointment.bisAbortRequested == false && model.appointmentDetails.appointment.bisAbortRequestApproved == false)
                             Padding(
                               padding: SizeConfig.sidepadding,
                               child: AppButton(
                                 height: 40,
                                 color: AppColors.darkBlue,
-                                buttonText:
-                                    AppStrings.change_appointment_status_button,
+                                buttonText: AppStrings.change_appointment_status_button,
                                 radius: 15,
-                                textStyle:
-                                    TextStyle(color: AppColors.whiteColor),
+                                textStyle: TextStyle(color: AppColors.whiteColor),
                                 onTap: () async {
-                                  bool status =
-                                      await model.onUpdateStatusOnSchedule(
-                                          context,
-                                          widget.arguments.appointmentID);
+                                  bool status = await model.onUpdateStatusOnSchedule(context, widget.arguments.appointmentID);
                                   if (status) {
-                                    model.initializeData(
-                                        widget.arguments.appointmentID,
-                                        widget.arguments.customerID);
+                                    model.initializeData(widget.arguments.appointmentID, widget.arguments.customerID);
                                   }
                                 },
                               ),
@@ -410,11 +397,11 @@ class _DetailScreenState extends State<DetailScreen> {
                               textStyle: TextStyle(color: AppColors.whiteColor),
                               onTap: () {
                                 AppConstants.showAppDialog(
-                                    context: context,
-                                    child: CommentDialogWidget(
-                                      appointmentID:
-                                          widget.arguments.appointmentID,
-                                    ));
+                                  context: context,
+                                  child: CommentDialogWidget(
+                                    appointmentID: widget.arguments.appointmentID,
+                                  ),
+                                );
                               },
                             ),
                           ),

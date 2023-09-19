@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -19,26 +18,6 @@ import 'package:flutter_svg/svg.dart';
 class UpdateStatusScreen extends StatelessWidget {
   static const String routeName = '/updateStatusScreen';
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-
-  Widget _rowWidget({String firstText, secondText}) {
-    return Row(
-      children: [
-        Expanded(
-            child: Text(
-          firstText,
-          style: TextStyle(
-              color: AppColors.darkGrayColor, fontWeight: FontWeight.bold),
-        )),
-        Expanded(
-            flex: 2,
-            child: Text(
-              secondText,
-              style: TextStyle(
-                  color: AppColors.black, fontWeight: FontWeight.bold),
-            ))
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -445,7 +424,6 @@ class UpdateStatusScreen extends StatelessWidget {
                                                           .appointmentStatusList[
                                                               index]
                                                           .appointmentEventType),
-//                                          color: AppColors.statusColor(model.appointmentStatusList[index].appointmentEventType),
                                                   semanticsLabel: 'Status'),
                                             ),
                                             SizeConfig.horizontalSpaceSmall(),

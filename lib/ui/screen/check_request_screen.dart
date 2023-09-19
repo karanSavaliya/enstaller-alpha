@@ -1,13 +1,10 @@
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
-
 import 'package:enstaller/core/constant/size_config.dart';
 import 'package:enstaller/core/enums/view_state.dart';
-
 import 'package:enstaller/core/provider/base_view.dart';
 import 'package:enstaller/core/viewmodel/check_request_viewmodel.dart';
-
 import 'package:enstaller/ui/shared/app_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

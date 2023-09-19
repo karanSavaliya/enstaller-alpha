@@ -20,21 +20,14 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   bool isChecked = false;
   bool autoValidation = false;
-  var _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
         body: BaseView<LogInViewModel>(
         builder: (context, model, child) {
-
           return SingleChildScrollView(child:Column(
-
             children: <Widget>[
-
-
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.04,
               ),
@@ -50,7 +43,6 @@ class VerifyEmailState extends State<VerifyEmail> {
                 decoration: BoxDecoration(color: AppColors.whiteColor),
               ),
               Container(
-//                width: SizeConfig.screenWidth,
                 height: SizeConfig.screenHeight * .76,
                 decoration: BoxDecoration(
                   color: AppColors.loginBottomColor,
@@ -89,23 +81,12 @@ class VerifyEmailState extends State<VerifyEmail> {
                         model.verifyEmail(context);
                       },
                     ),
-
                   ],
                 ),
               )
-
             ],
-
           ));
-
     })
-
-
-
-
     );
-
   }
-
-
 }
