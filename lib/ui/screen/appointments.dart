@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -21,13 +20,11 @@ class AppointmentScreen extends StatefulWidget {
 }
 
 class _ApppointmentScreenState extends State<AppointmentScreen> {
-  //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController controller = TextEditingController();
 
   @override
   void dispose() {
-    // TODO: implement dispose
     controller.dispose();
     super.dispose();
   }
@@ -36,9 +33,7 @@ class _ApppointmentScreenState extends State<AppointmentScreen> {
   Widget build(BuildContext context) {
     return BaseView<AppointmentViewModel>(
       onModelReady: (model) => model.getAppointmentList(),
-
       builder: (context, model, child) {
-
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
@@ -93,10 +88,6 @@ class _ApppointmentScreenState extends State<AppointmentScreen> {
                     model.onClickSerach();
                   },
                 ),
-                // Icon(
-                //   Icons.notifications_none,
-                //   size: MediaQuery.of(context).size.height * 0.035,
-                // ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.04,
                 ),
@@ -134,10 +125,6 @@ class _ApppointmentScreenState extends State<AppointmentScreen> {
                                           children: [
                                               _engineerInfo(
                                                 model.appointmentList[i])
-//                                Divider(
-//                                  color: AppColors.darkGrayColor,
-//                                  thickness: 1.0,
-//                                ),
                                           ],
                                         ),
                                       ) : Visibility(visible: false , child: Container(height: 0,)),
@@ -151,7 +138,6 @@ class _ApppointmentScreenState extends State<AppointmentScreen> {
     );
   }
 
-  // engineer info
   Widget _engineerInfo(Appointment appointment) {
     return Column(
       children: [
@@ -242,8 +228,6 @@ class _ApppointmentScreenState extends State<AppointmentScreen> {
       ],
     );
   }
-
-  //survey info
 
   TextStyle getTextStyle({Color color, bool isBold = false, num fontSize}) {
     return TextStyle(

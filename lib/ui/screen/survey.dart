@@ -1478,65 +1478,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
     }
   }
 
-  // text field form
-  Widget _textFieldForm(
-      {TextEditingController controller,
-      TextInputType keyboardType,
-      String hint,
-      FormFieldValidator<String> validator,
-      int maxLines = 1,
-      FocusNode currentFocusNode,
-      FocusNode nextFocusNode,
-      BuildContext context}) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        maxLines: maxLines,
-        maxLength: 150,
-        buildCounter: (BuildContext context,
-            {int currentLength, int maxLength, bool isFocused}) {
-          /* setState(() {
-            numOfChare=currentLength.toString();
-          });*/
-        },
-        style: TextStyle(color: Colors.black),
-        focusNode: currentFocusNode,
-        onSubmitted: (term) {
-          currentFocusNode?.unfocus();
-          if (nextFocusNode != null)
-            FocusScope.of(context).requestFocus(nextFocusNode);
-        },
-        decoration: new InputDecoration(
-          hintText: hint,
-          filled: true,
-          fillColor: Colors.grey[50],
-          hintStyle: TextStyle(
-              fontWeight: FontWeight.w500, fontSize: 14.0, color: Colors.grey),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(8),
-            ),
-            borderSide: BorderSide(
-              color: Colors.black,
-              width: 0.5,
-            ),
-          ),
-          focusedBorder: new OutlineInputBorder(
-            borderRadius: const BorderRadius.all(
-              const Radius.circular(8),
-            ),
-            borderSide: new BorderSide(
-              color: Colors.black,
-              width: 0.5,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<void> _showMyDialog(
       {SurveyResponseModel surveyResponseModel,
       File image,

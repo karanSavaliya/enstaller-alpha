@@ -361,8 +361,7 @@ class _DetailScreenState extends State<DetailScreen> {
                                         widget.arguments.appointmentID,
                                         widget.arguments.customerID);
                                   } else {
-                                    AppConstants.showFailToast(context,
-                                        "There is already one enrouted Appointment for today");
+                                    AppConstants.showFailToast(context, "There is already one enrouted Appointment for today");
                                   } //KARAN (ADD THIS ON LIVE)
                                 },
                               ),
@@ -940,15 +939,14 @@ class _DetailScreenState extends State<DetailScreen> {
                 ],
               ),
             ),
-            model.appointmentDetails.appointment.appointmentEventType ==
-                    "OnSite"
-                ? AppointmentDetailsRowWidget(
+            model.appointmentDetails.appointment.bisAbortRequested == false && model.appointmentDetails.appointment.bisAbortRequestApproved == false ?
+            model.appointmentDetails.appointment.appointmentEventType == "OnSite" ?
+                AppointmentDetailsRowWidget(
                     firstText: AppStrings.transferToBackOfficeSurvey,
                     secondChild: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        model.customerDetails.bisSurveyBackoffice == false
-                            ? AppButton(
+                        model.customerDetails.bisSurveyBackoffice == false ? AppButton(
                                 color: AppColors.appThemeColor,
                                 height: 30,
                                 width: SizeConfig.screenWidth * .23,
@@ -956,12 +954,20 @@ class _DetailScreenState extends State<DetailScreen> {
                                 textStyle:
                                     TextStyle(color: AppColors.whiteColor),
                                 radius: 15,
-                                onTap: () {
-                                  _showMyDialog(model, intAppointmentId,
-                                      appStateProvider, customerID);
+                                onTap: () async {
+                                  await appStateProvider.getLastAppointmentStatusList(
+                                      widget.arguments.appointmentID);
+                                  if (appStateProvider.lastAppointmentStatus ==
+                                      "Cancelled") {
+                                    AppConstants.showFailToast(context,
+                                        "Appointment has been cancelled so cannot proceed further!");
+                                  }
+                                  else{
+                                    _showMyDialog(model, intAppointmentId,
+                                        appStateProvider, customerID);
+                                  }
                                 },
-                              )
-                            : AppButton(
+                              ) : AppButton(
                                 color: Colors.grey,
                                 height: 30,
                                 width: SizeConfig.screenWidth * .23,
@@ -969,15 +975,24 @@ class _DetailScreenState extends State<DetailScreen> {
                                 textStyle:
                                     TextStyle(color: AppColors.whiteColor),
                                 radius: 15,
-                                onTap: () {
-                                  AppConstants.showFailToast(context,
-                                      "Already Survey Transfer To Back Office");
+                                onTap: () async {
+                                  await appStateProvider.getLastAppointmentStatusList(
+                                      widget.arguments.appointmentID);
+                                  if (appStateProvider.lastAppointmentStatus ==
+                                      "Cancelled") {
+                                    AppConstants.showFailToast(context,
+                                        "Appointment has been cancelled so cannot proceed further!");
+                                  }
+                                  else{
+                                    AppConstants.showFailToast(context,
+                                        "Already Survey Transfer To Back Office");
+                                  }
                                 },
                               ),
                       ],
                     ),
                   )
-                : Container(), //KARAN (ADD THIS ON LIVE)
+                : Container() : Container(), //KARAN (ADD THIS ON LIVE)
             AppointmentDetailsRowWidget(
               firstText: AppStrings.surveyReceived,
               secondText: model.appointmentDetails.appointment.surveyReceived,

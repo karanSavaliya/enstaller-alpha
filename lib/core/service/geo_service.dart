@@ -26,5 +26,4 @@ class GeoLocationService{
    return val.latitude.toString()+","+val.longitude.toString();
   }
 
-
 }

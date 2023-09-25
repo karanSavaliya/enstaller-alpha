@@ -19,11 +19,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../flutter_google_map/core/flutter_google_maps.dart';
-import '../../flutter_google_map/core/google_map.dart';
-import '../../flutter_google_map/core/map_items.dart';
-import '../../flutter_google_map/core/map_preferences.dart';
-
+import '../../flutter_google_map/flutter_google_maps.dart';
+import '../../flutter_google_map/src/core/google_map.dart';
+import '../../flutter_google_map/src/core/map_items.dart';
+import '../../flutter_google_map/src/core/map_preferences.dart';
 
 class TodayAppointmentScreen extends StatefulWidget {
   @override

@@ -21,7 +21,6 @@ class AddOrderScreen extends StatefulWidget {
 class _AddOrderScreenState extends State<AddOrderScreen> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -29,7 +28,6 @@ class _AddOrderScreenState extends State<AddOrderScreen> {
     return BaseView<AddOrderScreenViewModel>(
       onModelReady: (model) => widget.intOrderId == null ?  model.initializeData(null) :model.initializeData(widget.intOrderId),
       builder: (context, model, child) {
-
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,

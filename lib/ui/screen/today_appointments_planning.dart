@@ -88,7 +88,6 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
       }
 
       print(add_update_type+";;;;;;;;;;;;;;;;"+model.list_route_plan[0].route_plan_id);
-
       UserModel user = await Prefs.getUser();
 
       Map routeplanner = {
@@ -105,7 +104,6 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
         "intModifiedby": user.intCompanyId
       };
 
-
       List<Map> listmap = [];
       var intPriority = 0;
 
@@ -118,7 +116,6 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
         });
       }
 
-      print("KARAN");
       print(listmap);
 
       Future.delayed(const Duration(milliseconds: 1500) , () async {
@@ -309,7 +306,6 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
               },
             ),),
             ),),
-
             Container( margin: EdgeInsets.only(top: 15) , height: MediaQuery.of(context).size.height*0.75 , child:ReorderableListView(
                 children: model.list_route_plan
                     .map((item) => ListTile(

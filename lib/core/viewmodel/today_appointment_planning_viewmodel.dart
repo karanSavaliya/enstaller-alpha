@@ -20,6 +20,7 @@ class RoutePlanningArguments {
   String status;
   String appointmentTime;
   int intPriority;
+  String intId;
   RoutePlanningArguments({
     this.appointmentID,
     this.strBookingReference,
@@ -30,6 +31,7 @@ class RoutePlanningArguments {
     this.status,
     this.appointmentTime,
     this.intPriority,
+    this.intId,
   });
 
 }
@@ -105,6 +107,7 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
     siteAddressLength = site_address_.length;
     site_address_.forEach((element) {
         RoutePlanningArguments rpa = new RoutePlanningArguments(
+            intId: element.intId.toString(),
             appointmentID: element.intAppointmentId.toString(),
             strBookingReference: element.strBookingReference,
             site_address: element.strSiteAddress,
@@ -134,7 +137,9 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
       if(siteAddressLength-1 == count){
         list_route_plan.clear();
       }
+
       RoutePlanningArguments rpa = new RoutePlanningArguments(
+        intId: site_address_.elementAt(count).intId.toString(),
         appointmentID: site_address_.elementAt(count).intAppointmentId.toString(),
         strBookingReference: site_address_.elementAt(count).strBookingReference,
         site_address: site_address_.elementAt(count).strSiteAddress,
@@ -155,7 +160,6 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
       print(element.strStatus.toString()+"---------------------");
 
         if (element.intRoutePlanId == null) {
-          print("KARAN2");
           String appointment = element.intId.toString();
           String book_refrence = element.strBookingReference;
           String site_address = element.strSiteAddress;
@@ -230,6 +234,8 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
     sortorder   = vals;
 
     setState(ViewState.Idle);
+
+    makeMultipleRequests();
 
   }
 
