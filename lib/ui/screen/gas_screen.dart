@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../core/constant/app_colors.dart';
 import '../../core/constant/app_string.dart';
 import 'package:provider/provider.dart';
+import '../../core/constant/appconstant.dart';
 import '../../core/provider/app_state_provider.dart';
 import 'widget/electricity/electricity_text_field_widget.dart';
 
@@ -15,6 +16,8 @@ class Gas extends StatefulWidget {
 }
 
 class _GasState extends State<Gas> {
+
+  bool isSubmit = false;
 
   @override
   void initState(){
@@ -98,14 +101,14 @@ class _GasState extends State<Gas> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           ElectricityTextFieldWidget(
-                            hintText: "MEM MpId",
+                            hintText: "MEM MPID",
                             controller: appStateProvider.memMpId,
                             maxLength: 3,
                             required: "required",
                           ),
                           SizedBox(height: 10),
                           ElectricityTextFieldWidget(
-                            hintText: "Supplier MpId",
+                            hintText: "Supplier MPID",
                             controller: appStateProvider.supplierMpId,
                             maxLength: 3,
                             required: "required",
@@ -222,6 +225,7 @@ class _GasState extends State<Gas> {
                             onTap: () => appStateProvider.selectAppointmentDate(context),
                             controller: appStateProvider.textEditingControllerAppointmentDate,
                             maxLength: 10,
+                            keyboardType: "none",
                           ),
                           SizedBox(height: 10),
                           ElectricityTextFieldWidget(
@@ -256,6 +260,7 @@ class _GasState extends State<Gas> {
                             controller: appStateProvider.textEditingControllerSiteVisitDate,
                             onTap: () => appStateProvider.selectSiteVisitDate(context),
                             maxLength: 10,
+                            keyboardType: "none",
                           ),
                           SizedBox(height: 10),
                           Text("\t\tVisit Successful"),
@@ -342,7 +347,23 @@ class _GasState extends State<Gas> {
                                     children: [
                                       index != 0 ? GestureDetector(
                                         onTap: () {
-                                          appStateProvider.removeForm(index);
+                                          showDialog<String>(context: context, builder: (BuildContext context) => AlertDialog(
+                                            title: const Text('Remove?'),
+                                            content: const Text('Are you sure you want to remove this form?',style: TextStyle(fontWeight: FontWeight.bold,letterSpacing: 1)),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () {
+                                                  appStateProvider.removeForm(index);
+                                                  Navigator.pop(context);
+                                                },
+                                                child: const Text('YES'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(context, 'NO'),
+                                                child: const Text('NO'),
+                                              ),
+                                            ],
+                                          ));
                                         },
                                         child: Center(
                                           child: Container(
@@ -358,7 +379,10 @@ class _GasState extends State<Gas> {
                                       const SizedBox(width: 7),
                                       GestureDetector(
                                         onTap: () {
-                                          appStateProvider.addForm();
+                                          appStateProvider.fieldDataCheckWhenClickAddButtonGas(context);
+                                          if(appStateProvider.isCheckData == true){
+                                            appStateProvider.addForm();
+                                          }
                                         },
                                         child: Center(
                                           child: Container(
@@ -404,14 +428,14 @@ class _GasState extends State<Gas> {
                               ),
                               ElectricityTextFieldWidget(
                                 required: "required",
-                                hintText: "InstallationStatus",
+                                hintText: "Installation Status",
                                 controller: appStateProvider.formDataList[index]['installationStatus'],
                                 maxLength: 10,
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
                                 required: "required",
-                                hintText: "Asset Provider Mpid",
+                                hintText: "Asset Provider MPID",
                                 maxLength: 3,
                                 controller: appStateProvider.formDataList[index]['assetProviderMPID'],
                               ),
@@ -500,6 +524,7 @@ class _GasState extends State<Gas> {
                                 controller: appStateProvider.formDataList[index]['oamiInspectionDate'],
                                 onTap: () => appStateProvider.selectOAMIDate(context, index),
                                 maxLength: 10,
+                                keyboardType: "none",
                               ),
                               const SizedBox(height: 10),
                               ElectricityTextFieldWidget(
@@ -515,6 +540,7 @@ class _GasState extends State<Gas> {
                                 controller: appStateProvider.formDataList[index]['assetRemovalDate'],
                                 onTap: () => appStateProvider.selectRemovalDate(context, index),
                                 maxLength: 10,
+                                keyboardType: "none",
                               ),
                               const SizedBox(height: 10),
                               ListView.builder(
@@ -532,7 +558,23 @@ class _GasState extends State<Gas> {
                                             children: [
                                               subIndex != 0 ? GestureDetector(
                                                 onTap: () {
-                                                  appStateProvider.removeSubForm(index, subIndex);
+                                                  showDialog<String>(context: context, builder: (BuildContext context) => AlertDialog(
+                                                    title: const Text('Remove?'),
+                                                    content: const Text('Are you sure you want to remove this form?',style: TextStyle(fontWeight: FontWeight.bold,letterSpacing: 1)),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          appStateProvider.removeSubForm(index, subIndex);
+                                                          Navigator.pop(context);
+                                                        },
+                                                        child: const Text('YES'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pop(context, 'NO'),
+                                                        child: const Text('NO'),
+                                                      ),
+                                                    ],
+                                                  ));
                                                 },
                                                 child: Center(
                                                   child: Container(
@@ -548,7 +590,10 @@ class _GasState extends State<Gas> {
                                               const SizedBox(width: 7),
                                               GestureDetector(
                                                 onTap: () {
-                                                  appStateProvider.addSubForm(index);
+                                                  appStateProvider.fieldDataCheckWhenClickAddButtonGas(context);
+                                                  if(appStateProvider.isCheckData == true){
+                                                    appStateProvider.addSubForm(index);
+                                                  }
                                                 },
                                                 child: Center(
                                                   child: Container(
@@ -570,6 +615,7 @@ class _GasState extends State<Gas> {
                                         hintText: "Number Of Digits",
                                         keyboardType: "number",
                                         required: "required",
+                                        maxLength: 2,
                                         controller: appStateProvider.formDataList[index]['registers'][subIndex]['numberOfDigits'],
                                       ),
                                       SizedBox(height: 10),
@@ -596,7 +642,13 @@ class _GasState extends State<Gas> {
                         onTap: (){
                           appStateProvider.fieldDataCheck(context);
                           if(appStateProvider.isCheckData == true){
-                            appStateProvider.saveSapphireGasFlow(context,widget.customerID,widget.appointmentId,"SINGLE");
+                            if(!isSubmit){
+                              AppConstants.showSuccessToast(context, "Wait a Few seconds...");
+                              setState(() {
+                                isSubmit = true;
+                              });
+                              appStateProvider.saveSapphireGasFlow(context,widget.customerID,widget.appointmentId,"SINGLE");
+                            }
                           }
                         },
                         child: Container(

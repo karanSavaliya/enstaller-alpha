@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:enstaller/core/model/elec_closejob_model.dart';
 import 'package:enstaller/core/model/gas_job_model.dart';
 import 'package:enstaller/core/model/send/appointmentStatusUpdateCredential.dart';
+import 'package:enstaller/core/provider/app_state_provider.dart';
 import 'package:enstaller/ui/util/onchangeyesnoprovider.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
@@ -77,8 +78,7 @@ class SurveyScreenViewModel extends BaseModel {
     setState(ViewState.Idle);
   }
 
-  void initializeData(String appointmentID, bool edit, BuildContext context,
-      CheckCloseJobModel closeJobModel) async {
+  void initializeData(String appointmentID, bool edit, BuildContext context, CheckCloseJobModel closeJobModel) async {
     setState(ViewState.Busy);
     currentAppointmentId = appointmentID;
     user = await Prefs.getUser();
@@ -915,7 +915,6 @@ class SurveyScreenViewModel extends BaseModel {
       BuildContext context,
       DetailsScreenViewModel dsmodel,
       String sectionname) async {
-    //setState(ViewState.Busy);
     user = await Prefs.getUser();
     print(selected.toString() + 'line 1130');
     if (selected <= sectionQuestions.keys.length - 2) {
@@ -944,8 +943,6 @@ class SurveyScreenViewModel extends BaseModel {
           pref.remove("LastSelectionId+${appointmentid.trim()}");
           print(abortreasonmodel.response);
           if (responseModel.statusCode == 1) {
-            //setState(ViewState.Idle);
-            //await Future.delayed(Duration(seconds: 1));
             issubmitted = true;
             AppConstants.showSuccessToast(context, "Survey Aborted");
             GlobalVar.isloadAppointmentDetail = true;
@@ -965,8 +962,7 @@ class SurveyScreenViewModel extends BaseModel {
             _list.add(jsonEncode(element.toJson()));
           });
           if (preferences.getStringList("listOfUnSubmittedForm") != null) {
-            _setofUnSubmittedForm =
-                preferences.getStringList("listOfUnSubmittedForm").toSet();
+            _setofUnSubmittedForm = preferences.getStringList("listOfUnSubmittedForm").toSet();
           }
           _setofUnSubmittedForm.add(appointmentid);
 
@@ -990,8 +986,8 @@ class SurveyScreenViewModel extends BaseModel {
         if (status != "NONE") {
           ResponseModel responseModel; //KARAN (ADD THIS ON LIVE)
           if(sectionname.trim() == "Sign Off"){
-            issubmitted = true; //KARAN (ADD THIS ON LIVE)
             responseModel = await _apiService.submitListSurveyAnswer(answerList,context,appointmentid,"NotAbort");
+            issubmitted = true; //KARAN (ADD THIS ON LIVE)
           }
           else{
             responseModel = await _apiService.submitListSurveyAnswer(answerList,context,appointmentid,"NotAbortButNextButton");
@@ -1049,8 +1045,8 @@ class SurveyScreenViewModel extends BaseModel {
 
           Fluttertoast.showToast(msg: 'Submitted Offline', backgroundColor: Colors.red);
           if(sectionname.trim() == "Sign Off"){
-            issubmitted = true;
-          } //Continue
+            issubmitted = false;
+          } //KARAN (ADD THIS ON LIVE)
         }
       } catch (e) {
         // print(e.toString());
@@ -1061,11 +1057,16 @@ class SurveyScreenViewModel extends BaseModel {
 
     if (sectionname.trim() == "Sign Off") {
       return "Sign Off";
-    } else if (issubmitted) {
-      return "submitted";
-    } else {
-      return "none";
     }
+    else if (sectionname.trim() == "Abort") {
+      return "Abort";
+    }
+    else if (issubmitted) {
+      return "submitted";
+    }
+    else {
+      return "none";
+    } //KARAN (ADD THIS ON LIVE)
   }
 
   openJumboTab(DetailsScreenViewModel dsmodel, String appointmentid) async {
@@ -1143,8 +1144,7 @@ class SurveyScreenViewModel extends BaseModel {
     }
   }
 
-  void eleccloseJobSubmitOffline(
-      String appointmentid, ElecCloseJobModel elecCloseJobModel) async {
+  void eleccloseJobSubmitOffline(String appointmentid, ElecCloseJobModel elecCloseJobModel) async {
     ConnectivityResult result = await _connectivity.checkConnectivity();
     String status = _updateConnectionStatus(result);
     if (status != "NONE") {
@@ -1179,8 +1179,7 @@ class SurveyScreenViewModel extends BaseModel {
     }
   }
 
-  void gascloseJobSubmitOffline(
-      String appointmentid, GasCloseJobModel gasCloseJobModel) async {
+  void gascloseJobSubmitOffline(String appointmentid, GasCloseJobModel gasCloseJobModel) async {
     ConnectivityResult result = await _connectivity.checkConnectivity();
     String status = _updateConnectionStatus(result);
     if (status != "NONE") {
@@ -1215,10 +1214,7 @@ class SurveyScreenViewModel extends BaseModel {
     }
   }
 
-  void bothcloseJobSubmitOffline(
-      String appointmentid,
-      GasCloseJobModel gasCloseJobModel,
-      ElecCloseJobModel elecCloseJobModel) async {
+  void bothcloseJobSubmitOffline(String appointmentid, GasCloseJobModel gasCloseJobModel, ElecCloseJobModel elecCloseJobModel) async {
     ConnectivityResult result = await _connectivity.checkConnectivity();
     String status = _updateConnectionStatus(result);
     if (status != "NONE") {
@@ -1257,8 +1253,7 @@ class SurveyScreenViewModel extends BaseModel {
     }
   }
 
-  Future<void> onSubmitOffline(String appointmentid,
-      List<AnswerCredential> _listofanswer, String sectionName,BuildContext context) async {
+  Future<void> onSubmitOffline(String appointmentid, List<AnswerCredential> _listofanswer, String sectionName,BuildContext context) async {
     print("**********offline********");
     user = await Prefs.getUser();
     String abortReason = "";
@@ -1270,10 +1265,9 @@ class SurveyScreenViewModel extends BaseModel {
       ConnectivityResult result = await _connectivity.checkConnectivity();
       String status = _updateConnectionStatus(result);
       if (status != "NONE") {
-        print(
-            "Sumitted offline survey to online for appointment id: -----> $appointmentid"); //Continue
-        ResponseModel responseModel =
-        await _apiService.submitListSurveyAnswer(_listofanswer,context,appointmentid,"NotAbort");
+        print("Sumitted offline survey to online for appointment id: -----> $appointmentid");
+
+        ResponseModel responseModel = await _apiService.submitListSurveyAnswer(_listofanswer,context,appointmentid,"Abort"); //KARAN (ADD THIS ON LIVE)
         SharedPreferences pref = await SharedPreferences.getInstance();
         if (sectionName == "Abort") {
           ResponseModel abortreasonmodel = await _apiService
@@ -1284,18 +1278,15 @@ class SurveyScreenViewModel extends BaseModel {
               intCompanyId: user.intCompanyId));
           print(abortreasonmodel.response);
         } else {
-          ResponseModel response = await _apiService.updateAppointmentStatus(
-              AppointmentStatusUpdateCredentials(
-                  strStatus: "Completed",
-                  intBookedBy: user.intEngineerId.toString(),
-                  intEngineerId: user.intEngineerId.toString(),
-                  strEmailActionby: "Send by Engineer",
-                  intId: appointmentid,
-                  intCompanyId: user.intCompanyId));
-          if (response.statusCode == 1) {
-            GlobalVar.isloadAppointmentDetail = true;
-            GlobalVar.isloadDashboard = true;
-          }
+          AppStateProvider appStateProvider = Provider.of<AppStateProvider>(context,listen: false);
+          await appStateProvider.getOfflineAppointmentStatus();
+          for(int count = 0; count < appStateProvider.getOfflineAppointmentStatusList.length; count++){
+            updateStatus(appStateProvider.getOfflineAppointmentStatusList[count].intAppointmentId.toString());
+            if(count + 1 == appStateProvider.getOfflineAppointmentStatusList.length){
+              GlobalVar.isloadAppointmentDetail = true;
+              GlobalVar.isloadDashboard = true;
+            }
+          } //KARAN (ADD THIS ON LIVE)
         }
         pref.remove("saved+${appointmentid.trim()}");
         pref.remove("disabled+${appointmentid.trim()}");
@@ -1324,8 +1315,23 @@ class SurveyScreenViewModel extends BaseModel {
     }
   }
 
+  void updateStatus(String appointmentid) async{
+    ApiService _apiService = ApiService();
+    UserModel user = await Prefs.getUser();
+    ResponseModel response = await _apiService.updateAppointmentStatus(
+      AppointmentStatusUpdateCredentials(
+        strStatus: "Completed",
+        intBookedBy: user.intEngineerId.toString(),
+        intEngineerId: user.intEngineerId.toString(),
+        strEmailActionby: "Send by Engineer",
+        intId: appointmentid,
+        intCompanyId: user.intCompanyId,
+        intUserId:"0",
+      ),
+    );
+  } //KARAN (ADD THIS ON LIVE)
+
   String checkXCANC(List<ElectricAndGasMeterModel> electricGasMeterList) {
-    //setState(ViewState.Busy);
     String mpan = "none", mprn = "none", msg = "none";
     try {
       ElectricAndGasMeterModel model = electricGasMeterList
@@ -1357,6 +1363,8 @@ class SurveyScreenViewModel extends BaseModel {
   }
 
   void onRaiseButtonPressed(
+      String strGasCode,
+      String strSupplierCode,
       String customerid,
       String processId,
       String newElectricityMSN,
@@ -1372,12 +1380,12 @@ class SurveyScreenViewModel extends BaseModel {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       String ups = preferences.getString('ups');
 
-      if (processId == "79" || processId == "81" || processId == "94") {
+      if (processId == "79" || processId == "81" || processId == "94" || processId == "88" || processId == "89") { //KARAN (ADD THIS ON LIVE)
         startGasProcess(processId, userModel, ups, customerid, newGasMSN,
-            electricGasMeterList, context);
+            electricGasMeterList, context, strGasCode, strSupplierCode);
       } else {
         startElecProcess(processId, userModel, ups, customerid,
-            newElectricityMSN, electricGasMeterList, context);
+            newElectricityMSN, electricGasMeterList, context, strGasCode, strSupplierCode);
       }
       setState(ViewState.Idle);
     } else {
@@ -1394,6 +1402,8 @@ class SurveyScreenViewModel extends BaseModel {
       String newMSN,
       List<ElectricAndGasMeterModel> electricGasMeterList,
       BuildContext context,
+      String strGasCode,
+      String strSupplierCode,
       ) {
     try {
       ElectricAndGasMeterModel model;
@@ -1429,7 +1439,9 @@ class SurveyScreenViewModel extends BaseModel {
               '/' +
               em +
               '/' +
-              newMSN;
+              newMSN +
+              '/' +
+              strSupplierCode;
 
           strEncrypt = encryption(strPara);
           strUrl += '' +
@@ -1457,6 +1469,8 @@ class SurveyScreenViewModel extends BaseModel {
       String newMSN,
       List<ElectricAndGasMeterModel> electricGasMeterList,
       BuildContext context,
+      String strGasCode,
+      String strSupplierCode,
       ) {
     try {
       ElectricAndGasMeterModel model;
@@ -1492,7 +1506,10 @@ class SurveyScreenViewModel extends BaseModel {
               '/' +
               em +
               '/' +
-              newMSN;
+              newMSN +
+              '/' +
+              strGasCode;
+
           strEncrypt = encryption(strPara);
           strUrl += '' +
               dCCMAIWebUrl +

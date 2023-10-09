@@ -1,5 +1,4 @@
 // @dart=2.9
-
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
@@ -13,35 +12,6 @@ class SignatureScreen extends StatefulWidget {
   _SignatureScreenState createState() => _SignatureScreenState();
 }
 
-class _WatermarkPaint extends CustomPainter {
-  final String price;
-  final String watermark;
-
-  _WatermarkPaint(this.price, this.watermark);
-
-  @override
-  void paint(ui.Canvas canvas, ui.Size size) {
-    canvas.drawCircle(Offset(size.width / 2, size.height / 2), 10.8,
-        Paint()..color = Colors.blue);
-  }
-
-  @override
-  bool shouldRepaint(_WatermarkPaint oldDelegate) {
-    return oldDelegate != this;
-  }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is _WatermarkPaint &&
-          runtimeType == other.runtimeType &&
-          price == other.price &&
-          watermark == other.watermark;
-
-  @override
-  int get hashCode => price.hashCode ^ watermark.hashCode;
-}
-
 class _SignatureScreenState extends State<SignatureScreen> {
   ByteData _img = ByteData(0);
   var color = Colors.red;
@@ -50,8 +20,7 @@ class _SignatureScreenState extends State<SignatureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, "hello");
@@ -92,7 +61,6 @@ class _SignatureScreenState extends State<SignatureScreen> {
                         color: Colors.green,
                         onPressed: () async {
                           final sign = _sign.currentState;
-                          //retrieve image data, do whatever you want with it (send to server, save locally...)
                           final image = await sign.getData();
                           var data = await image.toByteData(
                               format: ui.ImageByteFormat.png);

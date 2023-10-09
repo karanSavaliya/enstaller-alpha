@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import '../model/engineer_document_model.dart';
 import '../model/engineer_qualification_model.dart';
 import '../model/last_appointment_status_model.dart';
+import '../model/offline_appointment_status_get.dart';
 import '../model/save_sapphire_electricity_flow_model.dart';
 import '../model/save_sapphire_gas_flow_model.dart';
 import '../model/user_model.dart';
@@ -140,6 +141,34 @@ class Api {
     }
   } //KARAN (ADD THIS ON LIVE)
 
+  Future<bool> appointmentLogActivityInsert(String apiUrl,String intAppointmentId) async {
+    UserModel user = await Prefs.getUser();
+    final Map<String, dynamic> data = {
+      "strComment": "Survey Transfer to back office",
+      "strEventType": "AppointmentEvent",
+      "bisIsSystemGenerated": 0,
+      "strUserName": user.username,
+      "intAppointmentId": intAppointmentId,
+      "intUserId": user.intEngineerId,
+      "intAppointmentEventsId": 0,
+    };
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode == 200) {
+      bool status = true;
+      return status;
+    } else {
+      bool status = false;
+      return status;
+    }
+  } //KARAN (ADD THIS ON LIVE)
+
   Future<bool> vehicleCheckLogInsert(String apiUrl) async {
     UserModel user = await Prefs.getUser();
     final Map<String, dynamic> data = {
@@ -186,6 +215,75 @@ class Api {
       return status;
     } else {
       throw Exception('Failed to send POST request');
+    }
+  } //KARAN (ADD THIS ON LIVE)
+
+  Future<String> supplierEngineerImageInsert(String apiUrl, String base64) async {
+    UserModel user = await Prefs.getUser();
+    final Map<String, dynamic> data = {
+      "ImgStr":base64,
+    };
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      String status = jsonResponse["status"];
+      return status;
+    } else {
+      throw Exception('Failed to send POST request');
+    }
+  } //KARAN (ADD THIS ON LIVE)
+
+  Future<String> supplierDocumentEngineerReadUpdate(String apiUrl, String imageName, int intId, String signatureBy) async {
+    UserModel user = await Prefs.getUser();
+    final Map<String, dynamic> data = {
+      "intId": intId,
+      "bisEngineerRead": true,
+      "strSignedImage": imageName.toString(),
+      "strSignedby": signatureBy.toString(),
+      "intModifiedby": user.id.toString(),
+    };
+    final response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(data),
+    );
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+      String status = jsonResponse["status"];
+      return status;
+    } else {
+      throw Exception('Failed to send POST request');
+    }
+  } //KARAN (ADD THIS ON LIVE)
+
+  Future<List<OfflineAppointmentStatusGetModel>> offlineAppointmentStatusGet(String apiUrl) async {
+    UserModel user = await Prefs.getUser();
+    Map<String, dynamic> requestData = {
+      'intEngineerId': user.intEngineerId,
+    };
+    Uri uri = Uri.parse(apiUrl).replace(queryParameters: requestData);
+    final response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer ${user.accessToken}',
+        'Content-Type': 'application/json',
+      },
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.map((json) => OfflineAppointmentStatusGetModel.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to fetch data');
     }
   } //KARAN (ADD THIS ON LIVE)
 }

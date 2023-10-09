@@ -37,6 +37,7 @@ import '../../core/provider/app_state_provider.dart';
 import 'electricity_screen.dart';
 import 'gas_electricity_screen.dart';
 import 'home_screen.dart';
+import 'package:connectivity/connectivity.dart';
 
 class SurveyArguments {
   String correlationId;
@@ -45,6 +46,8 @@ class SurveyArguments {
   String appointmentID;
   bool edit;
   DetailsScreenViewModel dsmodel;
+  String strGasCode;
+  String strSupplierCode;
   SurveyArguments({
     this.correlationId,
     this.jobType,
@@ -52,6 +55,8 @@ class SurveyArguments {
     this.appointmentID,
     this.edit,
     this.dsmodel,
+    this.strGasCode,
+    this.strSupplierCode,
   });
 }
 
@@ -75,8 +80,29 @@ class _SurveyScreenState extends State<SurveyScreen> {
     "EMREM": "6",
     "GMREM": "81",
     "GICOM": "79",
-    "EICOM": "1"
-  };
+    "EICOM": "1",
+    "Raise [XIPMD]  Install PPMID - Gas": "88",
+    "Raise [XIPMD]  Install PPMID - Electricity": "7",
+    "Raise [XITTD]  Install Type 2 Device - Gas": "89",
+    "Raise [XITTD]  Install Type 2 Device - Electricity": "8",
+  }; //KARAN (ADD THIS ON LIVE)
+
+  String _updateConnectionStatus(ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        return "WIFI";
+        break;
+      case ConnectivityResult.mobile:
+        return "MOBILE";
+        break;
+      case ConnectivityResult.none:
+        return "NONE";
+        break;
+      default:
+        return "NO RECORD";
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +255,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
     }
   }
 
-  //get widgets data  as per text
   Widget _getChildrenWidget(
       int index, SurveyScreenViewModel model, String _headerText, AppStateProvider appStateProvider) {
     print('object');
@@ -252,11 +277,12 @@ class _SurveyScreenState extends State<SurveyScreen> {
     scrollController.jumpTo(10.0);
   }
 
-  //column data
   Widget _getColumnData(
       SurveyResponseModel surveyResponseModel, SurveyScreenViewModel model) {
     return _getTypeWidget(surveyResponseModel, model, model.validationValue);
   }
+
+  final Connectivity _connectivity = Connectivity();
 
   Widget _getData(
       List<SurveyResponseModel> questions,
@@ -304,7 +330,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                 if (!widget.arguments.edit) {
                                   print(model.selected.toString() + 'line 314');
                                   int validateconter = 0;
-                                  // model.clearAnswer();
                                   model.onValidation();
                                   for (int i = 0; i < questions.length; i++) {
                                     print(questions[i].validate);
@@ -322,8 +347,7 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                           questions[i].requireExplainationstr;
                                       if (reqexp == null) reqexp = "";
                                       int index = -1;
-                                      print(
-                                          "length of anserlist is ....................${model.answerList.length} ");
+                                      print("length of anserlist is ....................${model.answerList.length} ");
                                       index = model.answerList.indexWhere(
                                               (element) =>
                                           element.intsurveyquetionid.trim() ==
@@ -418,26 +442,65 @@ class _SurveyScreenState extends State<SurveyScreen> {
                                         widget.arguments.dsmodel,
                                         questions[0].strSectionName);
 
-                                    if (response == "Sign Off") {
-                                      progressDialog.hide();
-                                      //Navigator.pop(mainContext); //KARAN (REMOVE THIS ON LIVE)
-                                      if(widget.arguments.jobType == "Gas SMETS2 Meter Exchange"  || widget.arguments.jobType == "Gas Meter Removal"){
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Gas(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
-                                      }
-                                      else if(widget.arguments.jobType == "Electric SMETS2 Meter Exchange" || widget.arguments.jobType == "Elec Meter Removal"){
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Electricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
-                                      }
-                                      else if(widget.arguments.jobType == "Dual SMETS2 Meter Exchange"){
-                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GasElectricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
-                                      } //Continue
-                                      else{
-                                        Navigator.pop(mainContext);
+                                    ConnectivityResult result = await _connectivity.checkConnectivity();
+                                    String status = _updateConnectionStatus(result);
+                                    if (status != "NONE") {
+                                      if (response == "Sign Off") {
+                                        progressDialog.hide();
+                                        //Navigator.pop(mainContext); //KARAN (REMOVE THIS ON LIVE)
+                                        if(widget.arguments.jobType == "Gas SMETS2 Meter Exchange"  || widget.arguments.jobType == "Gas Meter Removal"){
+                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Gas(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
+                                        }
+                                        else if(widget.arguments.jobType == "Electric SMETS2 Meter Exchange" || widget.arguments.jobType == "Elec Meter Removal"){
+                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Electricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
+                                        }
+                                        else if(widget.arguments.jobType == "Dual SMETS2 Meter Exchange"){
+                                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => GasElectricity(jobType: widget.arguments.jobType,customerID: widget.arguments.customerID,appointmentId: widget.arguments.appointmentID,correlationId:widget.arguments.correlationId)));
+                                        }
+                                        else{
+                                          Navigator.pop(mainContext);
+                                        } //KARAN (ADD THIS ON LIVE)
+                                      } else if (response == "submitted") {
+                                        progressDialog.hide();
+                                        Navigator.pop(context);
+                                      } else if(response == "Abort"){
+                                        progressDialog.hide();
+                                        Navigator.pop(context);
+                                      } else{
+                                        progressDialog.hide();
                                       } //KARAN (ADD THIS ON LIVE)
-                                    } else if (response == "submitted") {
-                                      progressDialog.hide();
-                                      Navigator.pop(context);
-                                    } else {
-                                      progressDialog.hide();
+                                    }
+                                    else{
+                                      if(response == "Abort"){
+                                        progressDialog.hide();
+                                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                                      }
+                                      else{
+                                        progressDialog.hide();
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text('Alert!!!'),
+                                              content: Text("Sapphire flow can't working in offline mode do you wait for network??",style: TextStyle(fontStyle: FontStyle.italic)),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text('Yes'),
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                ),
+                                                TextButton(
+                                                  child: Text('No'),
+                                                  onPressed: () {
+                                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
                                     } //KARAN (ADD THIS ON LIVE)
                                   } else {
                                     print("-------------");
@@ -1115,15 +1178,12 @@ class _SurveyScreenState extends State<SurveyScreen> {
           } else {
             return Column(
               children: [
-                // SizedBox(height: 10),
                 _getQuestion(surveyResponseModel),
                 InkWell(
                   onTap: () async {
-                    // signature screen
                     var result = await Navigator.of(context).push(
                         new MaterialPageRoute(
                             builder: (context) => SignatureScreen()));
-
                     if (result != null) {
                       setState(() {
                         surveyResponseModel?.signatureImage = result;
@@ -1309,6 +1369,8 @@ class _SurveyScreenState extends State<SurveyScreen> {
                           String electricityMSN = getNewElectricityMSN(model);
                           String gasMSN = getNewGasMSN(model);
                           model.onRaiseButtonPressed(
+                              widget.arguments.strGasCode,
+                              widget.arguments.strSupplierCode,
                               widget.arguments.customerID,
                               _processID,
                               electricityMSN,
@@ -1570,7 +1632,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
     return file;
   }
 
-  //chooose file
   Future<void> _choosFile(
       {SurveyResponseModel surveyResponseModel,
       SurveyScreenViewModel model,
@@ -1596,7 +1657,6 @@ class _SurveyScreenState extends State<SurveyScreen> {
         String base64Image = base64Encode(compressedFile);
         surveyResponseModel?.validate = AppConstants.base64Prefix + base64Image;
 
-        ///have to work
       });
     }
 
@@ -1654,9 +1714,7 @@ class MyTile extends StatefulWidget {
   _MyTileState createState() => _MyTileState();
 }
 
-// A custom list tile
 class _MyTileState extends State<MyTile> {
-  // Initalliy make the TextField uneditable.
   bool editable = false;
   TextEditingController controller = TextEditingController();
   FocusNode _focusNode;

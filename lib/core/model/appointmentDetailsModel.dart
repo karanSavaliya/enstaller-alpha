@@ -76,6 +76,8 @@ class Appointment {
   int intjumboresponseid;
   bool bCompleteForwardCall;
   int intRoutePlanId;
+  String strGasCode;
+  String strSupplierCode;
 
   Appointment(
       {this.intId,
@@ -125,7 +127,10 @@ class Appointment {
       this.intjumborequestid,
       this.intjumboresponseid,
       this.bCompleteForwardCall,
-      this.intRoutePlanId});
+      this.intRoutePlanId,
+      this.strGasCode,
+      this.strSupplierCode
+      });
 
   Appointment.fromJson(Map<String, dynamic> json) {
     intId = json['intId'];
@@ -176,7 +181,8 @@ class Appointment {
     intjumboresponseid = json['jumboresponse_id'];
     bCompleteForwardCall = json["bCompleteForwardCall"];
     intRoutePlanId = json["intRoutePlanId"];
-
+    strGasCode = json["strGasCode"];
+    strSupplierCode = json["strSupplierCode"];
   }
 
   Map<String, dynamic> toJson() {
@@ -230,6 +236,8 @@ class Appointment {
     data['jumboresponse_id'] = intjumboresponseid;
     data["bCompleteForwardCall"] = bCompleteForwardCall;
     data["intRoutePlanId"] = intRoutePlanId;
+    data["strGasCode"] = strGasCode;
+    data["strSupplierCode"] = strSupplierCode;
 
     return data;
   }

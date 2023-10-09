@@ -1,4 +1,5 @@
 // @dart=2.9
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:enstaller/core/constant/app_colors.dart';
@@ -452,7 +453,7 @@ class MapScreenState extends State<ProfilePage>
     if (image != null) {
       var compressedFile = await FlutterImageCompress.compressWithFile(
         image?.path,
-        quality: 50,
+        quality: 30,
         minWidth: 1800,
         minHeight: 1280,
       );

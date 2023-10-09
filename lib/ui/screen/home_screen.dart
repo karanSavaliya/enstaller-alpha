@@ -61,8 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
             int.parse(answerCredential.intsurveyid.trim()) == 10)
           sectionName = "Abort";
       });
-      await SurveyScreenViewModel()
-          .onSubmitOffline(appointmentid, _answerlist, sectionName, context);
+      await SurveyScreenViewModel().onSubmitOffline(appointmentid, _answerlist, sectionName, context);
       print("End sumitting survey for --> $appointmentid");
     }
   }
@@ -84,8 +83,7 @@ class _HomeScreenState extends State<HomeScreen> {
       try {
         if (status != "NONE" &&
             preferences.getStringList("listOfUnSubmittedForm") != null) {
-          List<String> _listOfUnSubmittedForm =
-              preferences.getStringList("listOfUnSubmittedForm");
+          List<String> _listOfUnSubmittedForm = preferences.getStringList("listOfUnSubmittedForm");
           for (int i = 0; i < _listOfUnSubmittedForm.length; i++) {
             await _submitOfflineSurveyForAppointmentId(
                 _listOfUnSubmittedForm[i]);
@@ -125,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    requestLocationPermission();
+    //requestLocationPermission();
     _subscribeconnectivity();
     super.initState();
   }
@@ -136,15 +134,15 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void requestLocationPermission() async {
-    final status = await Permission.location.request();
-    if (status.isGranted) {
-    } else if (status.isDenied) {
-      requestLocationPermission();
-    } else if (status.isPermanentlyDenied) {
-      requestLocationPermission();
-    }
-  }
+  // void requestLocationPermission() async {
+  //   final status = await Permission.location.request();
+  //   if (status.isGranted) {
+  //   } else if (status.isDenied) {
+  //     requestLocationPermission();
+  //   } else if (status.isPermanentlyDenied) {
+  //     requestLocationPermission();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +197,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: SizeConfig.padding,
                       child: model.dateSelected
                           ? RefreshIndicator(
-
                               onRefresh: () => Future.delayed(Duration.zero)
                                   .whenComplete(() { model.getAppointmentList();  print("first"); }),
                               child: SingleChildScrollView(

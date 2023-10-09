@@ -38,50 +38,88 @@ class DocumentModel {
 class DocumentResponseModel {
   int intId;
   String strDocUser;
+  int intDocTypeId;
   String strDocType;
   String strFileName;
+  String strName;
   int intSupplierId;
+  String strSignedby;
+  String strSignedImage;
+  String dteSigndate;
+  String strSignedName;
+  int intModifiedby;
   bool bisEngineerRead;
-  String strCompanyName;
+  bool bisEngineerRead1;
   String strValue;
-  bool bisalive;
+  String strCreatedDate;
+  int intCreatedBy;
+  int rownumber;
+  int allCOUNT;
 
-  DocumentResponseModel({
-    this.intId,
-    this.strDocUser,
-    this.strDocType,
-    this.strFileName,
-    this.intSupplierId,
-    this.bisEngineerRead,
-    this.strCompanyName,
-    this.strValue,
-    this.bisalive,
-  });
+  DocumentResponseModel(
+      {this.intId,
+        this.strDocUser,
+        this.intDocTypeId,
+        this.strDocType,
+        this.strFileName,
+        this.strName,
+        this.intSupplierId,
+        this.strSignedby,
+        this.strSignedImage,
+        this.dteSigndate,
+        this.strSignedName,
+        this.intModifiedby,
+        this.bisEngineerRead,
+        this.bisEngineerRead1,
+        this.strValue,
+        this.strCreatedDate,
+        this.intCreatedBy,
+        this.rownumber,
+        this.allCOUNT});
 
   DocumentResponseModel.fromJson(Map<String, dynamic> json) {
-    intId = json["intId"];
-    strDocUser = json["strDocUser"];
-    strDocType = json["strDocType"];
-    strFileName = json["strFileName"];
-    intSupplierId = json["intSupplierId"];
-    bisEngineerRead = json["bisEngineerRead"];
-    strCompanyName = json["strCompanyName"];
-    strValue = json["strValue"];
-    bisalive = json["bisalive"];
+    intId = json['intId'];
+    strDocUser = json['strDocUser'];
+    intDocTypeId = json['intDocTypeId'];
+    strDocType = json['strDocType'];
+    strFileName = json['strFileName'];
+    strName = json['strName'];
+    intSupplierId = json['intSupplierId'];
+    strSignedby = json['strSignedby'];
+    strSignedImage = json['strSignedImage'];
+    dteSigndate = json['dteSigndate'];
+    strSignedName = json['strSignedName'];
+    intModifiedby = json['intModifiedby'];
+    bisEngineerRead = json['bisEngineerRead'];
+    bisEngineerRead1 = json['bisEngineerRead1'];
+    strValue = json['strValue'];
+    strCreatedDate = json['strCreatedDate'];
+    intCreatedBy = json['intCreatedBy'];
+    rownumber = json['rownumber'];
+    allCOUNT = json['allCOUNT'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["intId"] = intId;
-    data["strDocUser"] = strDocUser;
-    data["strDocType"] = strDocType;
-    data["strFileName"] = strFileName;
-    data["intSupplierId"] = intSupplierId;
-    data["bisEngineerRead"] = bisEngineerRead;
-    data["strCompanyName"] = strCompanyName;
-    data["strValue"] = strValue;
-    data["bisalive"] = bisalive;
-
+    data['intId'] = this.intId;
+    data['strDocUser'] = this.strDocUser;
+    data['intDocTypeId'] = this.intDocTypeId;
+    data['strDocType'] = this.strDocType;
+    data['strFileName'] = this.strFileName;
+    data['strName'] = this.strName;
+    data['intSupplierId'] = this.intSupplierId;
+    data['strSignedby'] = this.strSignedby;
+    data['strSignedImage'] = this.strSignedImage;
+    data['dteSigndate'] = this.dteSigndate;
+    data['strSignedName'] = this.strSignedName;
+    data['intModifiedby'] = this.intModifiedby;
+    data['bisEngineerRead'] = this.bisEngineerRead;
+    data['bisEngineerRead1'] = this.bisEngineerRead1;
+    data['strValue'] = this.strValue;
+    data['strCreatedDate'] = this.strCreatedDate;
+    data['intCreatedBy'] = this.intCreatedBy;
+    data['rownumber'] = this.rownumber;
+    data['allCOUNT'] = this.allCOUNT;
     return data;
   }
 }

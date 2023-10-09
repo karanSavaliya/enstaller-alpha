@@ -150,6 +150,7 @@ class _AppDrawerWidgetState extends State<AppDrawerWidget> {
                         ),
                       ],
                     ),
+                    SizedBox(height: 10), //KARAN (ADD THIS ON LIVE)
                     Column(
                       children: [
                         Align(
@@ -163,7 +164,7 @@ class _AppDrawerWidgetState extends State<AppDrawerWidget> {
                               width: MediaQuery.of(context).size.width / 2,
                               child: Center(
                                 child: Text(
-                                  "Vehicle Checkout",
+                                  "Vehicle CheckIn",
                                   style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -171,17 +172,17 @@ class _AppDrawerWidgetState extends State<AppDrawerWidget> {
                             onTap: () async {
                               getVehicleSuccess = await appStateProvider.getVehicleLog();
                               if(getVehicleSuccess){
-                                AppConstants.showFailToast(context, "Vehicle Checkout Already Activated");
+                                AppConstants.showFailToast(context, "Vehicle CheckIn Already Activated");
                               }
                               else{
                                 bool success = await appStateProvider
                                     .insertVehicleCheckLog();
                                 if (success) {
                                   AppConstants.showSuccessToast(
-                                      context, "Vehicle Checkout Successfully");
+                                      context, "Vehicle CheckIn Successfully");
                                 } else {
                                   AppConstants.showFailToast(
-                                      context, "Vehicle Checkout Failed");
+                                      context, "Vehicle CheckIn Failed");
                                 }
                               }
                             },

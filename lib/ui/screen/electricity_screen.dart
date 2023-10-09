@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../core/constant/app_colors.dart';
 import '../../core/constant/app_string.dart';
 import 'package:provider/provider.dart';
+import '../../core/constant/appconstant.dart';
 import '../../core/provider/app_state_provider.dart';
 import 'widget/electricity/electricity_text_field_widget.dart';
 
@@ -15,6 +16,9 @@ class Electricity extends StatefulWidget {
 }
 
 class _ElectricityState extends State<Electricity> {
+
+  bool isSubmit = false;
+
   @override
   void initState() {
     super.initState();
@@ -96,14 +100,14 @@ class _ElectricityState extends State<Electricity> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           ElectricityTextFieldWidget(
-                            hintText: "MEM MpId",
+                            hintText: "MEM MPID",
                             required: "required",
                             maxLength: 4,
                             controller: appStateProvider.memMpIdElectricity,
                           ),
                           SizedBox(height: 10),
                           ElectricityTextFieldWidget(
-                            hintText: "Supplier MpId",
+                            hintText: "Supplier MPID",
                             required: "required",
                             maxLength: 4,
                             controller: appStateProvider.supplierMpIdElectricity,
@@ -124,7 +128,6 @@ class _ElectricityState extends State<Electricity> {
                           SizedBox(height: 10),
                           ElectricityTextFieldWidget(
                             hintText: "Correlation Id",
-                            required: "required",
                             readOnly: true,
                             controller: appStateProvider.correlationIdElectricity,
                           ),
@@ -157,6 +160,7 @@ class _ElectricityState extends State<Electricity> {
                             required: "required",
                             controller: appStateProvider.textEditingControllerSiteVisitDateElectricity,
                             onTap: () => appStateProvider.selectSiteVisitDateElectricity(context),
+                            keyboardType: "none",
                           ),
                           SizedBox(height: 10),
                           Text("\t\tVisit Successful"),
@@ -288,7 +292,23 @@ class _ElectricityState extends State<Electricity> {
                                       children: [
                                         index != 0 ? GestureDetector(
                                           onTap: () {
-                                            appStateProvider.removeFormElectricityMeters(index);
+                                            showDialog<String>(context: context, builder: (BuildContext context) => AlertDialog(
+                                              title: const Text('Remove?'),
+                                              content: const Text('Are you sure you want to remove this form?',style: TextStyle(fontWeight: FontWeight.bold,letterSpacing: 1)),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () {
+                                                    appStateProvider.removeFormElectricityMeters(index);
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child: const Text('YES'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () => Navigator.pop(context, 'NO'),
+                                                  child: const Text('NO'),
+                                                ),
+                                              ],
+                                            ));
                                           },
                                           child: Center(
                                             child: Container(
@@ -304,7 +324,10 @@ class _ElectricityState extends State<Electricity> {
                                         const SizedBox(width: 7),
                                         GestureDetector(
                                           onTap: () {
-                                            appStateProvider.addFormElectricityMeters();
+                                            appStateProvider.fieldDataCheckWhenClickAddButtonElectricity(context);
+                                            if(appStateProvider.isCheckDataElectricity == true){
+                                              appStateProvider.addFormElectricityMeters();
+                                            }
                                           },
                                           child: Center(
                                             child: Container(
@@ -376,7 +399,7 @@ class _ElectricityState extends State<Electricity> {
                                 ),
                                 const SizedBox(height: 10),
                                 ElectricityTextFieldWidget(
-                                  hintText: "Owner Mpid",
+                                  hintText: "Owner MPID",
                                   required: "required",
                                   maxLength: 4,
                                   controller: appStateProvider.formDataListElectricityMeters[index]['ownerMpidElectricity'],
@@ -386,6 +409,7 @@ class _ElectricityState extends State<Electricity> {
                                   hintText: "Current Rating",
                                   required: "required",
                                   keyboardType: "number",
+                                  maxLength: 3,
                                   controller: appStateProvider.formDataListElectricityMeters[index]['currentRatingElectricity'],
                                 ),
                                 const SizedBox(height: 10),
@@ -415,6 +439,7 @@ class _ElectricityState extends State<Electricity> {
                                   required: "required",
                                   onTap: () => appStateProvider.selectedMeterRemovalDateForMetersElectricity(context, index),
                                   controller: appStateProvider.formDataListElectricityMeters[index]['meterRemovalDateElectricity'],
+                                  keyboardType: "none",
                                 ),
                                 const SizedBox(height: 10),
                                 ListView.builder(
@@ -436,7 +461,23 @@ class _ElectricityState extends State<Electricity> {
                                                 children: [
                                                   subIndex != 0 ? GestureDetector(
                                                     onTap: () {
-                                                      appStateProvider.removeSubFormElectricityMeters(index, subIndex);
+                                                      showDialog<String>(context: context, builder: (BuildContext context) => AlertDialog(
+                                                        title: const Text('Remove?'),
+                                                        content: const Text('Are you sure you want to remove this form?',style: TextStyle(fontWeight: FontWeight.bold,letterSpacing: 1)),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              appStateProvider.removeSubFormElectricityMeters(index, subIndex);
+                                                              Navigator.pop(context);
+                                                            },
+                                                            child: const Text('YES'),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () => Navigator.pop(context, 'NO'),
+                                                            child: const Text('NO'),
+                                                          ),
+                                                        ],
+                                                      ));
                                                     },
                                                     child: Center(
                                                       child: Container(
@@ -452,7 +493,10 @@ class _ElectricityState extends State<Electricity> {
                                                   const SizedBox(width: 7),
                                                   GestureDetector(
                                                     onTap: () {
-                                                      appStateProvider.addSubFormElectricityMeters(index);
+                                                      appStateProvider.fieldDataCheckWhenClickAddButtonElectricity(context);
+                                                      if(appStateProvider.isCheckDataElectricity == true){
+                                                        appStateProvider.addSubFormElectricityMeters(index);
+                                                      }
                                                     },
                                                     child: Center(
                                                       child: Container(
@@ -497,7 +541,7 @@ class _ElectricityState extends State<Electricity> {
                                             ],
                                           ),
                                           ElectricityTextFieldWidget(
-                                            hintText: "Meter RegisterId",
+                                            hintText: "Meter Register Id",
                                             required: "required",
                                             maxLength: 2,
                                             controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['meterRegisterIdElectricity'],
@@ -573,17 +617,17 @@ class _ElectricityState extends State<Electricity> {
                                           ),
                                           const SizedBox(height: 10),
                                           ElectricityTextFieldWidget(
+                                            hintText: "Reading Not Valid Reason Code",
+                                            required: "required",
+                                            maxLength: 2,
+                                            controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['readingNotValidReasonCodeElectricity'],
+                                          ),
+                                          const SizedBox(height: 10),
+                                          ElectricityTextFieldWidget(
                                             hintText: "Prepayment Unit Rate",
                                             required: "required",
                                             keyboardType: "number",
                                             controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['prepaymentUnitRateElectricity'],
-                                          ),
-                                          const SizedBox(height: 10),
-                                          ElectricityTextFieldWidget(
-                                            hintText: "Reading NotValid Reason Code",
-                                            required: "required",
-                                            maxLength: 2,
-                                            controller: appStateProvider.formDataListElectricityMeters[index]['registers'][subIndex]['readingNotValidReasonCodeElectricity'],
                                           ),
                                           const SizedBox(height: 10),
                                           ListView.builder(
@@ -603,7 +647,23 @@ class _ElectricityState extends State<Electricity> {
                                                           children: [
                                                             subSubIndex != 0 ? GestureDetector(
                                                               onTap: () {
-                                                                appStateProvider.removeSubSubFormElectricityMeters(index, subIndex, subSubIndex);
+                                                                showDialog<String>(context: context, builder: (BuildContext context) => AlertDialog(
+                                                                  title: const Text('Remove?'),
+                                                                  content: const Text('Are you sure you want to remove this form?',style: TextStyle(fontWeight: FontWeight.bold,letterSpacing: 1)),
+                                                                  actions: <Widget>[
+                                                                    TextButton(
+                                                                      onPressed: () {
+                                                                        appStateProvider.removeSubSubFormElectricityMeters(index, subIndex, subSubIndex);
+                                                                        Navigator.pop(context);
+                                                                      },
+                                                                      child: const Text('YES'),
+                                                                    ),
+                                                                    TextButton(
+                                                                      onPressed: () => Navigator.pop(context, 'NO'),
+                                                                      child: const Text('NO'),
+                                                                    ),
+                                                                  ],
+                                                                ));
                                                               },
                                                               child: Center(
                                                                 child: Container(
@@ -620,7 +680,10 @@ class _ElectricityState extends State<Electricity> {
                                                             const SizedBox(width: 7),
                                                             GestureDetector(
                                                               onTap: () {
-                                                                appStateProvider.addSubSubFormElectricityMeters(index, subIndex);
+                                                                appStateProvider.fieldDataCheckWhenClickAddButtonElectricity(context);
+                                                                if(appStateProvider.isCheckDataElectricity == true){
+                                                                  appStateProvider.addSubSubFormElectricityMeters(index, subIndex);
+                                                                }
                                                               },
                                                               child: Center(
                                                                 child: Container(
@@ -675,7 +738,13 @@ class _ElectricityState extends State<Electricity> {
                         onTap: (){
                           appStateProvider.fieldDataCheckElectricity(context);
                           if(appStateProvider.isCheckDataElectricity == true){
-                            appStateProvider.saveSapphireElectricityFlow(context,widget.customerID,widget.appointmentId);
+                            if(!isSubmit){
+                              AppConstants.showSuccessToast(context, "Wait a Few seconds...");
+                              setState(() {
+                                isSubmit = true;
+                              });
+                              appStateProvider.saveSapphireElectricityFlow(context,widget.customerID,widget.appointmentId);
+                            }
                           }
                         },
                         child: Container(

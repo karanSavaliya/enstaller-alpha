@@ -1,5 +1,5 @@
 //@dart=2.9
-import 'dart:typed_data';
+import 'package:enstaller/core/constant/api_urls.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -16,6 +16,8 @@ import 'package:enstaller/ui/util/AppBuilder.dart';
 import 'package:enstaller/ui/util/DeletableTag.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/services.dart';
+import 'package:device_info/device_info.dart';
 
 class CommentDialogWidget extends StatefulWidget {
   final String appointmentID;
@@ -25,7 +27,6 @@ class CommentDialogWidget extends StatefulWidget {
 }
 
 class _CommentDialogWidgetState extends State<CommentDialogWidget> {
-
 
   List<Map<String, dynamic>> listfiles = [];
   double height = 0;
@@ -42,9 +43,8 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-
+    deviceInfo();
     _textFieldFocusNode.unfocus();
     Future.delayed(const Duration(milliseconds: 2500), () {
       addData(model1);
@@ -64,17 +64,14 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
   Widget filesPicked() {
     return Container(
         child: GridView.count(
-          // Maximum width of each cell
           mainAxisSpacing: 10,
-          // Spacing between cells vertically
           crossAxisSpacing: 10,
           crossAxisCount: 3,
           physics: NeverScrollableScrollPhysics(),
           childAspectRatio: 1,
           shrinkWrap: true,
-          // Spacing between cells horizontally
           children: List.generate(
-            listfiles.length, // Assuming 'myList' is the list of data
+            listfiles.length,
                 (index) {
               fileDownloadCheck.add(false);
               return DeletableTag(
@@ -90,40 +87,41 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
               });
             },
           ),
-
         ));
   }
 
-  Future<void> pickfile() async {
+  Future<void> _pickFiles() async {
     _onButtonClick();
-    final result = await FilePicker.getMultiFilePath(
-        type: FileType.ANY,
-        fileExtension: 'jpeg,jpg,png,doc,docx,pdf,xls,xlsx,jfif,pjpeg,pjp'
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpeg', 'jpg', 'png', 'doc', 'docx', 'pdf', 'xls', 'xlsx', 'jfif', 'pjpeg', 'pjp'],
+      allowMultiple: true,
     );
 
-    for (final element in result.values) {
-      setState(() {
-        print(element);
-        listfiles.add({"value": element});
-      });
+    if (result != null) {
+      if (listfiles.length + result.files.length <= 5) {
+        for (final element in result.files) {
+          setState(() {
+            print(element);
+            listfiles.add({"value": element.path});
+          });
+        }
+        setState(() {
+          isCheck = true;
+        });
+      } else {
+        AppConstants.showFailToast(context, "can't pick more than 5 files at once");
+      }
     }
-
-    setState(() {
-      isCheck = true;
-    });
-    //print(listfiles.length.toString());
   }
 
   List<ExpansionPanel> listexpansionPanel_ = [];
   CommentDialogViewModel model1;
-  Map<String, List<AppointmentAttachemnts>> list_map = new Map<String,
-      List<AppointmentAttachemnts>>();
-
+  Map<String, List<AppointmentAttachemnts>> list_map = new Map<String, List<AppointmentAttachemnts>>();
 
   List<Map<String, dynamic>> _items = [];
 
   List<Map<String, dynamic>> items = [];
-
 
   void addData(CommentDialogViewModel model) {
     model.appointmentDetails.asMap().forEach((index, element) {
@@ -132,13 +130,10 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
       appointmentAttachemnts.addAll(
           model.appointmentAttachemnts.where((elements) => elements
               .intDetailsId == element.intId).toList());
-      //list_map[element.strComments] = appointmentAttachemnts;
 
       List<String> filepath = [];
       appointmentAttachemnts.forEach((element) {
         filepath.add(element.strFileName);
-        // fileDownloadCheck[index] = true;
-        // setState(() {});
       });
 
 
@@ -153,7 +148,6 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
       });
     });
 
-
     Future.delayed(Duration(seconds: 2), () {
       setState(() {
         _items = items;
@@ -162,8 +156,29 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
     });
   }
 
-
   int indexcallback = 0;
+
+  String deviceVersion; //KARAN (REMOVE THIS ON LIVE AFTER CODE UPGRADED)
+
+  Future<void> deviceInfo() async {
+    if (Platform.isAndroid) {
+      try {
+        var deviceInfo = DeviceInfoPlugin();
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        setState(() {
+          deviceVersion = androidInfo.version.release;
+        });
+      } on PlatformException {
+        setState(() {
+          deviceVersion = 'failed';
+        });
+      }
+    } else {
+      setState(() {
+        deviceVersion = 'failed';
+      });
+    }
+  } //KARAN (REMOVE THIS ON LIVE AFTER CODE UPGRADED)
 
   @override
   Widget build(BuildContext context) {
@@ -292,8 +307,13 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                           color: AppColors.whiteColor,
                           fontWeight: FontWeight.bold),
                       onTap: () {
-                        pickfile();
-                        // model.addComments(context , widget.appointmentID , model.commentController.text.toString());
+                        // _pickFiles();
+                        if(deviceVersion == "13"){
+                          AppConstants.showFailToast(context, "File Picker functionality is not supported on Android 13 Version.");
+                        }
+                        else{
+                          _pickFiles();
+                        } //KARAN (REMOVE THIS ON LIVE AFTER CODE UPGRADED)
                       },
                     ),
                   ),
@@ -315,32 +335,51 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                           fontWeight: FontWeight.bold),
                       onTap: () async {
                         _onButtonClick();
-                        if (model.commentController.text
-                            .toString()
-                            .length > 0 && listfiles.length > 0) {
+                        // if (model.commentController.text.toString().length > 0 && listfiles.length > 0) {
+                        //   model.addComments(context, widget.appointmentID,
+                        //       model.commentController.text.toString(),
+                        //       listfiles);
+                        //   if (model.showErrorMessage == false) {
+                        //     setState(() {
+                        //       isLoading = true;
+                        //       AppConstants.showSuccessToast(
+                        //           context, "Wait a Few seconds...");
+                        //       isCheck = true;
+                        //     });
+                        //   }
+                        //   else {
+                        //     AppConstants.showFailToast(
+                        //         context, AppStrings.emptyFieldMessage);
+                        //   }
+                        //   if (model.state == ViewState.Idle) {
+                        //     print(model.response_body);
+                        //   }
+                        // } else {
+                        //   AppConstants.showFailToast(context,
+                        //       "Comments and Files both should be added");
+                        // }
+
+                        if (model.commentController.text.toString().length > 0) {
                           model.addComments(context, widget.appointmentID,
                               model.commentController.text.toString(),
                               listfiles);
                           if (model.showErrorMessage == false) {
                             setState(() {
                               isLoading = true;
-                              AppConstants.showSuccessToast(
-                                  context, "Wait a Few seconds...");
+                              AppConstants.showSuccessToast(context, "Wait a Few seconds...");
                               isCheck = true;
                             });
                           }
                           else {
-                            AppConstants.showFailToast(
-                                context, AppStrings.emptyFieldMessage);
+                            AppConstants.showFailToast(context, AppStrings.emptyFieldMessage);
                           }
                           if (model.state == ViewState.Idle) {
                             print(model.response_body);
                           }
                         } else {
                           AppConstants.showFailToast(context,
-                              "Comments and Files both should be added");
-                        }
-                        // model.addComments(context , widget.appointmentID , model.commentController.text.toString());
+                              "Comments should be added");
+                        } //KARAN (REMOVE THIS ON LIVE AFTER CODE UPGRADED)
                       },
                     ),
                   ),
@@ -401,9 +440,11 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                                   ),
                                 ),
                                 SizedBox(width: 7),
-                                Text(
-                                  item1.value["title"],
-                                  style: TextStyle(fontSize: 16),
+                                Expanded(
+                                  child: Text(
+                                    item1.value["title"],
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
@@ -419,20 +460,28 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
                               return ListTile(
                                 leading: GestureDetector(
                                   onTap: () {
-                                    fileOpenLoadCheck[index] = true;
-                                    setState(() {});
-                                    downloadFile("https://enstall.boshposh.com/Upload/Appointment/" + item1.value["description"].toString().split(",")[index],item1.value["description"].toString().split(",")[index], fileOpenLoadCheck, index);
+                                    if(deviceVersion == "13"){
+                                      AppConstants.showFailToast(context, "Document download & Open functionality is not supported on Android 13 Version.");
+                                    }
+                                    else{
+                                      fileOpenLoadCheck[index] = true;
+                                      setState(() {});
+                                      downloadFile(ApiUrls.commentDialogUrl + item1.value["description"].toString().split(",")[index],item1.value["description"].toString().split(",")[index], fileOpenLoadCheck, index);
+                                    } //KARAN (REMOVE THIS ON LIVE AFTER CODE UPGRADED)
+                                    //fileOpenLoadCheck[index] = true;
+                                    //setState(() {});
+                                    //downloadFile(ApiUrls.commentDialogUrl + item1.value["description"].toString().split(",")[index],item1.value["description"].toString().split(",")[index], fileOpenLoadCheck, index);
                                   },
                                   child: Stack(
                                     children: [
                                       Container(
                                         width: 30,
                                         height: 30,
-                                        child: item1.value["description"].toString().split(",")[index].endsWith("jpg") || item1.value["description"].toString().split(",")[index].endsWith("jpeg") || item1.value["description"].toString().split(",")[index].endsWith("png") ?
+                                        child: item1.value["description"].toString().split(",")[index].endsWith("jpg") || item1.value["description"].toString().split(",")[index].endsWith("jpeg") || item1.value["description"].toString().split(",")[index].endsWith("png") || item1.value["description"].toString().split(",")[index].endsWith("jfif") || item1.value["description"].toString().split(",")[index].endsWith("pjpeg") || item1.value["description"].toString().split(",")[index].endsWith("pjp")?
                                         Image.asset("assets/icon/img_image.png") :  item1.value["description"].toString().split(",")[index].endsWith("doc") || item1.value["description"].toString().split(",")[index].endsWith("docx") ?
                                         Image.asset("assets/icon/img_doc.png") : item1.value["description"].toString().split(",")[index].endsWith("pdf") ?
                                         Image.asset("assets/icon/img_pdf.png") : item1.value["description"].toString().split(",")[index].endsWith("xls") || item1.value["description"].toString().split(",")[index].endsWith("xlsx") ?
-                                        Image.asset("assets/icon/img_xls.png") : Container(),
+                                        Image.asset("assets/icon/img_xls.png") : Image.asset("assets/icon/img_image.png"),
                                       ),
                                       Positioned(
                                         child: fileOpenLoadCheck[index] == true ? SizedBox(height:10,width:10,child: CircularProgressIndicator()) : Container(),
@@ -467,7 +516,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
     var httpClient = http.Client();
     var request = new http.Request('GET', Uri.parse(url));
     var response = httpClient.send(request);
-    String dir = (await  getExternalStorageDirectory()).path;
+    String dir = (await getExternalStorageDirectory()).path;
     bool exists = await checkIfFileExists('$dir/$filename');
     if(!exists){
       List<List<int>> chunks = new List();
@@ -498,7 +547,7 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
         });
       });
     }else{
-      String dir = (await  getExternalStorageDirectory()).path;
+      String dir = (await getExternalStorageDirectory()).path;
       File file = new File('$dir/$filename');
       Future.delayed(Duration(milliseconds: 500), () {
         print("valuesss");
@@ -513,4 +562,4 @@ class _CommentDialogWidgetState extends State<CommentDialogWidget> {
     File file = File(filePath);
     return await file.exists();
   }
-} //KARAN (ADD THIS ON LIVE)
+}

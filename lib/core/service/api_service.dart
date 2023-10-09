@@ -275,7 +275,7 @@ class ApiService extends BaseApi {
         (response) {
       return  cm.commentModel.fromJson(json.decode(response.body));
     } , 'intappintmentid=$appointmentID');
-  } //KARAN (ADD THIS ON LIVE)
+  }
 
   Future<dynamic> getAbortAppointmentCode(
       AppointmentStatusUpdateCredentials credentials) {
@@ -430,14 +430,6 @@ class ApiService extends BaseApi {
     }, credentials.toJson());
   }
 
-  Future<dynamic> onclickpdf(PDFOpenModel pdFopenModel) {
-    return postRequest(ApiUrls.supplierDocumentUpdateEngineerRead, (r) {
-      final response = json.decode(r.body);
-      print('response$response');
-      return ResponseModel(statusCode: 1, response: 'Successfully opened');
-    }, pdFopenModel.toJson());
-  }
-
   void updateStatus(String appointmentid) async{
     ApiService _apiService = ApiService();
     UserModel user = await Prefs.getUser();
@@ -472,7 +464,7 @@ class ApiService extends BaseApi {
         AppConstants.showFailToast(context , "Failed submitting Survey");
         return ResponseModel(statusCode: 1, response: 'Failed submitting Survey');
       }
-      }, json.encode(credentials));
+    }, json.encode(credentials));
   } //KARAN (ADD THIS ON LIVE)
 
   Future<dynamic> getCustomerById(String customerID, String companyId) {

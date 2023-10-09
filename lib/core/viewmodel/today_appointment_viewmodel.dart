@@ -23,9 +23,6 @@ class TodayAppointmentViewModel extends BaseModel {
     _appointmentList =
         await _apiService.getTodaysAppointments( user.intEngineerId.toString() , CommonUtils().currDate() , user.intCompanyId);
     _appointmentList.forEach((element) {
-
-      //print("****"+element.dteCreatedDate+"*****");
-
       DateTime dt = DateTime.parse(element.dteBookedDate);
       if (dt.day == getCurrentDay(DateTime.now())) {
         appointmentList.add(element);

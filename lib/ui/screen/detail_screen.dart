@@ -98,7 +98,6 @@ class _DetailScreenState extends State<DetailScreen> {
 
   ApiService _apiService = ApiService();
 
-  //Declaration of scaffold key
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   int selected;
@@ -132,6 +131,21 @@ class _DetailScreenState extends State<DetailScreen> {
     mapController = controller;
   }
 
+  bool clickOnTransferButton = false;
+
+  @override
+  void initState(){
+    super.initState();
+    checkInternet();
+  }
+
+  String status;
+
+  void checkInternet() async {
+    ConnectivityResult result = await _connectivity.checkConnectivity();
+    status = _updateConnectionStatus(result);
+  }
+
   @override
   Widget build(BuildContext context) {
     AppStateProvider appStateProvider = Provider.of<AppStateProvider>(context);
@@ -139,7 +153,9 @@ class _DetailScreenState extends State<DetailScreen> {
       onModelReady: (model) => model.initializeData(
           widget.arguments.appointmentID, widget.arguments.customerID),
       builder: (context, model, child) {
-        model.checkifEnrouted(); //KARAN (ADD THIS ON LIVE)
+        if (status != "NONE") {
+          model.checkifEnrouted(); //KARAN (ADD THIS ON LIVE)
+        } //KARAN (ADD THIS ON LIVE)
         return Scaffold(
             backgroundColor: AppColors.scafoldColor,
             key: _scaffoldKey,
@@ -801,6 +817,25 @@ class _DetailScreenState extends State<DetailScreen> {
     );
   }
 
+  final Connectivity _connectivity = Connectivity(); //KARAN (ADD THIS ON LIVE)
+
+  String _updateConnectionStatus(ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        return "WIFI";
+        break;
+      case ConnectivityResult.mobile:
+        return "MOBILE";
+        break;
+      case ConnectivityResult.none:
+        return "NONE";
+        break;
+      default:
+        return "NO RECORD";
+        break;
+    }
+  } //KARAN (ADD THIS ON LIVE)
+
   //survey info
   Widget _surveyInfo(
       DetailsScreenViewModel model,
@@ -855,85 +890,92 @@ class _DetailScreenState extends State<DetailScreen> {
                       textStyle: TextStyle(color: AppColors.whiteColor),
                       radius: 15,
                       onTap: () async {
-                        await appStateProvider.getLastAppointmentStatusList(
-                            widget.arguments.appointmentID);
+                        ConnectivityResult result = await _connectivity.checkConnectivity();
+                        String status = _updateConnectionStatus(result);
 
-                        if (appStateProvider.lastAppointmentStatus ==
-                            "Cancelled") {
-                          AppConstants.showFailToast(context,
-                              "Appointment has been cancelled so cannot proceed further!");
-                        } else {
-                          if (model.customerDetails.bisSurveyBackoffice ==
-                              true) {
-                            AppConstants.showFailToast(
-                                context, "Survey Transfer To Back Office");
+                        if(status != "NONE"){
+                          await appStateProvider.getLastAppointmentStatusList(widget.arguments.appointmentID);
+                          if (appStateProvider.lastAppointmentStatus ==
+                              "Cancelled") {
+                            AppConstants.showFailToast(context,
+                                "Appointment has been cancelled so cannot proceed further!");
                           } else {
-                            if (model.appointmentDetails.appointment
-                                        .bisAbortRequested ==
-                                    true &&
-                                model.appointmentDetails.appointment
-                                        .bisAbortRequestApproved ==
-                                    false) {
-                              AppConstants.showFailToast(context,
-                                  "You can not start survey as abort survey is requested");
-                            } else if (model.appointmentDetails.appointment
-                                        .bisAbortRequested ==
-                                    true &&
-                                model.appointmentDetails.appointment
-                                        .bisAbortRequestApproved ==
-                                    true) {
-                              AppConstants.showFailToast(context,
-                                  "You can not start survey as this survey is aborted");
+                            if (model.customerDetails.bisSurveyBackoffice ==
+                                true) {
+                              AppConstants.showFailToast(
+                                  context, "Survey Transfer To Back Office");
                             } else {
-                              if (model.isSurveyEnable() &&
+                              if (model.appointmentDetails.appointment
+                                  .bisAbortRequested ==
+                                  true &&
                                   model.appointmentDetails.appointment
-                                          .appointmentEventType !=
-                                      "Rescheduled") {
-                                bool _isedit = model.appointmentDetails
-                                            .appointment.surveyReceived ==
-                                        AppStrings.yes
-                                    ? true
-                                    : false;
-                                String _status = model.appointmentDetails
-                                        .appointment.appointmentEventType ??
-                                    "";
-                                if (!_isedit && _status != "OnSite")
-                                  model.onUpdateStatusOnSite(
-                                      context, widget.arguments.appointmentID);
+                                      .bisAbortRequestApproved ==
+                                      false) {
+                                AppConstants.showFailToast(context,
+                                    "You can not start survey as abort survey is requested");
+                              } else if (model.appointmentDetails.appointment
+                                  .bisAbortRequested ==
+                                  true &&
+                                  model.appointmentDetails.appointment
+                                      .bisAbortRequestApproved ==
+                                      true) {
+                                AppConstants.showFailToast(context,
+                                    "You can not start survey as this survey is aborted");
+                              } else {
+                                if (model.isSurveyEnable() &&
+                                    model.appointmentDetails.appointment
+                                        .appointmentEventType !=
+                                        "Rescheduled") {
+                                  bool _isedit = model.appointmentDetails
+                                      .appointment.surveyReceived ==
+                                      AppStrings.yes
+                                      ? true
+                                      : false;
+                                  String _status = model.appointmentDetails
+                                      .appointment.appointmentEventType ??
+                                      "";
+                                  if (!_isedit && _status != "OnSite")
+                                    model.onUpdateStatusOnSite(
+                                        context, widget.arguments.appointmentID);
 
-                                Navigator.of(context)
-                                    .pushNamed(SurveyScreen.routeName,
-                                        arguments: SurveyArguments(
-                                            correlationId: model
-                                                .appointmentDetails
-                                                .appointment
-                                                .strBookingReference,
-                                            jobType: model.appointmentDetails
-                                                .appointment.strJobType,
-                                            customerID:
-                                                widget.arguments.customerID,
-                                            dsmodel: model,
-                                            appointmentID:
-                                                widget.arguments.appointmentID,
-                                            edit: model
-                                                        .appointmentDetails
-                                                        .appointment
-                                                        .surveyReceived ==
-                                                    AppStrings.yes
-                                                ? true
-                                                : false))
-                                    .then((value) {
-                                  if (GlobalVar.isloadAppointmentDetail) {
-                                    model.initializeData(
-                                        widget.arguments.appointmentID,
-                                        widget.arguments.customerID);
-                                    GlobalVar.isloadAppointmentDetail = false;
-                                  }
-                                });
+                                  Navigator.of(context)
+                                      .pushNamed(SurveyScreen.routeName,
+                                      arguments: SurveyArguments(
+                                          correlationId: model
+                                              .appointmentDetails
+                                              .appointment
+                                              .strBookingReference,
+                                          jobType: model.appointmentDetails
+                                              .appointment.strJobType,
+                                          customerID:
+                                          widget.arguments.customerID,
+                                          dsmodel: model,
+                                          appointmentID:
+                                          widget.arguments.appointmentID,
+                                          edit: model
+                                              .appointmentDetails
+                                              .appointment
+                                              .surveyReceived ==
+                                              AppStrings.yes
+                                              ? true
+                                              : false,strGasCode: model.appointmentDetails.appointment.strGasCode,strSupplierCode: model.appointmentDetails.appointment.strSupplierCode))
+                                      .then((value) {
+                                    if (GlobalVar.isloadAppointmentDetail) {
+                                      model.initializeData(
+                                          widget.arguments.appointmentID,
+                                          widget.arguments.customerID);
+                                      GlobalVar.isloadAppointmentDetail = false;
+                                    }
+                                  });
+                                }
                               }
                             }
                           }
                         }
+                        else{
+                          AppConstants.showFailToast(context,
+                              "No Internet Connection");
+                        } //KARAN (ADD THIS ON LIVE)
                       },
                     )
                 ],
@@ -955,17 +997,30 @@ class _DetailScreenState extends State<DetailScreen> {
                                     TextStyle(color: AppColors.whiteColor),
                                 radius: 15,
                                 onTap: () async {
-                                  await appStateProvider.getLastAppointmentStatusList(
-                                      widget.arguments.appointmentID);
-                                  if (appStateProvider.lastAppointmentStatus ==
-                                      "Cancelled") {
-                                    AppConstants.showFailToast(context,
-                                        "Appointment has been cancelled so cannot proceed further!");
+                                  ConnectivityResult result = await _connectivity.checkConnectivity();
+                                  String status = _updateConnectionStatus(result);
+
+                                  if(status != "NONE"){
+                                    if(!clickOnTransferButton){
+                                      clickOnTransferButton = true;
+                                      setState(() {});
+                                      await appStateProvider.getLastAppointmentStatusList(
+                                          widget.arguments.appointmentID);
+                                      if (appStateProvider.lastAppointmentStatus ==
+                                          "Cancelled") {
+                                        AppConstants.showFailToast(context,
+                                            "Appointment has been cancelled so cannot proceed further!");
+                                      }
+                                      else{
+                                        _showMyDialog(model, intAppointmentId,
+                                            appStateProvider, customerID);
+                                      }
+                                    }
                                   }
                                   else{
-                                    _showMyDialog(model, intAppointmentId,
-                                        appStateProvider, customerID);
-                                  }
+                                    AppConstants.showFailToast(context,
+                                        "No Internet Connection");
+                                  } //KARAN (ADD THIS ON LIVE)
                                 },
                               ) : AppButton(
                                 color: Colors.grey,
@@ -976,17 +1031,25 @@ class _DetailScreenState extends State<DetailScreen> {
                                     TextStyle(color: AppColors.whiteColor),
                                 radius: 15,
                                 onTap: () async {
-                                  await appStateProvider.getLastAppointmentStatusList(
-                                      widget.arguments.appointmentID);
-                                  if (appStateProvider.lastAppointmentStatus ==
-                                      "Cancelled") {
-                                    AppConstants.showFailToast(context,
-                                        "Appointment has been cancelled so cannot proceed further!");
+                                  ConnectivityResult result = await _connectivity.checkConnectivity();
+                                  String status = _updateConnectionStatus(result);
+
+                                  if(status != "NONE"){
+                                    await appStateProvider.getLastAppointmentStatusList(
+                                        widget.arguments.appointmentID);
+                                    if (appStateProvider.lastAppointmentStatus ==
+                                        "Cancelled") {
+                                      AppConstants.showFailToast(context,
+                                          "Appointment has been cancelled so cannot proceed further!");
+                                    }
+                                    else{
+                                      AppConstants.showFailToast(context, "Already Survey Transfer To Back Office");
+                                    }
                                   }
                                   else{
                                     AppConstants.showFailToast(context,
-                                        "Already Survey Transfer To Back Office");
-                                  }
+                                        "No Internet Connection");
+                                  } //KARAN (ADD THIS ON LIVE)
                                 },
                               ),
                       ],
@@ -1010,6 +1073,7 @@ class _DetailScreenState extends State<DetailScreen> {
       String customerID) async {
     return showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text(
@@ -1036,19 +1100,22 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
               onPressed: () async {
-                bool success = await appStateProvider
-                    .updateBackOfficeStatus(intAppointmentId);
+                bool success = await appStateProvider.updateBackOfficeStatus(intAppointmentId);
                 if (success) {
-                  AppConstants.showSuccessToast(
-                      context, "Survey Transfer To Back Office Successfully");
-                  Navigator.of(context).pop();
-                  Future.delayed(Duration.zero).whenComplete(() =>
-                      model.initializeData(widget.arguments.appointmentID,
-                          widget.arguments.customerID));
+                  bool successAppointment = await appStateProvider.insertAppointmentLogActivity(intAppointmentId);
+                  if(successAppointment){
+                    AppConstants.showSuccessToast(context, "Survey Transfer To Back Office Successfully");
+                    Navigator.of(context).pop();
+                    Future.delayed(Duration.zero).whenComplete(() =>
+                        model.initializeData(widget.arguments.appointmentID,
+                            widget.arguments.customerID));
+                  }
+                  else{
+                    AppConstants.showFailToast(context, "Survey Transfer To Back Office Status Failed");
+                  }
                 } else {
                   Navigator.of(context).pop();
-                  AppConstants.showFailToast(
-                      context, "Survey Transfer To Back Office Failed");
+                  AppConstants.showFailToast(context, "Survey Transfer To Back Office Failed");
                 }
               },
             ),
@@ -1060,6 +1127,8 @@ class _DetailScreenState extends State<DetailScreen> {
                 ),
               ),
               onPressed: () {
+                clickOnTransferButton = false;
+                setState(() {});
                 Navigator.of(context).pop();
               },
             ),

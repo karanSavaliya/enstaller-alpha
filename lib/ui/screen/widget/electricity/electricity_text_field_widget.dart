@@ -29,10 +29,8 @@ class _ElectricityTextFieldWidgetState extends State<ElectricityTextFieldWidget>
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        if (_showError && widget.required != null) Padding(
-          padding: const EdgeInsets.fromLTRB(5, 0, 0, 2),
-          child: Text('This field is required.', style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 7)),
-        ),
+        Text(widget.hintText,style: TextStyle(fontWeight: FontWeight.bold)),
+        SizedBox(height: 2),
         TextFormField(
           maxLines: widget.maxLine == null ? 1 : widget.maxLine,
           onTap: widget.onTap,
@@ -49,11 +47,12 @@ class _ElectricityTextFieldWidgetState extends State<ElectricityTextFieldWidget>
             }
           },
           readOnly: widget.readOnly == null ? false : widget.readOnly,
-          keyboardType: widget.keyboardType == null ? TextInputType.text : TextInputType.number,
+          keyboardType: widget.keyboardType == null ? TextInputType.text : widget.keyboardType == "none" ? TextInputType.none :TextInputType.number,
           maxLength: widget.maxLength == null ? 500 : widget.maxLength,
           controller: widget.controller == null ? nullController : widget.controller,
           decoration: InputDecoration(
             hintText: widget.hintText,
+            counterText: "",
             isDense: true,
             focusedBorder:OutlineInputBorder(
               borderSide: BorderSide(color: AppColors.appThemeColor),
@@ -74,6 +73,10 @@ class _ElectricityTextFieldWidgetState extends State<ElectricityTextFieldWidget>
               });
             }
           },
+        ),
+        if (widget.controller.text.toString().isEmpty && _showError && widget.required != null || widget.controller.text == ' ' || widget.controller.text.trim().isEmpty) Padding(
+          padding: const EdgeInsets.fromLTRB(5, 5, 0, 2),
+          child: Text('This field is required.', style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 7)),
         ),
       ],
     );

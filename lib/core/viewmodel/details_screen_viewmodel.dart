@@ -98,15 +98,6 @@ class DetailsScreenViewModel extends BaseModel {
     }
   }
 
-  void getActivityDetailsList(String appointmentID) async {
-    setState(ViewState.Busy);
-    print('appId=${appointmentID}');
-    activityDetailsList = await _apiService.getActivityLogsAppointmentId(
-        appointmentID, user.intCompanyId);
-    setState(ViewState.Idle);
-  }
-
-
   String vals_enroute;
   void checkifEnrouted() async {
 
@@ -114,8 +105,6 @@ class DetailsScreenViewModel extends BaseModel {
     vals_enroute = await _apiService.checkIfEnrouted(user);
 
   }
-
-
 
   void initializeData(String appointmentID, String customerID) async {
     setState(ViewState.Busy);

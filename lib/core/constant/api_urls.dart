@@ -36,7 +36,6 @@ class ApiUrls {
   static String abortappointmentreason = 'appointments/UpdateAbortAppointmentbyReason';
   static String getSurveyQuestionAppointmentWiseUrl = 'SurveyQuetion/GetSurveyQuestionAppointmentWise';
   static String addSurveyQuestionAnswerDetailUrl = 'SurveyQuestionAnswer/AddSurveyQuestionAnswerDetail';
-  static String supplierDocumentUpdateEngineerRead = 'SupplierDocument/SupplierDocumentUpdateEngineerRead';
   static String getCustomerByIdUrl = 'Customer/GetCustomerById';
   static String getJmbCloseAppointmentData = 'jmbClose/GetJmbCloseAppointmentData';
   static String getEngineerAppointmentsUrl = 'appointments/GetEngineerAppointments';
@@ -74,15 +73,24 @@ class ApiUrls {
   static String map_routing_url = 'routing';
   static String isEnrouted_url = "appointments/GetCheckInRouteAppointment";
 
+
   static String engineerDocumentList = baseUrl + "Engineer/GetEngineerCertificate";
   static String engineerQualificationList = baseUrl + "Engineer/GetEnginnerQualificationDocumentList";
   static String saveSapphireGasFlow = baseUrl + "SapphireGasFlow/SaveSapphireGasFlow";
   static String saveSapphireElectricityFlow = baseUrl + "SapphireElecFlow/SaveSapphireElecFlow";
-  static String engineerProfilePhotoUrl = "https://enstall.boshposh.com/Upload/EngineerPhoto";
-  static String engineerDocumentUrl = "https://enstall.boshposh.com/Upload/EngineerDocument/";
-  static String engineerQualificationUrl = "https://enstall.boshposh.com/Upload/EngineerQualification/";
   static String lastAppointmentStatus = baseUrl + "appointments/GetAppointmentLatestStatus";
   static String updateSurveyBackOfficeStatus = baseUrl + "appointments/updateSurveyFlgBackOffice";
+  static String addAppointmentActivityLogs = baseUrl + "AppointmentActivityLogs/AddAppointmentActivityLogs";
   static String insertVehicleCheckLog = baseUrl + "Customer/VehicelchecklogInsert";
   static String getVehicleLog = baseUrl + "Customer/VehicleCheckLogSelectbyEngineerDate";
+  static String supplierEngineerESignSave = baseUrl + "Supplier/EsingSaveImage";
+  static String supplierDocumentEngineerRead = baseUrl + "SupplierDocument/EsingUpdateEngineerRead";
+  static String offlineAppointmentStatusList = baseUrl + "appointments/GetAppointmentLastSurveySecByEnggId";
+
+  static String engineerProfilePhotoUrl = isLive ? "https://enstall.enpaas.com/Upload/EngineerPhoto" : "https://enstall.boshposh.com/Upload/EngineerPhoto";
+  static String engineerDocumentUrl = isLive ? "https://enstall.enpaas.com/Upload/EngineerDocument/" : "https://enstall.boshposh.com/Upload/EngineerDocument/";
+  static String engineerQualificationUrl = isLive ? "https://enstall.enpaas.com/Upload/EngineerQualification/" : "https://enstall.boshposh.com/Upload/EngineerQualification/";
+  static String commentDialogUrl = isLive ? "https://enstall.enpaas.com/Upload/Appointment/" : "https://enstall.boshposh.com/Upload/Appointment/";
+  static String documentUrl = isLive ? "https://enstall.enpaas.com/Upload/SupplierDoc/" : "https://enstall.boshposh.com/Upload/SupplierDoc/";
+  static String supplierESignImageUrl = isLive ? "https://enstall.enpaas.com/Upload/DoumentSign/" : "https://enstall.boshposh.com/Upload/DoumentSign/";
 }

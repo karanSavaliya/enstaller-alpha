@@ -43,6 +43,7 @@ class AppStrings {
   static const emailnotification = 'Email Notification';
   static const SMSnotification = 'SMS Notification';
   static const DOCUMNETS = 'DOCUMENTS';
+  static const DOCUMNETSESIGN = 'DOCUMENTS E-SIGN';
   static const ENGINEER_DOCUMNETS = 'ENGINEER DOCUMENTS';
   static const ENGINEER_QUALIFICATION = 'ENGINEER QUALIFICATION';
   static const APPOINTMENT_DETAILS = 'APPOINTMENT DETAILS';
@@ -153,6 +154,7 @@ class AppStrings {
   static const dashboard = 'DASHBOARD';
   static const gasFlow = 'GAS FLOW';
   static const electricityFlow = 'ELECTRICITY FLOW';
+  static const addCommentDocuments = '  Add Comments Documents';
   static const gasElectricityFlow = 'GAS / ELECTRICITY FLOW';
   static const time = 'Time';
   static const APPOINTMENT_COMMENTS = 'APPOINTMENT COMMENTS';
@@ -230,6 +232,4 @@ class AppStrings {
 
   static const String mapBoxStyleId = 'streets-v12';
   static const String PickFile = 'Pick File';
-
-
 }

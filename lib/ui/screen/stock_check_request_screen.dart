@@ -80,10 +80,6 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
                                           children: [
                                             _stockModel(
                                                 model.stockCheckList[i], model)
-//                                Divider(
-//                                  color: AppColors.darkGrayColor,
-//                                  thickness: 1.0,
-//                                ),
                                           ],
                                         ),
                                       ),
@@ -97,7 +93,6 @@ class _StockCheckRequestScreenState extends State<StockCheckRequestScreen> {
     );
   }
 
-  // engineer info
   Widget _stockModel(
       StockCheckModel stockCheckModel, StockCheckRequestViewModel model) {
     return Column(

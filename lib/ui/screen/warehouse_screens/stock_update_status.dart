@@ -108,44 +108,34 @@ class _StockUpdateStatusState extends State<StockUpdateStatus> {
     );
   }
 
-  _readCSV() async {
+  Future<void> _readCSV() async {
     isSelectedValidCSV = false;
-    File file = await FilePicker.getFile(
-      fileExtension: 'csv',
-      type: FileType.CUSTOM,
+    FilePickerResult result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['csv'],
     );
-    String path = file.path;
-    List<List<dynamic>> list = await loadingCsvData(path) ?? [];
-    print("-----------------------");
-    print(list);
-    if (list.length == 1) {
-      List<String> splitList = list[0][0].toString().split("\n");
-      print(list[0][0].toString().split("\n"));
-      if (splitList[0].trim() != "Serial") {
-        AppConstants.showFailToast(context, "Incorrect File Format");
-      } else {
-        splitList.forEach((element) {
-          if (element.toString().trim() != "Serial") {
-            _serialList.add(SerialList(serialNo: element.toString().trim()));
+
+    if (result != null && result.files.isNotEmpty) {
+      String path = result.files.single.path;
+      List<List<dynamic>> list = await loadingCsvData(path) ?? [];
+      print("-----------------------");
+      print(list);
+
+      if (list.isNotEmpty) {
+        if (list[0].isNotEmpty && list[0][0].toString().trim() == "Serial") {
+          for (List<dynamic> row in list) {
+            if (row.isNotEmpty && row[0].toString().trim() != "Serial") {
+              _serialList.add(SerialList(serialNo: row[0].toString().trim()));
+            }
           }
-        });
-        isSelectedValidCSV = true;
-        AppConstants.showSuccessToast(context, "File Data Saved");
-      }
-    } else if (list.length > 1) {
-      if (list[0][0].toString().trim() != "Serial" && list[0].length != 1) {
-        AppConstants.showFailToast(context, "Incorrect File Format");
+          isSelectedValidCSV = true;
+          AppConstants.showSuccessToast(context, "File Data Saved");
+        } else {
+          AppConstants.showFailToast(context, "Incorrect File Format");
+        }
       } else {
-        list.forEach((element) {
-          if (element[0].toString().trim() != "Serial" && element.length == 1) {
-            _serialList.add(SerialList(serialNo: element[0].toString().trim()));
-          }
-        });
-        isSelectedValidCSV = true;
-        AppConstants.showSuccessToast(context, "File Data Saved");
+        AppConstants.showFailToast(context, "Incorrect File Format");
       }
-    } else {
-      AppConstants.showFailToast(context, "Incorrect File Format");
     }
   }
 

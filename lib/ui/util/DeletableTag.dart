@@ -39,7 +39,7 @@ class _DeletableTagState extends State<DeletableTag> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
-              (widget.path.endsWith("jpg") || widget.path.endsWith("jpeg") || widget.path.endsWith("png")) ? "assets/icon/img_image.png" : (widget.path.endsWith("doc") || widget.path.endsWith("docx")) ? "assets/icon/img_doc.png" :  widget.path.endsWith("pdf") ? "assets/icon/img_pdf.png" : "assets/icon/img_xls.png",
+                (widget.path.endsWith("pjp") || widget.path.endsWith("pjpeg") || widget.path.endsWith("jfif") || widget.path.endsWith("jpg") || widget.path.endsWith("jpeg") || widget.path.endsWith("png")) ? "assets/icon/img_image.png" : (widget.path.endsWith("doc") || widget.path.endsWith("docx")) ? "assets/icon/img_doc.png" :  widget.path.endsWith("pdf") ? "assets/icon/img_pdf.png" : (widget.path.endsWith("xls") || widget.path.endsWith("xlsx")) ? "assets/icon/img_xls.png" : "assets/icon/img_xls.png",
                 width: 40,
                 height: 40,
               ),

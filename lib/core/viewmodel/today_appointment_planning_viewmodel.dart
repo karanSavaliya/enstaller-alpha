@@ -82,7 +82,7 @@ class TodayAppointmentPlanningViewModel extends BaseModel {
      setState(ViewState.Busy);
 
      UserModel user = await Prefs.getUser();
-     _site_address = await _apiService.getRoutePlanDetailEngineerWise( user.intEngineerId.toString() , CommonUtils().currDate());
+     _site_address = await _apiService.getRoutePlanDetailEngineerWise(user.intEngineerId.toString() , CommonUtils().currDate());
 
      _site_address.forEach((element) {
       site_address.add(element);

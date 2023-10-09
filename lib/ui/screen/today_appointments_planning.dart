@@ -25,11 +25,9 @@ class TodayAppointmentPlanningScreen extends StatefulWidget {
 
 }
 
-
 class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScreen> {
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  List<String> _list = ["Apple", "Ball", "Cat", "Dog", "Elephant"];
   List<String> listlatng = [];
 
   @override
@@ -76,22 +74,30 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
         longitude = latlng_str.split(",")[1];
       }
 
-
       print("------"+latitude+","+longitude+"-------------------------------------------------");
       listlatng.add(latitude+","+longitude);
 
       String add_update_type = "";
-      if (model.list_route_plan[0].route_plan_id == "0") {
-        add_update_type = "insert";
-      } else {
-        add_update_type = "update";
+      String routePlanId = "0";
+
+      for(int count = 0; count< model.list_route_plan.length; count++){
+        if(model.list_route_plan[count].route_plan_id == "0") {
+          add_update_type = "insert";
+          routePlanId = "0";
+          setState(() {});
+        } else {
+          add_update_type = "update";
+          routePlanId = model.list_route_plan[count].route_plan_id;
+          setState(() {});
+          break;
+        }
       }
 
-      print(add_update_type+";;;;;;;;;;;;;;;;"+model.list_route_plan[0].route_plan_id);
+      print(add_update_type+";;;;;;;;;;;;;;;;"+routePlanId.toString());
       UserModel user = await Prefs.getUser();
 
       Map routeplanner = {
-        "intId": model.list_route_plan[0].route_plan_id,
+        "intId": routePlanId.toString(),
         "intEngineerId": user.intEngineerId,
         "intLocationTypeId": type,
         "strRouteName": CommonUtils().currDate() + "-" + user.intEngineerId,
@@ -101,7 +107,7 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
         "strEngLocPostCode": type == "1" ? model.baseLoccation.engineerRouteBaseLocation.strBaseLocationPostcode : postalcode,
         "intCreatedby": user.intCompanyId,
         "strAction": add_update_type,
-        "intModifiedby": user.intCompanyId
+        "intModifiedby": user.intCompanyId,
       };
 
       List<Map> listmap = [];
@@ -132,15 +138,13 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
 
         });
 
-
         Future.delayed(const Duration(milliseconds: 2000), () async {
           Map routeplannerMap = {
             "routePlanner": routeplanner,
             "routePlannerDetail": listmap
           };
 
-          model.saveSortorderofLocation(routeplannerMap).then((value) =>
-              setorder(model));
+          model.saveSortorderofLocation(routeplannerMap).then((value) => setorder(model));
 
           print(listlatng.length.toString());
 
@@ -181,8 +185,8 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
   Widget build(BuildContext context) {
     return BaseView<TodayAppointmentPlanningViewModel>(
       onModelReady: (model) {
-             model.makeMultipleRequests();
-        },
+        model.makeMultipleRequests();
+      },
       builder: (context , model , child) {
         return Scaffold(
           backgroundColor: AppColors.scafoldColor,
@@ -346,7 +350,7 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
 
                   print(start.toString()+"----"+current.toString()+"----"+model.list_route_plan[start].status);
 
-                  if(model.list_route_plan[start].status == "InRoute" ){
+                  if(model.list_route_plan[start].status == "InRoute"){
 
                      if(model.list_route_plan[start].status == "InRoute") {
                        AppConstants.showFailToast(context,
@@ -364,20 +368,14 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
 
                   }
 
-
                   if(model.list_route_plan[curr_type].status == "InRoute" ){
-
                     if(model.list_route_plan[curr_type].status == "InRoute") {
                       AppConstants.showFailToast(context,
                           "Sequence of "+(model.list_route_plan[curr_type].appointmentID)+" can not be changed");
                     }
-
                     return;
                   }
 
-
-
-                  // dragging from top to bottom
                   if (start < current) {
                     int end = current - 1;
                     RoutePlanningArguments startItem = model.list_route_plan[start];
@@ -390,7 +388,6 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
                     } while (i < end - start);
                     model.list_route_plan[end] = startItem;
                   }
-                  // dragging from bottom to top
                   else if (start > current) {
                     RoutePlanningArguments startItem = model.list_route_plan[start];
                     for (int i = start; i > current; i--) {
@@ -398,21 +395,14 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
                     }
                     model.list_route_plan[current] = startItem;
                   }
-
                   setState(() {});
                 },
               ))
-
           ],),
-
-
         );
-
-
       },
     );
   }
-
 
   TextStyle getTextStyle({Color color, bool isBold = false, num fontSize}) {
     return TextStyle(
@@ -420,5 +410,4 @@ class _ApppointmentPlanningScreenState extends State<TodayAppointmentPlanningScr
         fontWeight: isBold ? FontWeight.bold : FontWeight.w500,
         fontSize: fontSize);
   }
-
 }

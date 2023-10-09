@@ -8,6 +8,7 @@ import '../constant/appconstant.dart';
 import '../model/engineer_document_model.dart';
 import '../model/engineer_qualification_model.dart';
 import '../model/last_appointment_status_model.dart';
+import '../model/offline_appointment_status_get.dart';
 import '../model/save_sapphire_electricity_flow_model.dart';
 import '../model/save_sapphire_gas_flow_model.dart';
 import '../model/user_model.dart';
@@ -301,6 +302,18 @@ class AppStateProvider extends ChangeNotifier {
         && _textEditingControllerSiteVisitDate.text.isNotEmpty && _visitSuccessful!=null && _readingTaken!=null && _engineerName.text.isNotEmpty && _transactionStatusCode.text.isNotEmpty
         && areAllFieldsFilled()
     ){
+      _isCheckData = true;
+      notifyListeners();
+    }
+    else{
+      _isCheckData = false;
+      notifyListeners();
+      AppConstants.showFailToast(context, "Required Fields Compulsory");
+    }
+  }
+
+  void fieldDataCheckWhenClickAddButtonGas(BuildContext context){
+    if(areAllFieldsFilled()){
       _isCheckData = true;
       notifyListeners();
     }
@@ -798,6 +811,18 @@ class AppStateProvider extends ChangeNotifier {
     }
   }
 
+  void fieldDataCheckWhenClickAddButtonElectricity(BuildContext context){
+    if(areAllFieldsFilledElectricity()){
+      _isCheckDataElectricity = true;
+      notifyListeners();
+    }
+    else{
+      _isCheckDataElectricity = false;
+      notifyListeners();
+      AppConstants.showFailToast(context, "Required Fields Compulsory");
+    }
+  }
+
   bool areAllFieldsFilledElectricity() {
     for (var formData in _formDataListElectricityMeters) {
       for (var key in formData.keys) {
@@ -1067,6 +1092,26 @@ class AppStateProvider extends ChangeNotifier {
     return _success;
   } //KARAN (ADD THIS ON LIVE)
 
+  bool _loadingInsertAppointmentLogActivity = false;
+  bool get loadingInsertAppointmentLogActivity => _loadingInsertAppointmentLogActivity;
+  bool _successAppointmentLogActivity;
+  bool get successAppointmentLogActivity  => _successAppointmentLogActivity;
+
+  Future<bool> insertAppointmentLogActivity(String intAppointmentId) async {
+    _loadingInsertAppointmentLogActivity = true;
+    notifyListeners();
+    try {
+      _successAppointmentLogActivity = await Api().appointmentLogActivityInsert(ApiUrls.addAppointmentActivityLogs, intAppointmentId);
+      _loadingInsertAppointmentLogActivity = false;
+    } on SocketException {
+      _loadingInsertAppointmentLogActivity = false;
+    } catch (e) {
+      _loadingInsertAppointmentLogActivity = false;
+    }
+    notifyListeners();
+    return _successAppointmentLogActivity;
+  } //KARAN (ADD THIS ON LIVE)
+
   // =======> Vehicle Check Log Insert Start <=======
 
   bool _loadingVehicleCheckLogInsert = false;
@@ -1109,5 +1154,75 @@ class AppStateProvider extends ChangeNotifier {
     }
     notifyListeners();
     return _getVehicleSuccess;
+  } //KARAN (ADD THIS ON LIVE)
+
+  // =======> Supplier Engineer ESign Save Start <=======
+
+  bool _loadingSupplierEngineerESignSave = false;
+  bool get loadingSupplierEngineerESignSave => _loadingSupplierEngineerESignSave;
+  String _eSignImageSuccess;
+  String get eSignImageSuccess  => _eSignImageSuccess;
+
+  Future<String> insertSupplierEngineerImage(String base64) async {
+    _loadingSupplierEngineerESignSave = true;
+    notifyListeners();
+    try {
+      _eSignImageSuccess = await Api().supplierEngineerImageInsert(ApiUrls.supplierEngineerESignSave, base64);
+      _loadingSupplierEngineerESignSave = false;
+    } on SocketException {
+      _loadingSupplierEngineerESignSave = false;
+    } catch (e) {
+      _loadingSupplierEngineerESignSave = false;
+    }
+    notifyListeners();
+    return _eSignImageSuccess;
+  } //KARAN (ADD THIS ON LIVE)
+
+  bool _loadingSupplierDocumentEngineerRead = false;
+  bool get loadingSupplierDocumentEngineerRead => _loadingSupplierDocumentEngineerRead;
+  String _engineerReadSuccess;
+  String get engineerReadSuccess  => _engineerReadSuccess;
+
+  Future<String> updateSupplierDocumentEngineerRead(String imageName, int intId, String signatureBy) async {
+    _loadingSupplierDocumentEngineerRead = true;
+    notifyListeners();
+    try {
+      _engineerReadSuccess = await Api().supplierDocumentEngineerReadUpdate(ApiUrls.supplierDocumentEngineerRead, imageName, intId, signatureBy);
+      _loadingSupplierDocumentEngineerRead = false;
+    } on SocketException {
+      _loadingSupplierDocumentEngineerRead = false;
+    } catch (e) {
+      _loadingSupplierDocumentEngineerRead = false;
+    }
+    notifyListeners();
+    return _engineerReadSuccess;
+  } //KARAN (ADD THIS ON LIVE)
+
+  // =======> Offline Appointment Status Get Start <=======
+
+  List<OfflineAppointmentStatusGetModel> getOfflineAppointmentStatusDoneObj;
+  final List<OfflineAppointmentStatusGetModel> _getOfflineAppointmentStatusList = [];
+  List<OfflineAppointmentStatusGetModel> get getOfflineAppointmentStatusList => _getOfflineAppointmentStatusList;
+  bool _loadingOfflineAppointmentStatus = false;
+  bool get loadingOfflineAppointmentStatus => _loadingOfflineAppointmentStatus;
+
+  Future<void> getOfflineAppointmentStatus() async {
+    _loadingOfflineAppointmentStatus = true;
+    notifyListeners();
+    try {
+      getOfflineAppointmentStatusDoneObj = await Api().offlineAppointmentStatusGet(ApiUrls.offlineAppointmentStatusList);
+      _getOfflineAppointmentStatusList.clear();
+      for (var element in getOfflineAppointmentStatusDoneObj) {
+        if(element.strSectionName == "Sign Off"){
+          _getOfflineAppointmentStatusList.add(element);
+        }
+      }
+      _loadingOfflineAppointmentStatus = false;
+    } on SocketException {
+      _loadingOfflineAppointmentStatus = false;
+    } catch (e) {
+      _loadingOfflineAppointmentStatus = false;
+    }
+    notifyListeners();
   } //KARAN (ADD THIS ON LIVE)
 }

@@ -35,13 +35,6 @@ class ResetPasswordState extends State<ResetPassword> {
   bool autoValidation = false;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    print(widget.emailId);
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: BaseView<LogInViewModel>(

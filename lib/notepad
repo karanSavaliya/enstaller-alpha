@@ -21,24 +21,9 @@ survey.dart
 
 ==============================================
 
-Add Comments
--------
-comment_model.dart
-widget/comment_dialog_widget.dart
-comment_dialog_viewmodel.dart
-api_service.dart
-
-==============================================
-
 Appointment Details Customer Name Add
 -------
 detail_screen.dart
-
-==============================================
-
-Profile Screen
--------
-base64 to name change API side
 
 ==============================================
 
@@ -49,7 +34,7 @@ appconstant.dart
 
 ==============================================
 
-MPAAS CRs Close Down Jobs From Back Office (4214243034)
+MPAAS CRs Close Down Jobs From Back Office (4214243034) & Survey submit section wise
 -------
 detail_screen.dart
 app_state_provider.dart
@@ -57,7 +42,9 @@ api.dart
 customer_details.dart
 survey.dart
 api_service.dart
-survey_screen_viewmodel.dart  SEARCH THIS ==> Continue
+survey_screen_viewmodel.dart
+offline_appointment_status_get.dart
+view_appointment_list_widget.dart
 
 ==============================================
 
@@ -76,16 +63,43 @@ detail_screen.dart
 
 ==============================================
 
-work
+Documents e-sign
 -------
-Gas Meter Removal & Elec Meter Removal testing ( add live ) ==> survey.dart // Continue // @Urvish Sir
-Web view bug // @Urvish Sir @Priyanka Mam
-Project migrate monday id // @Urvish Sir
-Offline Status // @Bharat @Urvish Sir
-appointment transfer status show and insert api // @Urvish Sir
-e-sign task // @Urvish Sir @Poojan Bhai
+document.dart
+document_viewmodel.dart
+e_sign_document_view.dart
+document_e_sign.dart
+document_model.dart
+api.dart
+app_state_provider.dart
 
-move to live task 30/09/2023
-------------------------------
-profile page
-search text filed
+==============================================
+
+Gas Meter Removal & Elec Meter Removal
+-------
+survey.dart
+survey_screen_viewmodel.dart  ### PENDING ### (sign off)
+
+==============================================
+
+Add Comments Change After Code Upgraded (Alpha & Live Both)
+-------
+comment_dialog_widget.dart  SEARCH THIS ==> REMOVE
+
+==============================================
+
+ME04 - Type 2 device smart flows (3798988494)
+-------
+survey.dart
+survey_screen_viewmodel.dart
+
+==============================================
+
+ME05 - PPMID smart flows (3798988516)
+-------
+survey.dart
+survey_screen_viewmodel.dart
+
+==============================================
+
+last change code

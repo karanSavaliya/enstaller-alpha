@@ -79,17 +79,15 @@ class CommentDialogViewModel extends BaseModel {
       showErrorMessage = false;
       UserModel userModel = await Prefs.getUser();
       print('usedId${userModel.id}');
-      String responseModel = await _apiService.saveAppointments(
-          {
-              "intDetailsId":"",
-              "intAppointmentid": appointmentID,
-              "strcomments": comments,
-              "bisvisibleuser":"true",
-              "intCreatedBy": userModel.id,
-              "intUpdatedby": "",
-              "intReturnId" : ""
-
-          });
+      String responseModel = await _apiService.saveAppointments({
+        "intDetailsId":"",
+        "intAppointmentid": appointmentID,
+        "strcomments": comments,
+        "bisvisibleuser":"true",
+        "intCreatedBy": userModel.id,
+        "intUpdatedby": "",
+        "intReturnId" : "",
+      });
       if (responseModel != null) {
         var url = ApiUrls.baseUrl + ApiUrls.insertAttachment;
         var map = {
@@ -115,4 +113,4 @@ class CommentDialogViewModel extends BaseModel {
       showErrorMessage = true;
     }
   }
-} //KARAN (ADD THIS ON LIVE)
+}

@@ -1,6 +1,5 @@
 // @dart=2.9
-
-
+import 'package:connectivity/connectivity.dart';
 import 'package:enstaller/core/constant/app_colors.dart';
 import 'package:enstaller/core/constant/app_string.dart';
 import 'package:enstaller/core/constant/appconstant.dart';
@@ -14,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-
 
 class ViewAppointmentListWidget extends StatelessWidget {
 
@@ -47,8 +45,24 @@ class ViewAppointmentListWidget extends StatelessWidget {
     return selectedDate;
   }
 
+  String _updateConnectionStatus(ConnectivityResult result) {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        return "WIFI";
+        break;
+      case ConnectivityResult.mobile:
+        return "MOBILE";
+        break;
+      case ConnectivityResult.none:
+        return "NONE";
+        break;
+      default:
+        return "NO RECORD";
+        break;
+    }
+  } //KARAN (ADD THIS ON LIVE)
 
-
+  final Connectivity _connectivity = Connectivity(); //KARAN (ADD THIS ON LIVE)
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +73,11 @@ class ViewAppointmentListWidget extends StatelessWidget {
       padding: EdgeInsets.all(0),
       itemBuilder: (context, childrenIndex) {
         return InkWell(
-          onTap: () {
+          onTap: () async {
+            ConnectivityResult result = await _connectivity.checkConnectivity();
+            String status = _updateConnectionStatus(result);
 
+            if(status != "NONE"){
               if(tables[childrenIndex].appointmentEventType != "Cancelled") {
                 Navigator.of(context)
                     .pushNamed(DetailScreen.routeName,
@@ -69,20 +86,18 @@ class ViewAppointmentListWidget extends StatelessWidget {
                         strBookingReference: tables[childrenIndex].strBookingReference,
                         customerID: tables[childrenIndex].intCustomerId.toString()))
                     .then((value) {
-                  // FlutterStatusbarcolor.setStatusBarColor(AppColors.appThemeColor);
-                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-                      statusBarIconBrightness: Brightness.light));
-
-
+                  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light));
                   if (GlobalVar.isloadDashboard) {
                     homeScreenViewModel.getAppointmentList();
                     GlobalVar.isloadDashboard = false;
                   }
                 });
               }
-
-
-
+            }
+            else{
+              AppConstants.showFailToast(context,
+                  "No Internet Connection");
+            } //KARAN (ADD THIS ON LIVE)
           },
            child: tables[childrenIndex].appointmentEventType != "Cancelled" ? Container(
             height: SizeConfig.screenHeight * .15,

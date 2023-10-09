@@ -43,4 +43,4 @@ class CommentModel {
     data['bisalive'] = this.bisalive;
     return data;
   }
-} //KARAN (ADD THIS ON LIVE)
+}

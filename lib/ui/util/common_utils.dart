@@ -1,8 +1,6 @@
 // @dart=2.9
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
-import 'dart:io';
 
 class CommonUtils {
   static CommonUtils _commonUtils = CommonUtils();
