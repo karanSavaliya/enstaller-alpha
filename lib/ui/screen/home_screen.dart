@@ -123,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    //requestLocationPermission();
+    requestLocationPermission();
     _subscribeconnectivity();
     super.initState();
   }
@@ -134,15 +134,15 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  // void requestLocationPermission() async {
-  //   final status = await Permission.location.request();
-  //   if (status.isGranted) {
-  //   } else if (status.isDenied) {
-  //     requestLocationPermission();
-  //   } else if (status.isPermanentlyDenied) {
-  //     requestLocationPermission();
-  //   }
-  // }
+  void requestLocationPermission() async {
+    final status = await Permission.location.request();
+    if (status.isGranted) {
+    } else if (status.isDenied) {
+      requestLocationPermission();
+    } else if (status.isPermanentlyDenied) {
+      requestLocationPermission();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

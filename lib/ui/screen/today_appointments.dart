@@ -24,7 +24,6 @@ class TodayAppointmentScreen extends StatefulWidget {
 }
 
 class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
-
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController controller = TextEditingController();
 
@@ -40,16 +39,15 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
     setLocation();
   }
 
-  List<String> list_lat_lng  = [];
+  List<String> list_lat_lng = [];
 
   setLocation() async {
     final preferences = await SharedPreferences.getInstance();
-   list_lat_lng =  preferences.getStringList(CommonUtils().currDate());
+    list_lat_lng = preferences.getStringList(CommonUtils().currDate());
 
-   if(list_lat_lng == null){
-     list_lat_lng  = [];
-   }
-
+    if (list_lat_lng == null) {
+      list_lat_lng = [];
+    }
   }
 
   @override
@@ -133,19 +131,24 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                                   return Padding(
                                     padding: SizeConfig.verticalC13Padding,
                                     child: InkWell(
-                                      child: model.appointmentList[i].appointmentEventType != "Cancelled" ? Container(
-                                        decoration: BoxDecoration(
-                                            color: AppColors
-                                                .appointmentBackGroundColor,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Column(
-                                          children: [
-                                            _engineerInfo(
-                                                model.appointmentList[i])
-                                          ],
-                                        ),
-                                      ): Container(),
+                                      child: model.appointmentList[i]
+                                                  .appointmentEventType !=
+                                              "Cancelled"
+                                          ? Container(
+                                              decoration: BoxDecoration(
+                                                  color: AppColors
+                                                      .appointmentBackGroundColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10)),
+                                              child: Column(
+                                                children: [
+                                                  _engineerInfo(
+                                                      model.appointmentList[i])
+                                                ],
+                                              ),
+                                            )
+                                          : Container(),
                                       onTap: () {
                                         Navigator.of(context).pushNamed(
                                             DetailScreen.routeName,
@@ -168,37 +171,42 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
                             )
                           : Center(child: Text(AppStrings.noDataFound))),
                 ),
-
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-             floatingActionButton: model.appointmentList.isNotEmpty == true ? Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  list_lat_lng.length > 0 ?   FloatingActionButton.extended(
-                    onPressed: () async {
-
-                      Navigator.of(context).pushNamed(MapsPage.route,
-                          arguments: MapRoutes(pincodes: list_lat_lng , firstloc: list_lat_lng[0]));
-
-                    },
-                    backgroundColor: Colors.blue,
-                    label: const Text('View Route'),
-                    icon: const Icon(Icons.navigation_sharp),
-                  ) : Container(),
-                  FloatingActionButton.extended(
-                    onPressed: () {
-                      Navigator.of(context).push(new MaterialPageRoute(
-                          builder: (context) => TodayAppointmentPlanningScreen()));
-                    },
-                    backgroundColor: Colors.green,
-                    label: const Text('Get Route'),
-                    icon: const Icon(Icons.navigation_sharp),
-                  )
-                ],
-              ),
-            ) : Container(),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: model.appointmentList.isNotEmpty == true
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      list_lat_lng.length > 0
+                          ? FloatingActionButton.extended(
+                              onPressed: () async {
+                                Navigator.of(context).pushNamed(MapsPage.route,
+                                    arguments: MapRoutes(
+                                        pincodes: list_lat_lng,
+                                        firstloc: list_lat_lng[0]));
+                              },
+                              backgroundColor: Colors.blue,
+                              label: const Text('View Route'),
+                              icon: const Icon(Icons.navigation_sharp),
+                            )
+                          : Container(),
+                      FloatingActionButton.extended(
+                        onPressed: () {
+                          Navigator.of(context).push(new MaterialPageRoute(
+                              builder: (context) =>
+                                  TodayAppointmentPlanningScreen()));
+                        },
+                        backgroundColor: Colors.green,
+                        label: const Text('Get Route'),
+                        icon: const Icon(Icons.navigation_sharp),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
         );
       },
     );
@@ -241,11 +249,11 @@ class _ApppointmentScreenState extends State<TodayAppointmentScreen> {
         ),
         AppointmentDataRow(
           firstText: AppStrings.bookOn,
-          secondText: AppConstants.getDateTime(appointment?.dteCreatedDate) ,
+          secondText: AppConstants.getDateTime(appointment?.dteCreatedDate),
         ),
         AppointmentDataRow(
           firstText: AppStrings.bookBy,
-          secondText: appointment?.strBookedBy ??  "",
+          secondText: appointment?.strBookedBy ?? "",
         ),
         AppointmentDataRow(
           firstText: AppStrings.status,

@@ -59,14 +59,14 @@ class _DocumentScreenState extends State<DocumentScreen> {
                 leading: Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: InkWell(
-                      onTap: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Icon(Icons.arrow_back)),
+                    onTap: () {
+                      Navigator.of(context).push(new MaterialPageRoute(builder: (context) => HomeScreen()));
+                    },
+                    child: Icon(Icons.arrow_back),
+                  ),
                 ),
                 centerTitle: true,
-                title: model.searchBool
-                    ? TextField(
+                title: model.searchBool ? TextField(
                   controller: controller,
                   cursorColor: Colors.white,
                   style: TextStyle(color: Colors.white),
@@ -81,8 +81,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
                   onChanged: (val) {
                     model.onSearch(val);
                   },
-                )
-                    : Text(
+                ) : Text(
                   AppStrings.DOCUMNETS,
                   style: getTextStyle(
                       color: AppColors.whiteColor, isBold: false),
@@ -224,11 +223,11 @@ class _DocumentScreenState extends State<DocumentScreen> {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => ESignDocumentView(doc: _url,signatureBy: document.strSignedby,signature: document.strSignedImage,date: document.dteSigndate)));
                           } else {
                             try {
-                              var reponse = await http.get(Uri.parse(_url));
+                              var response = await http.get(Uri.parse(_url));
                               var dir = await getTemporaryDirectory();
                               File file =
                               new File(dir.path + document.strFileName);
-                              file.writeAsBytesSync(reponse.bodyBytes, flush: true);
+                              file.writeAsBytesSync(response.bodyBytes, flush: true);
                               share(file.path);
                             } catch (e) {
                               print("error..........................");
@@ -241,7 +240,7 @@ class _DocumentScreenState extends State<DocumentScreen> {
                         }
                       },
                       child: Text(
-                        document?.strFileName ?? "",
+                        document?.strName ?? "",
                         style: TextStyle(
                             color: AppColors.darkGrayColor,
                             fontWeight: (document.bisEngineerRead)

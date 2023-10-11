@@ -11,8 +11,10 @@ import 'dart:ui' as ui;
 import 'package:flutter_signature_pad/flutter_signature_pad.dart';
 import 'package:flutter/services.dart';
 import '../../core/constant/appconstant.dart';
+import '../../core/model/user_model.dart';
 import '../../core/provider/app_state_provider.dart';
 import 'package:provider/provider.dart';
+import '../../core/service/pref_service.dart';
 
 class DocumentESignScreen extends StatefulWidget {
   int intId;
@@ -35,7 +37,14 @@ class _DocumentESignScreenState extends State<DocumentESignScreen> {
   @override
   void initState() {
     _textFieldFocusNode.unfocus();
+    getEngineerName();
     super.initState();
+  }
+
+  void getEngineerName() async{
+    UserModel user = await Prefs.getUser();
+    signatureBy.text = user.strEngineerName;
+    setState(() {});
   }
 
   @override
@@ -75,6 +84,7 @@ class _DocumentESignScreenState extends State<DocumentESignScreen> {
                 TextFormField(
                   focusNode: _textFieldFocusNode,
                   controller: signatureBy,
+                  readOnly: true,
                   decoration: InputDecoration(
                     hintText: "Signature By",
                     isDense: true,
@@ -118,8 +128,8 @@ class _DocumentESignScreenState extends State<DocumentESignScreen> {
                               color: Colors.green,
                               onPressed: () async {
                                 final sign = _sign.currentState;
-                                if(signatureBy.text == ' ' || signatureBy.text.trim().isEmpty || sign.points.length == 0){
-                                  AppConstants.showFailToast(context, "All Fields are Compulsory");
+                                if(sign.points.length == 0){
+                                  AppConstants.showFailToast(context, "E-Signature Compulsory");
                                 }
                                 else{
                                   AppConstants.showSuccessToast(context, "Wait a Few seconds...");
